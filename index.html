@@ -53,64 +53,63 @@
             align-items: center;
         }
 
-        /* ここから新しい変更点 
-           画像を一枚貼るのではなく、舞台（ステージ）を作ります
-        */
+        /* アニメーションの舞台（ステージ） */
         .header-scene {
             position: relative;
-            width: 45%;          /* 前回のサイズ感を維持 */
+            width: 45%;          
             max-width: 425px;    
             margin-bottom: 40px;
-            /* 影は全体にかける */
+            /* 全体に影を落とす */
             filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
         }
 
-        /* 椅子の画像（ベース） */
+        /* 椅子の画像（isu.png） */
         .bench-img {
             width: 100%;
             height: auto;
             display: block;
         }
 
-        /* キャラクター共通スタイル */
+        /* キャラクター共通スタイル（修正箇所） */
         .char-img {
             position: absolute;
-            bottom: 25%; /* 椅子の座面に合うように調整 */
-            width: 25%;  /* 4人並ぶのでこのくらいのサイズ感 */
+            /* 高さを調整：座面に座っているように見える高さへ */
+            bottom: 48%; 
+            /* サイズを調整：少し大きくして重なりを持たせる */
+            width: 32%;  
             height: auto;
-            transform-origin: bottom center; /* 揺れる基点を足元に */
+            transform-origin: bottom center; /* 足元を基点に揺らす */
         }
 
-        /* 各キャラクターの配置と個別の動き設定 
-           leftの位置で横並びを調整しています
-        */
+        /* 各キャラクターの配置と個別の動き設定 */
+        /* 左右の位置(left/right)は重なり具合を見て微調整してください */
         
-        /* 1人目：Toruma */
+        /* 1人目：Toruma (左端) */
         .char-1 {
-            left: 2%;
+            left: 0%;
             animation: talk-sway 3.2s infinite ease-in-out;
             z-index: 2;
         }
 
-        /* 2人目：Lily */
+        /* 2人目：Lily (中央左) */
         .char-2 {
-            left: 26%;
+            left: 24%;
             animation: talk-bounce 2.5s infinite ease-in-out;
             animation-delay: 0.2s;
             z-index: 3;
         }
 
-        /* 3人目：Yuzucha */
+        /* 3人目：Yuzucha (中央右) */
         .char-3 {
-            right: 26%;
+            right: 24%;
             animation: talk-sway-reverse 3.8s infinite ease-in-out;
             animation-delay: 0.5s;
             z-index: 3;
         }
 
-        /* 4人目：Wakanagi */
+        /* 4人目：Wakanagi (右端) */
         .char-4 {
-            right: 2%;
+            right: 0%;
             animation: talk-nod 4.0s infinite ease-in-out;
             animation-delay: 1.0s;
             z-index: 2;
@@ -143,7 +142,7 @@
         /* 落ち着いて頷くような動き */
         @keyframes talk-nod {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(1px) scaleY(0.99); } /* ほんの少し沈む */
+            50% { transform: translateY(1px) scaleY(0.99); } 
         }
 
 
@@ -208,10 +207,7 @@
 
         @media (max-width: 768px) {
             header { padding-top: 30px; }
-            
-            /* スマホ時のサイズ調整 */
             .header-scene { width: 70%; max-width: 350px; } 
-
             .logo-img { max-width: 250px; }
             .standing-image img { max-height: 45vh; }
         }
