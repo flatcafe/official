@@ -11,7 +11,7 @@
             --paper-color: #fcf6e6;
             --wood-dark: #5d4037;
             --accent-gold: #ffd54f;
-            --pin-color: #a52a2a; /* 押しピンの色 */
+            --pin-color: #a52a2a;
         }
 
         body, html {
@@ -22,6 +22,61 @@
             color: #fff9c4;
             overflow-x: hidden;
         }
+
+        /* --- ローディング画面 --- */
+        #loading-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #2c1e1a;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1.5s ease-out, visibility 1.5s;
+        }
+        #loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loading-text {
+            font-size: 1.2rem;
+            letter-spacing: 0.2em;
+            margin-top: 20px;
+            color: var(--accent-gold);
+            animation: pulse 2s infinite;
+        }
+        /* 簡易的なコーヒーカップのアイコン */
+        .coffee-icon {
+            width: 40px; height: 30px;
+            border: 2px solid var(--paper-color);
+            border-radius: 0 0 15px 15px;
+            position: relative;
+        }
+        .coffee-icon::after { /* 取手 */
+            content: ''; position: absolute; top: 5px; right: -12px;
+            width: 8px; height: 12px;
+            border: 2px solid var(--paper-color);
+            border-radius: 0 10px 10px 0;
+        }
+        .steam {
+            position: absolute; top: -15px; left: 10px;
+            width: 4px; height: 10px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 50%;
+            filter: blur(2px);
+            animation: steam-rise 2s infinite;
+        }
+        .steam:nth-child(2) { left: 20px; animation-delay: 0.5s; }
+        .steam:nth-child(3) { left: 30px; animation-delay: 1.0s; }
+
+        @keyframes steam-rise {
+            0% { transform: translateY(0); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-15px); opacity: 0; }
+        }
+        @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+
 
         /* 背景 */
         .background {
@@ -51,32 +106,35 @@
         .photo-gallery {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 3; /* 背景より手前、メインコンテンツより奥 */
-            pointer-events: none; /* クリックを透過させる */
+            z-index: 3;
+            pointer-events: none; 
         }
 
         .photo-item {
             position: absolute;
-            width: 120px; /* PCでの基本サイズ */
-            padding: 6px 6px 20px 6px; /* ポラロイド風の枠 */
+            width: 120px; 
+            padding: 6px 6px 20px 6px;
             background-color: #f8f8f0;
             box-shadow: 2px 4px 8px rgba(0,0,0,0.5);
             transform-origin: top center;
             animation: photo-sway ease-in-out infinite alternate;
+            cursor: pointer; /* クリックできることを示す */
+            pointer-events: auto; /* 写真だけクリック有効 */
+            transition: transform 0.3s;
+        }
+
+        .photo-item:hover {
+            transform: scale(1.1) !important; /* ホバー時に少し浮く */
+            z-index: 10;
         }
 
         .photo-item img {
-            width: 100%;
-            height: auto;
-            display: block;
+            width: 100%; height: auto; display: block;
             filter: sepia(0.3) contrast(0.9);
         }
 
-        /* 押しピン */
         .photo-item::after {
-            content: '';
-            position: absolute;
-            top: -4px; left: 50%;
+            content: ''; position: absolute; top: -4px; left: 50%;
             width: 10px; height: 10px;
             background: radial-gradient(circle at 30% 30%, #ff6b6b, var(--pin-color));
             border-radius: 50%;
@@ -90,13 +148,42 @@
             100% { transform: rotate(1.5deg); }
         }
 
-        /* PC配置（基本） */
-        .p1 { top: 8%; left: 5%; animation-duration: 4.5s; animation-delay: 0s; transform: rotate(-3deg); }
+        /* 写真配置（PC） */
+        .p1 { top: 8%; left: 5%; animation-duration: 4.5s; transform: rotate(-3deg); }
         .p2 { top: 20%; right: 8%; width: 110px; animation-duration: 5.2s; animation-delay: 0.8s; transform: rotate(4deg); }
         .p3 { top: 45%; left: 10%; width: 130px; animation-duration: 4.8s; animation-delay: 2s; transform: rotate(-2deg); }
         .p4 { top: 60%; right: 12%; animation-duration: 5.5s; animation-delay: 1.5s; transform: rotate(5deg); }
         .p5 { top: 80%; left: 18%; width: 115px; animation-duration: 5.0s; animation-delay: 0.3s; transform: rotate(-4deg); }
 
+        /* --- 一瞬だけ拡大表示するモーダル --- */
+        #zoom-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease;
+            pointer-events: none; /* 拡大中は操作不要 */
+        }
+        #zoom-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        #zoom-img {
+            max-width: 80%;
+            max-height: 80%;
+            border: 10px solid #fff;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            transform: scale(0.8);
+            transition: transform 0.5s ease-out;
+        }
+        #zoom-modal.active #zoom-img {
+            transform: scale(1);
+        }
 
         /* --- メインコンテンツ --- */
         .header-scene {
@@ -111,12 +198,42 @@
         .bench-img { width: 100%; height: auto; display: block; }
 
         .char-img {
-            position: absolute;
-            bottom: 25%; 
-            width: 55%;  
-            height: auto;
+            position: absolute; bottom: 25%; width: 55%; height: auto;
             transform-origin: bottom center;
+            cursor: pointer; /* クリック可 */
         }
+
+        /* 吹き出しスタイル */
+        .chat-bubble {
+            position: absolute;
+            bottom: 85%; /* キャラの頭上 */
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            background: #fff;
+            color: #4a3b32;
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            pointer-events: none;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 100;
+        }
+        .chat-bubble::after { /* 吹き出しのしっぽ */
+            content: ''; position: absolute; bottom: -6px; left: 50%;
+            margin-left: -6px;
+            border-width: 6px 6px 0; border-style: solid;
+            border-color: #fff transparent transparent transparent;
+        }
+        /* 吹き出し表示時のクラス */
+        .chat-bubble.show {
+            transform: translateX(-50%) scale(1);
+            opacity: 1;
+        }
+
 
         .char-1 { left: 0%; animation: talk-sway 3.2s infinite ease-in-out; z-index: 2; }
         .char-2 { left: 15.5%; animation: talk-bounce 2.5s infinite ease-in-out; animation-delay: 0.2s; z-index: 3; }
@@ -138,79 +255,52 @@
 
         .logo-img {
             display: inline-block;
-            max-width: 180px;
-            width: 40%;
-            height: auto;
+            max-width: 180px; width: 40%; height: auto;
             margin-bottom: 30px;
             filter: drop-shadow(0 0 15px rgba(255,245,200,0.3));
         }
 
         .copy-text {
-            font-size: 1.15rem;
-            margin: 0 auto 40px auto;
-            color: #fffbe0;
-            line-height: 2.4; 
-            letter-spacing: 0.1em; 
+            font-size: 1.15rem; margin: 0 auto 40px auto;
+            color: #fffbe0; line-height: 2.4; letter-spacing: 0.1em;
             text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-            font-weight: 500;
-            font-feature-settings: "palt"; 
-            width: 100%; 
+            font-weight: 500; font-feature-settings: "palt"; width: 100%; 
         }
 
-        .standing-image {
-            width: 100%;
-            margin-bottom: 20px;
-        }
+        .standing-image { width: 100%; margin-bottom: 20px; }
         .standing-image img {
-            max-height: 55vh;
-            margin-top: 10px;
+            max-height: 55vh; margin-top: 10px;
             filter: drop-shadow(0 20px 40px rgba(0,0,0,0.9));
         }
 
         .enter-btn {
-            position: relative;
-            display: inline-block;
-            margin: 0 0 80px;
-            padding: 16px 60px;
+            position: relative; display: inline-block;
+            margin: 0 0 80px; padding: 16px 60px;
             background-color: var(--wood-dark); 
             border: 2px solid var(--paper-color); 
             color: var(--paper-color);
-            text-decoration: none;
-            font-size: 1.1rem;
-            font-weight: bold;
-            letter-spacing: 0.1em;
-            border-radius: 4px;
+            text-decoration: none; font-size: 1.1rem; font-weight: bold;
+            letter-spacing: 0.1em; border-radius: 4px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-            transition: all 0.3s ease;
-            overflow: hidden;
+            transition: all 0.3s ease; overflow: hidden;
         }
-
         .enter-btn:hover {
             background-color: var(--paper-color);
             color: var(--wood-dark);
             box-shadow: 0 10px 25px rgba(255, 213, 79, 0.4); 
             transform: translateY(-2px);
         }
-        
         .enter-btn::before, .enter-btn::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: 10px; height: 1px;
-            background: currentColor;
+            content: ''; position: absolute; top: 50%;
+            width: 10px; height: 1px; background: currentColor;
             transition: all 0.3s;
         }
         .enter-btn::before { left: 15px; }
         .enter-btn::after { right: 15px; }
 
-
         .particle {
-            position: fixed;
-            background: white;
-            border-radius: 50%;
-            opacity: 0;
-            z-index: 100;
-            pointer-events: none;
+            position: fixed; background: white; border-radius: 50%; opacity: 0;
+            z-index: 100; pointer-events: none;
             animation: drift 15s infinite linear;
         }
         @keyframes drift {
@@ -219,7 +309,7 @@
             100% { transform: translateY(-5vh) translateX(40px); opacity: 0; }
         }
 
-        /* レスポンシブ調整（スマホ対応） */
+        /* レスポンシブ調整 */
         @media (max-width: 768px) {
             .main-content { padding-top: 60px; }
             .header-scene { width: 80%; max-width: 350px; } 
@@ -228,44 +318,40 @@
             .enter-btn { padding: 14px 45px; font-size: 1rem; }
             .standing-image img { max-height: 45vh; }
 
-            /* --- 変更箇所：スマホでの写真サイズと位置の調整 --- */
-            /* サイズを大幅に縮小し、余白も狭く */
-            .photo-item { 
-                width: 70px; 
-                padding: 4px 4px 12px 4px;
-            } 
-            
-            /* 位置調整：中央のコンテンツを避け、画面の端（左右）に寄せる */
-            /* topの%は画面縦位置、left/rightは端からの距離 */
-            
-            /* 1. ロゴの左上付近 */
+            /* スマホ写真調整 */
+            .photo-item { width: 70px; padding: 4px 4px 12px 4px; } 
             .p1 { top: 4%; left: 2%; transform: rotate(-5deg); }
-            
-            /* 2. ロゴの右上～メッセージ横 */
             .p2 { top: 10%; right: 2%; width: 65px; transform: rotate(5deg); }
-            
-            /* 3. キャラクターの左横（少し画面外にはみ出し気味に） */
             .p3 { top: 40%; left: -2%; width: 75px; transform: rotate(3deg); }
-            
-            /* 4. キャラクターの右横 */
             .p4 { top: 55%; right: 1%; transform: rotate(-3deg); }
-            
-            /* 5. ボタンの左下付近 */
             .p5 { top: 78%; left: 3%; width: 68px; transform: rotate(-6deg); }
         }
     </style>
 </head>
 <body>
 
+    <div id="loading-screen">
+        <div class="coffee-icon">
+            <div class="steam"></div>
+            <div class="steam"></div>
+            <div class="steam"></div>
+        </div>
+        <div class="loading-text">Now Brewing...</div>
+    </div>
+
     <div class="background"></div>
     <div class="window-shadow"></div>
 
+    <div id="zoom-modal">
+        <img id="zoom-img" src="" alt="Zoomed Photo">
+    </div>
+
     <div class="photo-gallery">
-        <div class="photo-item p1"><img src="photo_01.png" alt="Photo 1"></div>
-        <div class="photo-item p2"><img src="photo_02.png" alt="Photo 2"></div>
-        <div class="photo-item p3"><img src="photo_03.png" alt="Photo 3"></div>
-        <div class="photo-item p4"><img src="photo_04.png" alt="Photo 4"></div>
-        <div class="photo-item p5"><img src="photo_05.png" alt="Photo 5"></div>
+        <div class="photo-item p1" onclick="zoomPhoto('photo_01.png')"><img src="photo_01.png" alt="Photo 1"></div>
+        <div class="photo-item p2" onclick="zoomPhoto('photo_02.png')"><img src="photo_02.png" alt="Photo 2"></div>
+        <div class="photo-item p3" onclick="zoomPhoto('photo_03.png')"><img src="photo_03.png" alt="Photo 3"></div>
+        <div class="photo-item p4" onclick="zoomPhoto('photo_04.png')"><img src="photo_04.png" alt="Photo 4"></div>
+        <div class="photo-item p5" onclick="zoomPhoto('photo_05.png')"><img src="photo_05.png" alt="Photo 5"></div>
     </div>
 
     <main class="main-content">
@@ -278,10 +364,18 @@
 
         <div class="header-scene">
             <img src="isu.png" alt="Bench" class="bench-img">
-            <img src="top_toruma.png" alt="Toruma" class="char-img char-1">
-            <img src="top_lily00.png" alt="Lily" class="char-img char-2">
-            <img src="top_yuzucha.png" alt="Yuzucha" class="char-img char-3">
-            <img src="top_wakanagi.png" alt="Wakanagi" class="char-img char-4">
+            
+            <img src="top_toruma.png" alt="Toruma" class="char-img char-1" onclick="showSpeech(this, ['いらっしゃい！', '今日は何する？', 'ゆっくりしていってね'])">
+            <div class="chat-bubble"></div>
+
+            <img src="top_lily00.png" alt="Lily" class="char-img char-2" onclick="showSpeech(this, ['ふふっ、待ってたよ', 'お茶にする？', 'いい天気だね'])">
+            <div class="chat-bubble"></div>
+
+            <img src="top_yuzucha.png" alt="Yuzucha" class="char-img char-3" onclick="showSpeech(this, ['やっほー！', '一緒に遊ぼう！', 'わくわくするね！'])">
+            <div class="chat-bubble"></div>
+
+            <img src="top_wakanagi.png" alt="Wakanagi" class="char-img char-4" onclick="showSpeech(this, ['よく来たね', '準備はいい？', 'さあ、行こうか'])">
+            <div class="chat-bubble"></div>
         </div>
 
         <div class="standing-image">
@@ -294,6 +388,16 @@
     </main>
 
     <script>
+        // 1. ローディング処理
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loading-screen');
+            // 少しだけ待ってからフェードアウト（演出のため）
+            setTimeout(() => {
+                loader.classList.add('hidden');
+            }, 1000); // 1秒後に消える
+        });
+
+        // 2. 背景パーティクル生成
         for (let i = 0; i < 20; i++) {
             const p = document.createElement('div');
             p.className = 'particle';
@@ -303,6 +407,44 @@
             p.style.animationDuration = (Math.random() * 10 + 12) + 's';
             p.style.animationDelay = (Math.random() * 5) + 's';
             document.body.appendChild(p);
+        }
+
+        // 3. 写真ズーム処理（2秒で消える）
+        let zoomTimeout;
+        function zoomPhoto(src) {
+            const modal = document.getElementById('zoom-modal');
+            const img = document.getElementById('zoom-img');
+            
+            // 既存のタイマーがあればキャンセル（連続クリック対策）
+            if(zoomTimeout) clearTimeout(zoomTimeout);
+
+            img.src = src;
+            modal.classList.add('active');
+
+            // 2秒後にフェードアウト開始
+            zoomTimeout = setTimeout(() => {
+                modal.classList.remove('active');
+            }, 2000);
+        }
+
+        // 4. キャラクターつぶやき処理
+        function showSpeech(element, messages) {
+            // クリックされたキャラの直後の要素（bubble）を取得
+            const bubble = element.nextElementSibling;
+            
+            // 既に表示中なら何もしない、または更新する
+            if (bubble.classList.contains('show')) return;
+
+            // ランダムにメッセージを選択
+            const text = messages[Math.floor(Math.random() * messages.length)];
+            bubble.textContent = text;
+            
+            bubble.classList.add('show');
+
+            // 3秒後に消える
+            setTimeout(() => {
+                bubble.classList.remove('show');
+            }, 3000);
         }
     </script>
 </body>
