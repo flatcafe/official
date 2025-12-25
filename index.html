@@ -134,26 +134,26 @@
         .p4 { top: 60%; right: 12%; animation-duration: 5.5s; animation-delay: 1.5s; transform: rotate(5deg); }
         .p5 { top: 80%; left: 18%; width: 115px; animation-duration: 5.0s; animation-delay: 0.3s; transform: rotate(-4deg); }
 
-        /* ▼ 追加：手前の観葉植物（フレーム効果） ▼ */
+        /* ▼ 手前の観葉植物（3倍サイズでフレーム化） ▼ */
         .foreground-plants {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 80; /* 写真より手前、ローディングより奥 */
-            pointer-events: none; /* クリックを透過 */
+            z-index: 80; pointer-events: none;
         }
         .plant-img {
             position: absolute;
-            width: 40%; /* 画面幅の40%程度 */
-            max-width: 300px;
+            width: 120%; /* 元の3倍 (40%*3) */
             height: auto;
-            filter: blur(5px); /* 少しぼかす */
+            filter: blur(5px);
         }
         .plant-left-bottom {
-            bottom: -5%; left: -5%; /* 少し画面外にはみ出させる */
+            /* 大きくなった分、位置を外側に逃がす */
+            bottom: -25%; left: -25%; 
             transform: rotate(-10deg);
         }
         .plant-right-top {
-            top: -10%; right: -5%;
-            transform: scaleX(-1) rotate(15deg); /* 左右反転して角度をつける */
+            /* 大きくなった分、位置を外側に逃がす */
+            top: -30%; right: -25%;
+            transform: scaleX(-1) rotate(15deg);
         }
 
 
@@ -227,11 +227,6 @@
         .char-3 { right: 15.5%; animation: talk-sway-reverse 3.8s infinite ease-in-out; animation-delay: 0.5s; z-index: 3; }
         .char-4 { right: 0%; animation: talk-nod 4.0s infinite ease-in-out; animation-delay: 1.0s; z-index: 2; }
 
-        @keyframes talk-sway { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-2deg); } 75% { transform: rotate(1deg); } }
-        @keyframes talk-sway-reverse { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(2deg); } 75% { transform: rotate(-1.5deg); } }
-        @keyframes talk-bounce { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-4px) rotate(1deg); } 60% { transform: translateY(0) rotate(0deg); } 80% { transform: translateY(-2px) rotate(-1deg); } }
-        @keyframes talk-nod { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(1px) scaleY(0.99); } }
-
         /* 吹き出し */
         .chat-bubble {
             position: absolute; bottom: 85%; left: 50%;
@@ -294,9 +289,10 @@
             .p4 { top: 55%; right: 1%; transform: rotate(-3deg); }
             .p5 { top: 78%; left: 3%; width: 68px; transform: rotate(-6deg); }
 
-            /* スマホでの植物配置（少し小さく調整） */
-            .plant-img { width: 50%; max-width: none; }
-            .plant-right-top { top: -5%; right: -15%; }
+            /* スマホでの植物配置（3倍設定） */
+            .plant-img { width: 150%; /* 50%*3 */ }
+            .plant-left-bottom { bottom: -20%; left: -30%; }
+            .plant-right-top { top: -25%; right: -35%; }
         }
     </style>
 </head>
