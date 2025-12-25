@@ -69,45 +69,49 @@
             display: block;
         }
 
-        /* キャラクター共通スタイル（今回の大幅な変更点） */
+        /* キャラクター共通スタイル */
         .char-img {
             position: absolute;
-            /* 高さを少し下げる：座面により深く座らせる */
-            bottom: 45%; /* 48% -> 45% に変更 */
-            /* サイズをさらに大きくする：存在感をアップ */
-            width: 40%;  /* 32% -> 40% に変更 */
+            /* 修正：サイズをさらに大きくすると、足の位置が浮きがちなので少し下げて調整 */
+            bottom: 42%; 
+            /* 修正：思い切って55%まで大きくします */
+            width: 55%;  
             height: auto;
             transform-origin: bottom center;
         }
 
-        /* 各キャラクターの配置を中央に寄せる */
+        /* 各キャラクターの配置
+           サイズを大きくした分、left/rightを大きくして中央に寄せないと
+           画面からはみ出したり、バラバラに見えてしまいます。
+           「肩が重なるくらい」を目指して数値を詰めました。
+        */
         
-        /* 1人目：Toruma (左端 -> 少し内側へ) */
+        /* 1人目：Toruma (左端) */
         .char-1 {
-            left: 5%; /* 0% -> 5% に変更 */
+            left: 8%; /* 5% -> 8% : 内側へ */
             animation: talk-sway 3.2s infinite ease-in-out;
             z-index: 2;
         }
 
-        /* 2人目：Lily (中央左 -> より内側へ) */
+        /* 2人目：Lily (中央左) */
         .char-2 {
-            left: 18%; /* 24% -> 18% に変更 */
+            left: 28%; /* 18% -> 28% : 大幅に内側へ */
             animation: talk-bounce 2.5s infinite ease-in-out;
             animation-delay: 0.2s;
-            z-index: 3; /* 手前に表示 */
+            z-index: 3; /* 手前 */
         }
 
-        /* 3人目：Yuzucha (中央右 -> より内側へ) */
+        /* 3人目：Yuzucha (中央右) */
         .char-3 {
-            right: 18%; /* 24% -> 18% に変更 */
+            right: 28%; /* 18% -> 28% : 大幅に内側へ */
             animation: talk-sway-reverse 3.8s infinite ease-in-out;
             animation-delay: 0.5s;
-            z-index: 3; /* 手前に表示 */
+            z-index: 3; /* 手前 */
         }
 
-        /* 4人目：Wakanagi (右端 -> 少し内側へ) */
+        /* 4人目：Wakanagi (右端) */
         .char-4 {
-            right: 5%; /* 0% -> 5% に変更 */
+            right: 8%; /* 5% -> 8% : 内側へ */
             animation: talk-nod 4.0s infinite ease-in-out;
             animation-delay: 1.0s;
             z-index: 2;
