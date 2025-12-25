@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ふらっとcafe Official</title>
+    <style>
+        :root {
+            --cafe-brown: #5d4037;
+            --cafe-cream: #f5f5dc;
+            --wakanagi-green: #81a182;
+        }
+        body { margin: 0; font-family: sans-serif; background: var(--cafe-cream); color: var(--cafe-brown); }
+        
+        /* タブ・ナビゲーション */
+        nav { display: flex; justify-content: center; background: var(--cafe-brown); padding: 10px; sticky; top: 0; z-index: 100; }
+        nav button { background: none; border: none; color: white; padding: 10px 20px; cursor: pointer; font-weight: bold; }
+        nav button.active { border-bottom: 3px solid var(--wakanagi-green); }
+
+        .container { padding: 40px 10%; display: none; }
+        .container.active { display: block; }
+
+        /* メンバーカード（拡張性重視） */
+        .member-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .member-card { background: white; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .member-card img { width: 150px; filter: drop-shadow(5px 5px 10px rgba(0,0,0,0.1)); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <button onclick="showTab('visitor')" id="btn-visitor" class="active">Welcome</button>
+    <button onclick="showTab('fan')" id="btn-fan">Members Detail</button>
+</nav>
+
+<div id="visitor" class="container active">
+    <div style="text-align:center;">
+        <h1>目指せ、登録者1,000人。</h1>
+        <p>「ふらっとcafe」の物語はここから始まります。</p>
+        </div>
+</div>
+
+<div id="fan" class="container">
+    <div id="member-list" class="member-grid">
+        </div>
+</div>
+
+<script>
+    // メンバー情報の管理（ここを増やすだけでサイトに反映される）
+    const members = [
+        {
+            name: "若凪",
+            image: "image_dd7325.png",
+            intro: "カフェの店主。歌とゲームを愛するリーダー。",
+            color: "#81a182"
+        },
+        // 今後ここに追加するだけでOK
+        // { name: "ゆずちゃ", image: "yuzucha.png", intro: "...", color: "..." }
+    ];
+
+    function renderMembers() {
+        const list = document.getElementById('member-list');
+        list.innerHTML = members.map(m => `
+            <div class="member-card" style="border-top: 8px solid ${m.color}">
+                <img src="${m.image}" alt="${m.name}">
+                <h2>${m.name}</h2>
+                <p>${m.intro}</p>
+            </div>
+        `).join('');
+    }
+
+    function showTab(tabName) {
+        document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+        document.getElementById('btn-' + tabName).classList.add('active');
+    }
+
+    // 初期化
+    renderMembers();
+</script>
+</body>
+</html>
