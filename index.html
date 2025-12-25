@@ -8,42 +8,59 @@
         :root {
             --wood-dark: #3e2723;
             --wood-main: #5d4037;
-            --sun-core: rgba(255, 252, 210, 0.6); /* 光の芯 */
-            --sun-glow: rgba(255, 248, 200, 0.2); /* 周囲のぼかし光 */
+            --sun-beam: rgba(255, 250, 200, 0.4); /* 差し込む光の束 */
         }
 
         body {
             margin: 0;
-            font-family: 'Georgia', 'serif', 'Noto Serif JP';
-            background-color: #f4ece1;
-            /* 木目の質感を追加 */
-            background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+            padding: 0;
+            font-family: 'Georgia', serif;
+            background-color: #e0d5c5; /* 木の質感に近いベースカラー */
             color: var(--wood-dark);
             overflow-x: hidden;
+            min-height: 100vh;
         }
 
-        /* --- 【重要】劇的に光を差し込ませる設定 --- */
-        .sun-ray {
+        /* --- 劇的な光の筋（ライトビーム）の強制描画 --- */
+        .light-system {
             position: fixed;
-            top: -20%;
-            right: -10%;
-            width: 100vw;
-            height: 120vh;
-            /* 放射状に広がる強い光の束 */
-            background: radial-gradient(circle at top right, 
-                var(--sun-core) 0%, 
-                var(--sun-glow) 30%, 
-                transparent 70%);
+            top: 0; right: 0; bottom: 0; left: 0;
             pointer-events: none;
-            z-index: 100; /* 全ての要素の前に光を置く */
-            mix-blend-mode: screen; /* 背景と光を合成して発光させる */
-            filter: blur(60px);
-            animation: light-pulse 10s ease-in-out infinite alternate;
+            z-index: 999; /* 最前面に配置 */
+            overflow: hidden;
         }
 
-        @keyframes light-pulse {
-            0% { opacity: 0.4; transform: scale(1); }
-            100% { opacity: 0.9; transform: scale(1.1); }
+        /* 光の筋 その1 */
+        .beam {
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 200%;
+            background: linear-gradient(to bottom, var(--sun-beam), transparent);
+            transform: rotate(35deg); /* 斜めに差し込む角度 */
+            filter: blur(40px);
+            mix-blend-mode: overlay; /* 背景と馴染ませつつ発光 */
+            animation: shimmer 6s infinite alternate;
+        }
+
+        /* 光の筋 その2（少しずらす） */
+        .beam-sub {
+            position: absolute;
+            top: -50%;
+            right: 15%;
+            width: 150px;
+            height: 200%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+            transform: rotate(35deg);
+            filter: blur(60px);
+            mix-blend-mode: screen;
+            animation: shimmer 8s infinite alternate-reverse;
+        }
+
+        @keyframes shimmer {
+            from { opacity: 0.3; transform: rotate(35deg) translateX(0); }
+            to { opacity: 0.7; transform: rotate(35deg) translateX(-30px); }
         }
 
         /* ヒーローエリア */
@@ -51,88 +68,67 @@
             height: 100vh;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-around;
             padding: 0 10%;
-            position: relative;
-            background: rgba(0, 0, 0, 0.05); /* 木目を少し落ち着かせる */
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.2)),
+                url('https://www.transparenttextures.com/patterns/wood-pattern.png'); /* 木目 */
         }
 
         .entrance-sign {
-            flex: 1.2;
             z-index: 5;
+            max-width: 500px;
         }
 
         .entrance-sign h1 {
             font-size: 5rem;
             margin: 0;
-            color: var(--wood-dark);
-            letter-spacing: -2px;
-            text-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+            line-height: 1;
         }
 
-        /* 若凪さんの立ち絵 */
         .waiter-img {
-            flex: 0.8;
             z-index: 2;
         }
 
         .waiter-img img {
-            max-height: 85vh;
-            filter: drop-shadow(30px 20px 60px rgba(0,0,0,0.4));
+            max-height: 80vh;
+            filter: drop-shadow(20px 20px 40px rgba(0,0,0,0.3));
         }
 
-        /* カフェの看板風ボタン */
+        /* 入店ボタン */
         .enter-btn {
             display: inline-block;
-            margin-top: 40px;
-            padding: 22px 60px;
-            background: linear-gradient(145deg, #6d4c41, #4e342e);
-            color: #fff9c4;
+            margin-top: 30px;
+            padding: 20px 50px;
+            background: var(--wood-dark);
+            color: #fff;
             text-decoration: none;
-            border-radius: 4px;
-            font-size: 1.4rem;
             font-weight: bold;
-            box-shadow: 8px 8px 20px rgba(0,0,0,0.3);
-            border: 1px solid #795548;
-            transition: 0.3s;
+            border-radius: 5px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
             position: relative;
-            z-index: 110; /* 光よりさらに前面へ */
+            z-index: 1000; /* ボタンは確実にクリック可能に */
         }
 
-        .enter-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 12px 12px 30px rgba(0,0,0,0.4);
-        }
-
-        /* メニュー（動画）エリア */
-        .menu-section {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 100px 10%;
-            border-top: 15px solid var(--wood-dark);
-            position: relative;
-            z-index: 10;
-        }
-
-        @media (max-width: 900px) {
-            .entrance { flex-direction: column; text-align: center; height: auto; padding: 80px 20px; }
+        @media (max-width: 768px) {
+            .entrance { flex-direction: column; text-align: center; }
             .entrance-sign h1 { font-size: 3rem; }
-            .waiter-img img { max-height: 50vh; margin-top: 40px; }
-            .sun-ray { width: 150vw; height: 100vh; }
+            .waiter-img img { max-height: 50vh; }
         }
     </style>
 </head>
 <body>
 
-    <div class="sun-ray"></div>
+    <div class="light-system">
+        <div class="beam"></div>
+        <div class="beam-sub"></div>
+    </div>
 
     <section class="entrance">
         <div class="entrance-sign">
-            <p style="font-size: 1.2rem; margin-bottom: 0; font-style: italic;">Welcome to the story</p>
+            <p>Welcome to</p>
             <h1>Flat Cafe</h1>
-            <p style="color: var(--wood-main); font-size: 1.2rem; max-width: 500px; margin-top: 10px;">
-                柔らかな木漏れ日と、心落ち着く場所。<br>
-                ここは、誰もが「ふらっと」帰ってこれるカフェです。
-            </p>
+            <p>目指せ、常連客1,000人。<br>あなたの日常に、ひとときの安らぎを。</p>
             <a href="https://www.youtube.com/@flatcafe-official?sub_confirmation=1" class="enter-btn">
                 常連客として入店する
             </a>
@@ -142,11 +138,6 @@
             <img src="image_dd7e27.png" alt="若凪">
         </div>
     </section>
-
-    <div class="menu-section">
-        <h2 style="text-align:center; font-size: 3rem; color: var(--wood-dark);">Today's Specials</h2>
-        <p style="text-align:center; margin-bottom: 50px;">本日のおすすめ動画をご用意しました。</p>
-        </div>
 
 </body>
 </html>
