@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ふらっとcafe Official - Ver.Final</title>
+    <title>ふらっとcafe Official - Ver.Refined</title>
 
     <style>
         /* =========================================
@@ -25,7 +25,7 @@
             font-family: 'Georgia', 'Yu Mincho', 'Kozuka Mincho Pr6N', 'Hiragino Mincho ProN', 'serif';
             color: #fff9c4;
             overflow-x: hidden;
-            perspective: 1000px; /* 3D演出のための奥行き */
+            perspective: 1000px;
         }
 
         /* =========================================
@@ -47,7 +47,6 @@
             color: var(--accent-gold); animation: pulse 2s infinite;
         }
 
-        /* コーヒーカップのアニメーション */
         .coffee-icon {
             width: 40px; height: 30px;
             border: 2px solid var(--paper-color); border-radius: 0 0 15px 15px;
@@ -76,30 +75,38 @@
         @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
 
         /* =========================================
-           3. 背景演出 (壁、窓の光、パーティクル)
+           3. 背景演出 (壁、窓の光、パーティクル、ノイズ)
            ========================================= */
         .background {
             position: fixed; width: 100%; height: 100%;
-            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+            background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://www.transparenttextures.com/patterns/wood-pattern.png');
             z-index: 1;
         }
+        /* フィルムノイズのような質感を追加 */
+        .texture-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 3;
+            background: radial-gradient(circle, transparent 60%, rgba(0,0,0,0.7) 100%);
+            mix-blend-mode: multiply;
+        }
+
         .window-shadow {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: 
-                repeating-linear-gradient(90deg, transparent, transparent 300px, rgba(0,0,0,0.3) 300px, rgba(0,0,0,0.3) 340px),
-                repeating-linear-gradient(0deg, transparent, transparent 300px, rgba(0,0,0,0.3) 300px, rgba(0,0,0,0.3) 340px),
+                repeating-linear-gradient(90deg, transparent, transparent 300px, rgba(0,0,0,0.2) 300px, rgba(0,0,0,0.2) 340px),
                 radial-gradient(circle at 50% 30%, var(--sun-light), transparent 70%);
-            z-index: 2; transform: skewX(-15deg) scale(1.5); filter: blur(12px);
+            z-index: 2; transform: skewX(-15deg) scale(1.5); filter: blur(15px);
             pointer-events: none;
         }
         .particle {
-            position: fixed; background: white; border-radius: 50%; opacity: 0;
+            position: fixed; background: #fffbe0; border-radius: 50%; opacity: 0;
             z-index: 100; pointer-events: none;
+            box-shadow: 0 0 4px #fffbe0;
             animation: drift 15s infinite linear;
         }
         @keyframes drift {
             0% { transform: translateY(105vh) translateX(0); opacity: 0; }
-            50% { opacity: 0.4; }
+            50% { opacity: 0.5; }
             100% { transform: translateY(-5vh) translateX(40px); opacity: 0; }
         }
 
@@ -113,15 +120,17 @@
         .photo-item {
             position: absolute; width: 120px; 
             padding: 6px 6px 20px 6px; background-color: #f8f8f0;
-            box-shadow: 2px 4px 8px rgba(0,0,0,0.5);
+            box-shadow: 2px 4px 12px rgba(0,0,0,0.6);
             transform-origin: top center;
             animation: photo-sway ease-in-out infinite alternate;
             cursor: pointer; pointer-events: auto; 
-            transition: transform 0.3s;
+            transition: transform 0.3s, z-index 0s;
             -webkit-tap-highlight-color: transparent; outline: none;
         }
-        .photo-item:hover { transform: scale(1.1) !important; z-index: 10; }
-        .photo-item img { width: 100%; height: auto; display: block; filter: sepia(0.3) contrast(0.9); }
+        .photo-item:hover { transform: scale(1.15) !important; z-index: 200; }
+        .photo-item img { width: 100%; height: auto; display: block; filter: sepia(0.4) contrast(0.95); transition: filter 0.3s; }
+        .photo-item:hover img { filter: sepia(0) contrast(1); }
+        
         .photo-item::after { /* 押しピン */
             content: ''; position: absolute; top: -4px; left: 50%;
             width: 10px; height: 10px;
@@ -129,82 +138,96 @@
             border-radius: 50%; transform: translateX(-50%);
             box-shadow: 0 2px 3px rgba(0,0,0,0.6); z-index: 1;
         }
-        @keyframes photo-sway { 0% { transform: rotate(-1.5deg); } 100% { transform: rotate(1.5deg); } }
+        @keyframes photo-sway { 0% { transform: rotate(-2deg); } 100% { transform: rotate(2deg); } }
 
-        /* 個別の配置設定 (PC基準) */
-        .p1 { top: 8%; left: 5%; animation-duration: 4.5s; transform: rotate(-3deg); }
-        .p2 { top: 20%; right: 8%; width: 110px; animation-duration: 5.2s; animation-delay: 0.8s; transform: rotate(4deg); }
-        .p3 { top: 45%; left: 10%; width: 130px; animation-duration: 4.8s; animation-delay: 2s; transform: rotate(-2deg); }
-        .p4 { top: 60%; right: 12%; animation-duration: 5.5s; animation-delay: 1.5s; transform: rotate(5deg); }
-        .p5 { top: 80%; left: 18%; width: 115px; animation-duration: 5.0s; animation-delay: 0.3s; transform: rotate(-4deg); }
+        /* 配置設定 (PC) */
+        .p1 { top: 8%; left: 5%; animation-duration: 5s; transform: rotate(-3deg); }
+        .p2 { top: 18%; right: 6%; width: 110px; animation-duration: 6s; animation-delay: 0.8s; transform: rotate(4deg); }
+        .p3 { top: 45%; left: 8%; width: 130px; animation-duration: 5.5s; animation-delay: 2s; transform: rotate(-2deg); }
+        .p4 { top: 58%; right: 10%; animation-duration: 5.8s; animation-delay: 1.5s; transform: rotate(5deg); }
+        .p5 { top: 80%; left: 18%; width: 115px; animation-duration: 5.2s; animation-delay: 0.3s; transform: rotate(-4deg); }
 
         /* =========================================
            5. 写真の拡大＆飛んでいく演出 (3D Animation)
            ========================================= */
         #zoom-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.7); z-index: 2000;
+            background-color: rgba(0,0,0,0.85); z-index: 2000;
             display: flex; justify-content: center; align-items: center;
             opacity: 0; visibility: hidden;
-            transition: opacity 0.5s ease; pointer-events: none;
-            perspective: 1200px; /* 3D空間の定義 */
+            transition: opacity 0.4s ease;
+            perspective: 1200px;
+            cursor: pointer; /* どこを押しても閉じられることを示唆 */
         }
         #zoom-modal.active { opacity: 1; visibility: visible; }
         
         #zoom-img {
-            max-width: 80%; max-height: 80%;
-            border: 10px solid #fff; box-shadow: 0 0 30px rgba(0,0,0,0.8);
-            transform: scale(0.8); opacity: 0;
-            transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.8s ease-out;
-            transform-style: preserve-3d; backface-visibility: visible;
+            max-width: 85%; max-height: 85%;
+            border: 12px solid #fff; box-shadow: 0 10px 40px rgba(0,0,0,0.9);
+            transform: scale(0.8) translateZ(0); opacity: 0;
+            transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.6s ease-out;
+            pointer-events: none; /* 画像自体のクリックイベントは親に委譲 */
         }
-        #zoom-modal.active #zoom-img { transform: scale(1) rotateX(0) rotateY(0); opacity: 1; }
+        #zoom-modal.active #zoom-img { transform: scale(1) translateZ(0); opacity: 1; }
 
-        /* ▼ 風に吹かれて飛んでいくクラス ▼ */
+        /* ▼ 風に吹かれて飛んでいくアニメーション ▼ */
         #zoom-img.blown-away {
-            animation: paper-fly-3d 1.8s cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
+            animation: paper-fly-3d 1.5s cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
             transition: none !important;
         }
         @keyframes paper-fly-3d {
             0% { transform: scale(1) translate3d(0, 0, 0) rotate(0deg); opacity: 1; filter: blur(0); }
-            15% { transform: scale(0.95) translate3d(-20px, 30px, 0) rotate3d(0, 0, 1, -5deg); opacity: 1; }
+            20% { transform: scale(0.9) translate3d(-30px, 40px, 0) rotate3d(0, 0, 1, -8deg); opacity: 1; }
             100% {
-                transform: translate3d(80vw, -120vh, -500px) rotate3d(1, 1, 0.5, 160deg) scale(0.6);
-                opacity: 0; filter: blur(4px);
+                transform: translate3d(80vw, -120vh, -600px) rotate3d(1, 1, 0.5, 160deg) scale(0.5);
+                opacity: 0; filter: blur(5px);
             }
         }
+        
+        /* 拡大中の案内テキスト */
+        .modal-hint {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            color: rgba(255,255,255,0.7); font-size: 0.9rem; letter-spacing: 0.1em;
+            opacity: 0; transition: opacity 0.5s 0.5s;
+        }
+        #zoom-modal.active .modal-hint { opacity: 1; }
 
         /* =========================================
-           6. メインコンテンツ (ロゴ・キャラ・ボタン)
+           6. メインコンテンツ
            ========================================= */
         .main-content {
             position: relative; z-index: 60;
-            text-align: center; padding: 80px 20px 0; display: block;
+            text-align: center; padding: 60px 20px 0; display: block;
         }
         .logo-img {
             display: inline-block; max-width: 180px; width: 40%; height: auto;
-            margin-bottom: 30px; filter: drop-shadow(0 0 15px rgba(255,245,200,0.3));
+            margin-bottom: 25px; filter: drop-shadow(0 0 15px rgba(255,245,200,0.2));
+            animation: float-logo 6s ease-in-out infinite;
         }
+        @keyframes float-logo { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
         .copy-text {
-            font-size: 1.15rem; margin: 0 auto 40px auto;
-            color: #fffbe0; line-height: 2.4; letter-spacing: 0.1em;
+            font-size: 1.1rem; margin: 0 auto 35px auto;
+            color: #fffbe0; line-height: 2.2; letter-spacing: 0.12em;
             text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-            font-weight: 500; font-feature-settings: "palt"; width: 100%; 
+            font-weight: 500; font-feature-settings: "palt";
         }
 
-        /* ベンチとキャラクター群 */
+        /* ベンチシーン */
         .header-scene {
-            position: relative; width: 55%; max-width: 425px; margin: 0 auto 30px auto;
-            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6)); z-index: 50;
+            position: relative; width: 60%; max-width: 480px; margin: 0 auto 40px auto;
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.7)); z-index: 50;
         }
         .bench-img { width: 100%; height: auto; display: block; }
         .char-img {
             position: absolute; bottom: 25%; width: 55%; height: auto;
             transform-origin: bottom center; cursor: pointer;
             -webkit-tap-highlight-color: transparent; outline: none;
+            transition: transform 0.2s;
         }
+        .char-img:active { transform: scale(0.95); }
         
-        /* キャラクター個別アニメーション */
+        /* キャラクター個別 */
         .char-1 { left: 0%; animation: talk-sway 3.2s infinite ease-in-out; z-index: 2; }
         .char-2 { left: 15.5%; animation: talk-bounce 2.5s infinite ease-in-out; animation-delay: 0.2s; z-index: 3; }
         .char-3 { right: 15.5%; animation: talk-sway-reverse 3.8s infinite ease-in-out; animation-delay: 0.5s; z-index: 3; }
@@ -220,9 +243,9 @@
             position: absolute; bottom: 85%; left: 50%;
             transform: translateX(-50%) scale(0);
             background: #fff; color: #4a3b32;
-            padding: 8px 12px; border-radius: 12px;
-            font-size: 0.9rem; font-weight: bold; white-space: nowrap;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            padding: 8px 14px; border-radius: 16px;
+            font-size: 0.85rem; font-weight: bold; white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
             pointer-events: none; opacity: 0;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 100;
@@ -235,47 +258,56 @@
         .chat-bubble.show { transform: translateX(-50%) scale(1); opacity: 1; }
 
         /* メイン立ち絵 */
-        .standing-image { width: 100%; margin-bottom: 20px; }
-        .standing-image img { max-height: 55vh; margin-top: 10px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.9)); }
+        .standing-image { width: 100%; margin-bottom: 25px; pointer-events: none; }
+        .standing-image img { 
+            max-height: 50vh; margin-top: 10px; 
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.9));
+            transition: transform 0.5s ease-out;
+        }
 
         /* 入店ボタン */
         .enter-btn {
             position: relative; display: inline-block;
-            margin: 0 0 80px; padding: 16px 60px;
-            background-color: var(--wood-dark); border: 2px solid var(--paper-color); color: var(--paper-color);
-            text-decoration: none; font-size: 1.1rem; font-weight: bold;
-            letter-spacing: 0.1em; border-radius: 4px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-            transition: all 0.3s ease; overflow: hidden;
+            margin: 0 0 100px; padding: 18px 70px;
+            background-color: var(--wood-dark); 
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--paper-color);
+            text-decoration: none; font-size: 1.15rem; font-weight: bold;
+            letter-spacing: 0.15em; border-radius: 4px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.6), inset 0 0 0 2px var(--paper-color);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            overflow: hidden; z-index: 80;
         }
         .enter-btn:hover {
             background-color: var(--paper-color); color: var(--wood-dark);
-            box-shadow: 0 10px 25px rgba(255, 213, 79, 0.4); transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(255, 213, 79, 0.3), inset 0 0 0 2px var(--wood-dark);
+            transform: translateY(-4px);
         }
         .enter-btn::before, .enter-btn::after {
             content: ''; position: absolute; top: 50%;
-            width: 10px; height: 1px; background: currentColor; transition: all 0.3s;
+            width: 12px; height: 1px; background: currentColor; transition: all 0.3s;
         }
-        .enter-btn::before { left: 15px; } .enter-btn::after { right: 15px; }
+        .enter-btn::before { left: 18px; } .enter-btn::after { right: 18px; }
+        .enter-btn:active { transform: translateY(0); box-shadow: 0 5px 10px rgba(0,0,0,0.5); }
 
         /* =========================================
            7. スマホ用レスポンシブ設定
            ========================================= */
         @media (max-width: 768px) {
-            .main-content { padding-top: 60px; }
-            .header-scene { width: 80%; max-width: 350px; } 
-            .logo-img { max-width: 130px; }
-            .copy-text { font-size: 1rem; }
-            .enter-btn { padding: 14px 45px; font-size: 1rem; }
-            .standing-image img { max-height: 45vh; }
+            .main-content { padding-top: 50px; }
+            .header-scene { width: 85%; max-width: 380px; margin-bottom: 30px; } 
+            .logo-img { max-width: 140px; }
+            .copy-text { font-size: 0.95rem; line-height: 2.0; width: 90%; }
+            .enter-btn { padding: 16px 50px; font-size: 1rem; width: 60%; box-sizing: border-box; }
+            .standing-image img { max-height: 42vh; }
 
-            /* スマホでの写真配置（小さく、端に寄せる） */
-            .photo-item { width: 70px; padding: 4px 4px 12px 4px; } 
-            .p1 { top: 4%; left: 2%; transform: rotate(-5deg); }
-            .p2 { top: 10%; right: 2%; width: 65px; transform: rotate(5deg); }
-            .p3 { top: 40%; left: -2%; width: 75px; transform: rotate(3deg); }
-            .p4 { top: 55%; right: 1%; transform: rotate(-3deg); }
-            .p5 { top: 78%; left: 3%; width: 68px; transform: rotate(-6deg); }
+            /* スマホでの写真配置の最適化（ボタンやキャラに被らないように外へ逃がす） */
+            .photo-item { width: 75px; padding: 4px 4px 14px 4px; } 
+            .p1 { top: 3%; left: -2%; transform: rotate(-8deg); }
+            .p2 { top: 12%; right: -2%; width: 70px; transform: rotate(8deg); }
+            .p3 { top: 35%; left: -5%; width: 80px; transform: rotate(5deg); }
+            .p4 { top: 50%; right: -3%; transform: rotate(-5deg); }
+            .p5 { top: 75%; left: 2%; width: 72px; transform: rotate(-10deg); }
         }
     </style>
 </head>
@@ -288,18 +320,20 @@
     </div>
 
     <div class="background"></div>
+    <div class="texture-overlay"></div>
     <div class="window-shadow"></div>
 
-    <div id="zoom-modal">
+    <div id="zoom-modal" onclick="closeZoom()">
         <img id="zoom-img" src="" alt="Zoomed Photo">
+        <div class="modal-hint">Tap to close</div>
     </div>
 
     <div class="photo-gallery">
-        <div class="photo-item p1" onclick="zoomPhoto('photo_01.png')"><img src="photo_01.png" alt="Photo 1"></div>
-        <div class="photo-item p2" onclick="zoomPhoto('photo_02.png')"><img src="photo_02.png" alt="Photo 2"></div>
-        <div class="photo-item p3" onclick="zoomPhoto('photo_03.png')"><img src="photo_03.png" alt="Photo 3"></div>
-        <div class="photo-item p4" onclick="zoomPhoto('photo_04.png')"><img src="photo_04.png" alt="Photo 4"></div>
-        <div class="photo-item p5" onclick="zoomPhoto('photo_05.png')"><img src="photo_05.png" alt="Photo 5"></div>
+        <div class="photo-item p1" onclick="openZoom('photo_01.png')"><img src="photo_01.png" alt="Photo 1"></div>
+        <div class="photo-item p2" onclick="openZoom('photo_02.png')"><img src="photo_02.png" alt="Photo 2"></div>
+        <div class="photo-item p3" onclick="openZoom('photo_03.png')"><img src="photo_03.png" alt="Photo 3"></div>
+        <div class="photo-item p4" onclick="openZoom('photo_04.png')"><img src="photo_04.png" alt="Photo 4"></div>
+        <div class="photo-item p5" onclick="openZoom('photo_05.png')"><img src="photo_05.png" alt="Photo 5"></div>
     </div>
 
     <main class="main-content">
@@ -336,68 +370,72 @@
     </main>
 
     <script>
-        // --- 1. ローディング完了時の処理 ---
+        // --- 1. ローディング ---
         window.addEventListener('load', () => {
             const loader = document.getElementById('loading-screen');
             setTimeout(() => {
                 loader.classList.add('hidden');
-            }, 1000); // 1秒待ってフェードアウト
+            }, 800);
         });
 
-        // --- 2. 背景パーティクルの生成 ---
-        for (let i = 0; i < 20; i++) {
+        // --- 2. 背景パーティクル ---
+        const particleContainer = document.body;
+        for (let i = 0; i < 25; i++) {
             const p = document.createElement('div');
             p.className = 'particle';
-            const size = Math.random() * 3 + 'px';
+            const size = Math.random() * 4 + 1 + 'px';
             p.style.width = size; p.style.height = size;
             p.style.left = Math.random() * 100 + 'vw';
-            p.style.animationDuration = (Math.random() * 10 + 12) + 's';
-            p.style.animationDelay = (Math.random() * 5) + 's';
-            document.body.appendChild(p);
+            p.style.animationDuration = (Math.random() * 12 + 10) + 's';
+            p.style.animationDelay = (Math.random() * 8) + 's';
+            particleContainer.appendChild(p);
         }
 
-        // --- 3. 写真ズーム＆飛んでいく演出 ---
-        let zoomTimeout;
-        let resetTimeout; 
+        // --- 3. 写真ズーム制御 (UX改善版) ---
+        // 自動で閉じず、ユーザーのアクションで飛んでいくように変更
+        let isAnimating = false;
 
-        function zoomPhoto(src) {
+        function openZoom(src) {
+            if(isAnimating) return; // アニメーション中は操作禁止
+            
             const modal = document.getElementById('zoom-modal');
             const img = document.getElementById('zoom-img');
             
-            // 連打対策: 前回のタイマーをクリア
-            if(zoomTimeout) clearTimeout(zoomTimeout);
-            if(resetTimeout) clearTimeout(resetTimeout);
-            
-            // クラスをリセットして初期状態へ
-            img.classList.remove('blown-away');
-            modal.classList.remove('active');
-            void img.offsetWidth; // アニメーションリセット用のおまじない
-
             img.src = src;
+            img.classList.remove('blown-away');
             modal.classList.add('active');
-
-            // 2.5秒後に「飛んでいく」アニメーション開始
-            zoomTimeout = setTimeout(() => {
-                img.classList.add('blown-away');
-
-                // 飛び去り完了後(1.8秒後)にモーダルを閉じる
-                resetTimeout = setTimeout(() => {
-                    modal.classList.remove('active');
-                    img.classList.remove('blown-away');
-                }, 1800); 
-            }, 2500);
         }
 
-        // --- 4. キャラクターつぶやき機能 ---
+        function closeZoom() {
+            const modal = document.getElementById('zoom-modal');
+            const img = document.getElementById('zoom-img');
+
+            if (!modal.classList.contains('active')) return;
+
+            // 飛んでいくアニメーション開始
+            isAnimating = true;
+            img.classList.add('blown-away');
+
+            // アニメーション完了後にモーダルを非表示
+            setTimeout(() => {
+                modal.classList.remove('active');
+                img.classList.remove('blown-away'); // 次回のためにリセット
+                isAnimating = false;
+            }, 1400); // アニメーション時間に合わせて調整
+        }
+
+        // --- 4. キャラクターつぶやき ---
         function showSpeech(element, messages) {
             const bubble = element.nextElementSibling;
             if (bubble.classList.contains('show')) return;
 
+            // ランダムメッセージ
             const text = messages[Math.floor(Math.random() * messages.length)];
             bubble.textContent = text;
             
             bubble.classList.add('show');
 
+            // 3秒後に消える
             setTimeout(() => {
                 bubble.classList.remove('show');
             }, 3000);
