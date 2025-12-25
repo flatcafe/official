@@ -137,28 +137,28 @@
             margin-top: -10px;
         }
 
-        /* ロゴ画像 */
+        /* ロゴ画像：サイズを半分に変更 */
         .logo-img {
-            max-width: 100px;
-            width: 35%;
+            max-width: 150px; /* 300px -> 150px */
+            width: 35%;       /* 70% -> 35% */
             height: auto;
             margin-bottom: 25px;
             filter: drop-shadow(0 0 15px rgba(255,245,200,0.3));
         }
 
-        /* キャッチコピー（ここを変更しました） */
+        /* キャッチコピー */
         .copy-text {
             font-size: 1.15rem;
             margin: 0 0 40px 0;
             color: #fffbe0;
-            line-height: 2.4; /* ゆったりとした行間 */
-            letter-spacing: 0.1em; /* 文字間を少し開けて読みやすく */
+            line-height: 2.4; 
+            letter-spacing: 0.1em; 
             text-shadow: 0 2px 4px rgba(0,0,0,0.8);
             font-weight: 500;
-            font-feature-settings: "palt"; /* 文字詰めを美しく */
+            font-feature-settings: "palt"; 
         }
 
-        /* ボタン：カフェの看板風 */
+        /* ボタン */
         .enter-btn {
             position: relative;
             display: inline-block;
@@ -221,7 +221,8 @@
         @media (max-width: 768px) {
             header { padding-top: 30px; }
             .header-scene { width: 70%; max-width: 350px; } 
-            .logo-img { max-width: 220px; }
+            /* スマホ時もロゴサイズを半分に調整 */
+            .logo-img { max-width: 110px; } /* 220px -> 110px */
             .copy-text { font-size: 1rem; }
             .enter-btn { padding: 14px 45px; font-size: 1rem; }
             .standing-image img { max-height: 45vh; }
