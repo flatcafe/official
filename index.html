@@ -8,7 +8,6 @@
         :root {
             --sun-light: rgba(255, 252, 220, 0.4);
             --room-dark: #2c1e1a;
-            /* カフェ風デザイン用の色を追加 */
             --paper-color: #fcf6e6; /* 生成り色 */
             --wood-dark: #5d4037;   /* 看板の焦げ茶 */
             --accent-gold: #ffd54f; /* 金色アクセント */
@@ -62,7 +61,6 @@
             position: relative;
             width: 45%;          
             max-width: 425px;    
-            /* 下のマージンを少し減らしてロゴとの距離を詰める */
             margin-bottom: 20px; 
             filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
         }
@@ -77,39 +75,30 @@
         /* キャラクター共通スタイル */
         .char-img {
             position: absolute;
-            /* 確定位置: 25% */
             bottom: 25%; 
             width: 55%;  
             height: auto;
             transform-origin: bottom center;
         }
 
-        /* 各キャラクターの配置（確定版） */
-        
-        /* 1人目：Toruma (左端) */
+        /* 各キャラクターの配置 */
         .char-1 {
             left: 0%; 
             animation: talk-sway 3.2s infinite ease-in-out;
             z-index: 2;
         }
-
-        /* 2人目：Lily (中央左) */
         .char-2 {
             left: 15.5%; 
             animation: talk-bounce 2.5s infinite ease-in-out;
             animation-delay: 0.2s;
             z-index: 3;
         }
-
-        /* 3人目：Yuzucha (中央右) */
         .char-3 {
             right: 15.5%; 
             animation: talk-sway-reverse 3.8s infinite ease-in-out;
             animation-delay: 0.5s;
             z-index: 3;
         }
-
-        /* 4人目：Wakanagi (右端) */
         .char-4 {
             right: 0%; 
             animation: talk-nod 4.0s infinite ease-in-out;
@@ -139,17 +128,16 @@
             50% { transform: translateY(1px) scaleY(0.99); } 
         }
 
-        /* --- メインコンテンツ（デザイン適用） --- */
+        /* --- メインコンテンツ --- */
         .main-content {
             position: relative;
             z-index: 60;
             text-align: center;
             padding: 0 20px;
-            /* 一体感を出すために少し上に */
             margin-top: -10px;
         }
 
-        /* ロゴ画像用スタイル */
+        /* ロゴ画像 */
         .logo-img {
             max-width: 300px;
             width: 70%;
@@ -158,36 +146,27 @@
             filter: drop-shadow(0 0 15px rgba(255,245,200,0.3));
         }
 
-        /* キャッチコピーのスタイル */
+        /* キャッチコピー（ここを変更しました） */
         .copy-text {
             font-size: 1.15rem;
             margin: 0 0 40px 0;
             color: #fffbe0;
-            line-height: 2.2;
-            letter-spacing: 0.15em;
+            line-height: 2.4; /* ゆったりとした行間 */
+            letter-spacing: 0.1em; /* 文字間を少し開けて読みやすく */
             text-shadow: 0 2px 4px rgba(0,0,0,0.8);
             font-weight: 500;
+            font-feature-settings: "palt"; /* 文字詰めを美しく */
         }
 
-        /* 立ち絵（若凪） */
-        .standing-image img {
-            max-height: 55vh;
-            margin-top: 20px;
-            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.9));
-        }
-
-        /* ボタン：カフェの看板風にリデザイン */
+        /* ボタン：カフェの看板風 */
         .enter-btn {
             position: relative;
             display: inline-block;
             margin: 10px 0 40px;
             padding: 16px 60px;
-            
-            /* 木の看板のような質感 */
             background-color: var(--wood-dark); 
             border: 2px solid var(--paper-color); 
             color: var(--paper-color);
-            
             text-decoration: none;
             font-size: 1.1rem;
             font-weight: bold;
@@ -198,15 +177,13 @@
             overflow: hidden;
         }
 
-        /* ホバー時の演出：ふわっと光る */
         .enter-btn:hover {
             background-color: var(--paper-color);
             color: var(--wood-dark);
-            box-shadow: 0 10px 25px rgba(255, 213, 79, 0.4); /* 金色の光 */
+            box-shadow: 0 10px 25px rgba(255, 213, 79, 0.4); 
             transform: translateY(-2px);
         }
         
-        /* ボタン内の装飾線 */
         .enter-btn::before, .enter-btn::after {
             content: '';
             position: absolute;
@@ -218,6 +195,13 @@
         .enter-btn::before { left: 15px; }
         .enter-btn::after { right: 15px; }
 
+
+        /* 立ち絵（若凪） */
+        .standing-image img {
+            max-height: 55vh;
+            margin-top: 20px;
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.9));
+        }
 
         .particle {
             position: fixed;
@@ -263,8 +247,8 @@
         <img src="flat-cafe-logo.png" alt="Flat Cafe" class="logo-img">
         
         <p class="copy-text">
-            ふらっと立ち寄り、心が軽くなる場所。<br>
-            常連客 1,000人の物語を、ここから。
+            ゲームと歌で、あなたに寄り添う。<br>
+            ふらっと立ち寄り、心が軽くなる場所。
         </p>
         
         <a href="https://www.youtube.com/@flatcafe-official?sub_confirmation=1" class="enter-btn">
