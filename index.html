@@ -8,9 +8,9 @@
         :root {
             --sun-light: rgba(255, 252, 220, 0.4);
             --room-dark: #2c1e1a;
-            --paper-color: #fcf6e6; /* 生成り色 */
-            --wood-dark: #5d4037;   /* 看板の焦げ茶 */
-            --accent-gold: #ffd54f; /* 金色アクセント */
+            --paper-color: #fcf6e6;
+            --wood-dark: #5d4037;
+            --accent-gold: #ffd54f;
         }
 
         body, html {
@@ -56,7 +56,7 @@
             align-items: center;
         }
 
-        /* アニメーションの舞台（ステージ） */
+        /* アニメーションの舞台 */
         .header-scene {
             position: relative;
             width: 45%;          
@@ -65,7 +65,6 @@
             filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
         }
 
-        /* 椅子の画像 */
         .bench-img {
             width: 100%;
             height: auto;
@@ -106,7 +105,7 @@
             z-index: 2;
         }
 
-        /* --- アニメーション定義 --- */
+        /* アニメーション定義 */
         @keyframes talk-sway {
             0%, 100% { transform: rotate(0deg); }
             25% { transform: rotate(-2deg); }
@@ -137,19 +136,19 @@
             margin-top: -10px;
         }
 
-        /* ロゴ画像：サイズを半分に変更 */
+        /* 1. ロゴ画像（サイズ50%） */
         .logo-img {
-            max-width: 150px; /* 300px -> 150px */
-            width: 35%;       /* 70% -> 35% */
+            max-width: 150px;
+            width: 35%;
             height: auto;
             margin-bottom: 25px;
             filter: drop-shadow(0 0 15px rgba(255,245,200,0.3));
         }
 
-        /* キャッチコピー */
+        /* 2. メッセージ */
         .copy-text {
             font-size: 1.15rem;
-            margin: 0 0 40px 0;
+            margin: 0 0 20px 0; /* 下の余白を少し調整 */
             color: #fffbe0;
             line-height: 2.4; 
             letter-spacing: 0.1em; 
@@ -158,11 +157,20 @@
             font-feature-settings: "palt"; 
         }
 
-        /* ボタン */
+        /* 3. キャラクター（立ち絵） */
+        /* ボタンの上に配置するため、順序を変更 */
+        .standing-image img {
+            max-height: 55vh;
+            margin-top: 10px;
+            margin-bottom: 20px; /* ボタンとの間隔 */
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.9));
+        }
+
+        /* 4. 入店ボタン */
         .enter-btn {
             position: relative;
             display: inline-block;
-            margin: 10px 0 40px;
+            margin: 0 0 60px; /* ページ下部に余白 */
             padding: 16px 60px;
             background-color: var(--wood-dark); 
             border: 2px solid var(--paper-color); 
@@ -196,13 +204,6 @@
         .enter-btn::after { right: 15px; }
 
 
-        /* 立ち絵（若凪） */
-        .standing-image img {
-            max-height: 55vh;
-            margin-top: 20px;
-            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.9));
-        }
-
         .particle {
             position: fixed;
             background: white;
@@ -221,8 +222,7 @@
         @media (max-width: 768px) {
             header { padding-top: 30px; }
             .header-scene { width: 70%; max-width: 350px; } 
-            /* スマホ時もロゴサイズを半分に調整 */
-            .logo-img { max-width: 110px; } /* 220px -> 110px */
+            .logo-img { max-width: 110px; }
             .copy-text { font-size: 1rem; }
             .enter-btn { padding: 14px 45px; font-size: 1rem; }
             .standing-image img { max-height: 45vh; }
@@ -251,14 +251,14 @@
             ゲームと歌で、あなたに寄り添う。<br>
             ふらっと立ち寄り、心が軽くなる場所。
         </p>
-        
-        <a href="https://www.youtube.com/@flatcafe-official?sub_confirmation=1" class="enter-btn">
-            カフェに入店する
-        </a>
 
         <div class="standing-image">
             <img src="wakanagi-main.png" alt="若凪">
         </div>
+        
+        <a href="https://www.youtube.com/@flatcafe-official?sub_confirmation=1" class="enter-btn">
+            カフェに入店する
+        </a>
     </main>
 
     <script>
