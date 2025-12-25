@@ -7,14 +7,15 @@
 
     <style>
         /* =========================================
-           共通デザイン設定 (index.htmlと統一)
+           1. 基本設定・変数
            ========================================= */
         :root {
-            --sun-light: rgba(255, 252, 220, 0.4);
-            --room-dark: #2c1e1a;
-            --paper-color: #fcf6e6;
-            --wood-dark: #5d4037;
-            --accent-gold: #ffd54f;
+            --paper-white: #fdfbf7;
+            --paper-cream: #f4e4bc;
+            --wood-dark: #4a3b32;
+            --accent-red: #e57373;
+            --accent-blue: #64b5f6;
+            --pin-shadow: rgba(0,0,0,0.4);
         }
 
         body, html {
@@ -22,130 +23,224 @@
             width: 100%; min-height: 100%;
             background-color: #1a1210;
             font-family: 'Georgia', 'Yu Mincho', serif;
-            color: #4a3b32; /* 文字色を濃く（紙の上の文字） */
+            color: var(--wood-dark);
             overflow-x: hidden;
         }
 
-        /* フェードイン演出 */
-        body {
-            opacity: 0; 
-            transition: opacity 1s ease-in-out;
-        }
-        body.loaded { opacity: 1; }
-
-        /* 背景：少し暗めの落ち着いた店内 */
+        /* 背景：木目調の壁 */
         .background {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+            background-color: #2c1e1a;
             z-index: -2;
         }
+        /* ノイズテクスチャ */
         .texture-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: -1;
-            background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.8) 100%);
+            background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.6) 100%);
             mix-blend-mode: multiply;
         }
 
         /* =========================================
-           レイアウト
+           2. コンテナ & ヘッダー
            ========================================= */
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 40px 20px 80px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* ヘッダー */
-        header { text-align: center; margin-bottom: 40px; }
-        .mini-logo {
-            width: 120px; height: auto;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
-            margin-bottom: 10px;
-        }
-        .page-title {
-            color: #fffbe0; font-size: 1.5rem; letter-spacing: 0.2em;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-            border-bottom: 1px solid rgba(255,255,255,0.3);
-            display: inline-block; padding-bottom: 10px;
-        }
-
-        /* メニューグリッド */
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            width: 100%;
-        }
-
-        /* メニューカード (ポラロイド風・手紙風) */
-        .menu-card {
-            background-color: var(--paper-color);
-            padding: 20px;
-            border-radius: 2px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-            transition: transform 0.3s, box-shadow 0.3s;
-            text-decoration: none;
-            color: var(--wood-dark);
-            position: relative;
+            padding: 40px 20px 120px; /* 下部に余白多め（コーヒー用） */
             display: flex; flex-direction: column; align-items: center;
         }
+
+        header { 
+            text-align: center; margin-bottom: 50px; 
+            animation: fade-down 1s ease-out;
+        }
+        .mini-logo {
+            width: 140px; height: auto;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+            transition: transform 0.3s;
+        }
+        .mini-logo:hover { transform: scale(1.05) rotate(2deg); }
         
-        .menu-card:hover {
-            transform: translateY(-5px) rotate(1deg);
-            box-shadow: 0 15px 30px rgba(255, 213, 79, 0.2);
-            z-index: 10;
+        .page-title {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 5px 20px;
+            background-color: rgba(0,0,0,0.4);
+            color: #fffbe0;
+            font-size: 1.2rem; letter-spacing: 0.3em;
+            border-radius: 4px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
-        /* テープ留め演出 */
-        .tape {
-            position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(-2deg);
-            width: 80px; height: 30px;
-            background-color: rgba(255, 255, 255, 0.4);
+        /* =========================================
+           3. メニューグリッド (スクラップブック風)
+           ========================================= */
+        .menu-grid {
+            display: flex; flex-wrap: wrap; justify-content: center;
+            gap: 40px; width: 100%;
+            perspective: 1000px;
+        }
+
+        .menu-item {
+            position: relative;
+            text-decoration: none;
+            color: var(--wood-dark);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            /* 初期状態：透明で少し手前に */
+            opacity: 0; transform: translateY(30px) scale(0.9);
+            animation: card-appear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        
+        /* ホバー時の挙動 */
+        .menu-item:hover {
+            transform: translateY(-10px) scale(1.05) !important; /* !importantで傾きを上書き維持しつつ持ち上げる */
+            z-index: 50;
+        }
+
+        /* --- スタイルA: ポラロイド写真風 (YouTube) --- */
+        .style-polaroid {
+            background: #fff;
+            padding: 15px 15px 50px 15px; /* 下を広く */
+            width: 240px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            transform: rotate(-3deg);
+        }
+        .polaroid-img-box {
+            background: #333; height: 180px; width: 100%;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+            border: 1px solid #eee;
+        }
+        .polaroid-img-box img { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; transition: opacity 0.3s; }
+        .menu-item:hover .polaroid-img-box img { opacity: 1; transform: scale(1.1); }
+        .hand-text {
+            position: absolute; bottom: 15px; left: 0; width: 100%;
+            text-align: center; font-family: 'Bradley Hand', 'Brush Script MT', cursive;
+            font-size: 1.4rem; color: #333; transform: rotate(-2deg);
+        }
+        /* マスキングテープ */
+        .tape-top {
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%) rotate(2deg);
+            width: 90px; height: 25px;
+            background: rgba(255,255,255,0.4);
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
             backdrop-filter: blur(2px);
         }
 
-        .card-icon {
-            font-size: 2.5rem; margin-bottom: 15px;
-            color: var(--pin-color);
+        /* --- スタイルB: チケット/カード風 (X/Twitter) --- */
+        .style-ticket {
+            background: var(--paper-cream);
+            width: 260px; height: 160px;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 8px solid var(--wood-dark);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            display: flex; flex-direction: column; justify-content: center;
+            transform: rotate(2deg);
+            position: relative;
+            background-image: radial-gradient(#d7ccc8 1px, transparent 1px);
+            background-size: 10px 10px;
         }
-        .card-title {
-            font-size: 1.2rem; font-weight: bold; margin-bottom: 10px;
-            border-bottom: 2px dotted var(--wood-dark);
+        /* 穴あき表現 */
+        .style-ticket::after {
+            content: ''; position: absolute; right: -10px; top: 50%; transform: translateY(-50%);
+            width: 20px; height: 20px; background: #2c1e1a; /* 背景色と同じ */
+            border-radius: 50%; box-shadow: inset 2px 2px 2px rgba(0,0,0,0.5);
         }
-        .card-desc {
-            font-size: 0.9rem; line-height: 1.6; text-align: center;
-        }
+        .ticket-title { font-size: 1.4rem; font-weight: bold; border-bottom: 2px dashed #8d6e63; padding-bottom: 5px; margin-bottom: 8px; }
+        .ticket-desc { font-size: 0.9rem; line-height: 1.4; color: #5d4037; }
 
-        /* 特定カードごとのアクセント */
-        .youtube-card .card-icon { color: #ff0000; }
-        .twitter-card .card-icon { color: #1da1f2; }
+        /* --- スタイルC: メモ帳風 (Members / Gallery) --- */
+        .style-memo {
+            background: #fff9c4; /* 付箋っぽい黄色 */
+            width: 200px; height: 200px;
+            padding: 25px;
+            box-shadow: 2px 5px 15px rgba(0,0,0,0.3);
+            transform: rotate(4deg);
+            display: flex; align-items: center; justify-content: center; flex-direction: column;
+            text-align: center;
+            border-bottom-right-radius: 60px 5px; /* めくれ表現 */
+        }
+        .pin {
+            position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+            width: 14px; height: 14px; border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ff5252, #b71c1c);
+            box-shadow: 2px 3px 5px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+        .memo-icon { font-size: 3rem; margin-bottom: 10px; opacity: 0.7; }
+        .memo-text { font-weight: bold; font-size: 1.1rem; color: #4e342e; }
+
+        /* --- アニメーション遅延設定 --- */
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.25s; }
+        .delay-3 { animation-delay: 0.4s; }
+        .delay-4 { animation-delay: 0.55s; }
+
+        @keyframes card-appear {
+            0% { opacity: 0; transform: translateY(50px) scale(0.8) rotate(0deg); }
+            100% { opacity: 1; transform: translateY(0) scale(1) var(--rotate-val); } /* 変数で傾きを維持 */
+        }
+        @keyframes fade-down { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
         /* =========================================
-           フッター (戻るボタン)
+           4. フッター & 装飾 (コーヒー)
            ========================================= */
-        .footer-nav {
-            margin-top: 60px;
-        }
+        .footer-nav { margin-top: 60px; z-index: 10; }
         .back-btn {
             color: #fffbe0; text-decoration: none;
             border: 1px solid rgba(255,255,255,0.3);
-            padding: 10px 30px; border-radius: 30px;
-            font-size: 0.9rem; letter-spacing: 0.1em;
+            padding: 12px 40px; border-radius: 30px;
+            font-size: 0.95rem; letter-spacing: 0.15em;
             transition: all 0.3s;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.4);
+            display: inline-block;
         }
-        .back-btn:hover {
-            background: var(--paper-color); color: var(--wood-dark);
-        }
+        .back-btn:hover { background: var(--paper-cream); color: var(--wood-dark); transform: translateY(-2px); }
 
-        /* スマホ調整 */
+        /* コーヒーカップ (右下固定) */
+        .coffee-container {
+            position: fixed; bottom: 20px; right: 30px;
+            z-index: 20; pointer-events: none;
+            filter: drop-shadow(-10px 10px 15px rgba(0,0,0,0.6));
+            animation: float-coffee 5s ease-in-out infinite;
+        }
+        .cup-img { width: 120px; height: auto; display: block; }
+        /* 湯気 */
+        .steam-lobby {
+            position: absolute; top: 10px; left: 40px;
+            width: 8px; height: 20px; background: rgba(255,255,255,0.4);
+            border-radius: 50%; filter: blur(4px);
+            animation: steam-rise-lobby 3s infinite; opacity: 0;
+        }
+        .s1 { animation-delay: 0s; left: 30px; }
+        .s2 { animation-delay: 1.5s; left: 50px; height: 15px; }
+        .s3 { animation-delay: 2.5s; left: 70px; }
+
+        @keyframes steam-rise-lobby {
+            0% { transform: translateY(0) scaleX(1); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-30px) scaleX(1.5); opacity: 0; }
+        }
+        @keyframes float-coffee { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+        /* =========================================
+           5. レスポンシブ
+           ========================================= */
         @media (max-width: 600px) {
-            .container { padding: 30px 15px; }
-            .menu-grid { grid-template-columns: 1fr; }
+            .container { padding-top: 20px; }
+            .menu-grid { gap: 25px; }
+            .style-polaroid, .style-ticket, .style-memo { 
+                width: 80%; max-width: 300px; 
+                transform: rotate(0deg) !important; /* スマホでは見やすさ優先で真っ直ぐに */
+                --rotate-val: rotate(0deg); /* アニメーション用変数も上書き */
+            }
+            .coffee-container { width: 80px; bottom: 10px; right: 10px; }
+            .cup-img { width: 100%; }
         }
     </style>
 </head>
@@ -157,61 +252,55 @@
         <header>
             <img src="flat-cafe-logo.png" alt="Flat Cafe" class="mini-logo">
             <br>
-            <span class="page-title">MAIN MENU</span>
+            <div class="page-title">ENTRANCE HALL</div>
         </header>
 
         <div class="menu-grid">
-            <a href="https://www.youtube.com/@flatcafe-official" target="_blank" class="menu-card youtube-card">
-                <div class="tape"></div>
-                <div class="card-icon">▶</div>
-                <div class="card-title">YouTube Channel</div>
-                <div class="card-desc">
-                    メインの活動場所です。<br>
-                    ゲーム配信や歌枠はこちらから。
+            <a href="https://www.youtube.com/@flatcafe-official" target="_blank" class="menu-item style-polaroid delay-1" style="--rotate-val: rotate(-3deg);">
+                <div class="tape-top"></div>
+                <div class="polaroid-img-box">
+                    <span style="color:#fff; font-size:3rem;">▶</span>
+                </div>
+                <div class="hand-text">On Air</div>
+            </a>
+
+            <a href="https://twitter.com/" target="_blank" class="menu-item style-ticket delay-2" style="--rotate-val: rotate(2deg);">
+                <div class="ticket-title">Official X</div>
+                <div class="ticket-desc">
+                    最新情報やスケジュール。<br>
+                    #ふらっとcafe
                 </div>
             </a>
 
-            <a href="https://twitter.com/" target="_blank" class="menu-card twitter-card">
-                <div class="tape"></div>
-                <div class="card-icon">✦</div> <div class="card-title">Official X</div>
-                <div class="card-desc">
-                    最新情報やスケジュールの<br>
-                    お知らせをしています。
-                </div>
+            <a href="#" class="menu-item style-memo delay-3" style="--rotate-val: rotate(-4deg);">
+                <div class="pin"></div>
+                <div class="memo-icon">☕</div>
+                <div class="memo-text">Members<br><span style="font-size:0.8rem; font-weight:normal;">スタッフ紹介(準備中)</span></div>
             </a>
 
-            <a href="#" class="menu-card">
-                <div class="tape"></div>
-                <div class="card-icon">☺</div>
-                <div class="card-title">Members</div>
-                <div class="card-desc">
-                    ふらっとcafeの<br>
-                    メンバー紹介ページ（準備中）
-                </div>
-            </a>
-
-            <a href="#" class="menu-card">
-                <div class="tape"></div>
-                <div class="card-icon">📷</div>
-                <div class="card-title">Gallery</div>
-                <div class="card-desc">
-                    思い出の写真や<br>
-                    ファンアートの展示室（準備中）
-                </div>
+            <a href="#" class="menu-item style-memo delay-4" style="--rotate-val: rotate(3deg); background-color:#e1f5fe;">
+                <div class="pin" style="background: radial-gradient(circle at 30% 30%, #42a5f5, #1565c0);"></div>
+                <div class="memo-icon">📷</div>
+                <div class="memo-text">Gallery<br><span style="font-size:0.8rem; font-weight:normal;">思い出(準備中)</span></div>
             </a>
         </div>
 
         <nav class="footer-nav">
-            <a href="index.html" class="back-btn">← お店の外へ戻る</a>
+            <a href="index.html" class="back-btn">← お店の外へ</a>
         </nav>
     </div>
 
+    <div class="coffee-container">
+        <img src="coffee_cup_top_view.png" onerror="this.style.display='none'" alt="" class="cup-img">
+        
+        <div class="steam-lobby s1"></div>
+        <div class="steam-lobby s2"></div>
+        <div class="steam-lobby s3"></div>
+    </div>
+
     <script>
-        // ページ読み込み時にふわっと表示する
-        window.addEventListener('load', () => {
-            document.body.classList.add('loaded');
-        });
+        // 画像読み込みエラー時にCSSだけのカップを表示するなどの処理が必要なら記述
+        // 今回はシンプルにCSSアニメーションのみ
     </script>
 </body>
 </html>
-
