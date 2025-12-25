@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ふらっとcafe Official - Ver.FinalFix</title>
+    <title>ふらっとcafe Official - Entrance</title>
 
     <style>
         /* =========================================
@@ -24,9 +24,8 @@
             background-color: #1a1210;
             font-family: 'Georgia', 'Yu Mincho', 'Kozuka Mincho Pr6N', 'Hiragino Mincho ProN', 'serif';
             color: #fff9c4;
-            /* ▼▼▼ 修正点: スクロールを禁止し、1画面アプリ化 ▼▼▼ */
             overflow: hidden; 
-            overscroll-behavior: none; /* スマホの引っ張り更新エフェクトなども無効化 */
+            overscroll-behavior: none;
             perspective: 1000px;
         }
 
@@ -168,30 +167,22 @@
         #zoom-modal.active .modal-hint { opacity: 1; }
 
         /* =========================================
-           6. メインコンテンツ (1画面収束レイアウト)
+           6. メインコンテンツ
            ========================================= */
         .main-content {
             position: relative; z-index: 60;
-            /* ▼▼▼ 修正点: Flexboxで画面中央に配置し、高さを画面いっぱいに ▼▼▼ */
-            width: 100%; 
-            height: 100dvh; /* ビューポートの高さに合わせる */
-            min-height: 600px; /* 極端に縦が短い端末用 */
-            display: flex;
-            flex-direction: column;
-            justify-content: space-evenly; /* 要素間の隙間を均等に */
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-            overflow-y: auto; /* 画面が小さすぎる場合のみスクロール許可 */
+            width: 100%; height: 100dvh; min-height: 600px;
+            display: flex; flex-direction: column;
+            justify-content: space-evenly; align-items: center;
+            padding: 20px; box-sizing: border-box;
+            overflow-y: auto;
         }
 
         .logo-img {
             max-width: 180px; width: 40%; height: auto;
             filter: drop-shadow(0 0 15px rgba(255,245,200,0.2));
             animation: float-logo 6s ease-in-out infinite;
-            /* マージン削除 */
-            margin: 0; 
-            flex-shrink: 0; /* 縮小させない */
+            margin: 0; flex-shrink: 0;
         }
         @keyframes float-logo { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 
@@ -201,15 +192,13 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.8);
             font-weight: 500; font-feature-settings: "palt";
             text-align: center;
-            margin: 0;
-            flex-shrink: 0;
+            margin: 0; flex-shrink: 0;
         }
 
-        /* キャラクターベンチ */
         .header-scene {
             position: relative; width: 60%; max-width: 480px;
             filter: drop-shadow(0 15px 30px rgba(0,0,0,0.7)); z-index: 50;
-            flex-shrink: 1; /* 画面が狭いときは少し縮む */
+            flex-shrink: 1;
         }
         .bench-img { width: 100%; height: auto; display: block; }
         .char-img {
@@ -224,7 +213,7 @@
         .char-2 { left: 15.5%; animation: talk-bounce 2.5s infinite ease-in-out; animation-delay: 0.2s; z-index: 3; }
         .char-3 { right: 15.5%; animation: talk-sway-reverse 3.8s infinite ease-in-out; animation-delay: 0.5s; z-index: 3; }
         .char-4 { right: 0%; animation: talk-nod 4.0s infinite ease-in-out; animation-delay: 1.0s; z-index: 2; }
-        /* アニメーション省略なし */
+
         @keyframes talk-sway { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-2deg); } 75% { transform: rotate(1deg); } }
         @keyframes talk-sway-reverse { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(2deg); } 75% { transform: rotate(-1.5deg); } }
         @keyframes talk-bounce { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-4px) rotate(1deg); } 60% { transform: translateY(0) rotate(0deg); } 80% { transform: translateY(-2px) rotate(-1deg); } }
@@ -250,16 +239,15 @@
 
         .standing-image { 
             width: 100%; pointer-events: none; text-align: center;
-            flex-shrink: 1; /* 画面に合わせて縮小 */
-            display: flex; justify-content: center; align-items: flex-end;
-            max-height: 35vh; /* 高さを制限 */
+            flex-shrink: 1; display: flex; justify-content: center; align-items: flex-end;
+            max-height: 35vh;
         }
         .standing-image img { 
             max-height: 100%; width: auto; max-width: 100%;
             filter: drop-shadow(0 20px 40px rgba(0,0,0,0.9));
         }
 
-        /* 入店ボタン */
+        /* 入店ボタン (修正：リンク先をlobby.htmlへ) */
         .enter-btn {
             position: relative; display: inline-block;
             padding: 18px 70px;
@@ -271,8 +259,7 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.6), inset 0 0 0 2px var(--paper-color);
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
             overflow: hidden; z-index: 80;
-            margin: 10px 0 20px 0; /* マージンを最小限に */
-            flex-shrink: 0;
+            margin: 10px 0 20px 0; flex-shrink: 0;
         }
         .enter-btn:hover {
             background-color: var(--paper-color); color: var(--wood-dark);
@@ -286,7 +273,7 @@
         .enter-btn:active { transform: translateY(0); box-shadow: 0 5px 10px rgba(0,0,0,0.5); }
 
         /* =========================================
-           7. スマホ用レスポンシブ (配置微調整)
+           7. スマホ用レスポンシブ
            ========================================= */
         @media (max-width: 768px) {
             .main-content { padding: 40px 20px 20px; }
@@ -296,7 +283,6 @@
             .enter-btn { padding: 16px 50px; font-size: 1rem; width: 60%; box-sizing: border-box; margin-bottom: 40px; }
             .standing-image { max-height: 30vh; }
 
-            /* 写真配置の最適化 */
             .photo-item { width: 75px; padding: 4px 4px 14px 4px; } 
             .p1 { top: 3%; left: -2%; transform: rotate(-8deg); }
             .p2 { top: 12%; right: -2%; width: 70px; transform: rotate(8deg); }
@@ -304,10 +290,9 @@
             .p4 { top: 50%; right: -3%; transform: rotate(-5deg); }
             .p5 { top: 75%; left: 2%; width: 72px; transform: rotate(-10deg); }
         }
-        /* 縦が短いスマホ対策 (横向きなど) */
         @media (max-height: 650px) {
             .main-content { justify-content: flex-start; gap: 15px; }
-            .standing-image { display: none; } /* 狭すぎる場合は立ち絵を非表示にしてスッキリさせる */
+            .standing-image { display: none; } 
             .header-scene { margin-top: 10px; width: 40%; }
         }
     </style>
@@ -355,7 +340,7 @@
             <img src="wakanagi-main.png" alt="若凪">
         </div>
         
-        <a href="https://www.youtube.com/@flatcafe-official?sub_confirmation=1" class="enter-btn">
+        <a href="lobby.html" class="enter-btn">
             カフェに入店する
         </a>
     </main>
@@ -365,7 +350,6 @@
             setTimeout(() => { document.getElementById('loading-screen').classList.add('hidden'); }, 800);
         });
 
-        // パーティクル生成
         const particleContainer = document.body;
         for (let i = 0; i < 25; i++) {
             const p = document.createElement('div');
@@ -378,7 +362,6 @@
             particleContainer.appendChild(p);
         }
 
-        // ズーム制御
         let isAnimating = false;
         function openZoom(src) {
             if(isAnimating) return;
@@ -397,7 +380,6 @@
             }, 1400);
         }
 
-        // 会話
         function showSpeech(element, messages) {
             const bubble = element.nextElementSibling;
             if (bubble.classList.contains('show')) return;
