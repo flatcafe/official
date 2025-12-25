@@ -7,15 +7,14 @@
 
     <style>
         /* =========================================
-           1. 基本設定・変数
+           1. 共通設定
            ========================================= */
         :root {
-            --paper-white: #fdfbf7;
-            --paper-cream: #f4e4bc;
+            --paper-bg: #fdfbf7;
+            --card-bg: #fffcf5;
             --wood-dark: #4a3b32;
-            --accent-red: #e57373;
-            --accent-blue: #64b5f6;
-            --pin-shadow: rgba(0,0,0,0.4);
+            --accent-gold: #ffd54f;
+            --shadow-color: rgba(0,0,0,0.4);
         }
 
         body, html {
@@ -27,220 +26,187 @@
             overflow-x: hidden;
         }
 
-        /* 背景：木目調の壁 */
+        /* 背景：落ち着いた木目 */
         .background {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://www.transparenttextures.com/patterns/wood-pattern.png');
-            background-color: #2c1e1a;
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://www.transparenttextures.com/patterns/wood-pattern.png');
             z-index: -2;
         }
-        /* ノイズテクスチャ */
         .texture-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: -1;
-            background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.6) 100%);
+            background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.8) 100%);
             mix-blend-mode: multiply;
         }
 
         /* =========================================
-           2. コンテナ & ヘッダー
+           2. レイアウト & ヘッダー
            ========================================= */
         .container {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 40px 20px 120px; /* 下部に余白多め（コーヒー用） */
+            padding: 40px 20px 100px;
             display: flex; flex-direction: column; align-items: center;
         }
 
         header { 
-            text-align: center; margin-bottom: 50px; 
-            animation: fade-down 1s ease-out;
+            text-align: center; margin-bottom: 60px; 
+            animation: fade-in 1.2s ease-out;
         }
         .mini-logo {
-            width: 140px; height: auto;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
-            transition: transform 0.3s;
+            width: 160px; height: auto;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.6));
+            margin-bottom: 15px;
         }
-        .mini-logo:hover { transform: scale(1.05) rotate(2deg); }
-        
-        .page-title {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 5px 20px;
-            background-color: rgba(0,0,0,0.4);
-            color: #fffbe0;
-            font-size: 1.2rem; letter-spacing: 0.3em;
-            border-radius: 4px;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255,255,255,0.2);
+        .header-text {
+            color: #fffbe0; letter-spacing: 0.2em; font-size: 1.1rem;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+            border-top: 1px solid rgba(255,255,255,0.4);
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+            padding: 5px 20px; display: inline-block;
         }
 
         /* =========================================
-           3. メニューグリッド (スクラップブック風)
+           3. キャラクターカード (メイン)
            ========================================= */
-        .menu-grid {
+        .card-grid {
             display: flex; flex-wrap: wrap; justify-content: center;
             gap: 40px; width: 100%;
-            perspective: 1000px;
+            perspective: 1200px; /* 3D効果用 */
         }
 
-        .menu-item {
+        .char-card {
             position: relative;
+            width: 240px; height: 340px;
+            background-color: var(--card-bg);
+            border-radius: 4px;
             text-decoration: none;
             color: var(--wood-dark);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            cursor: pointer;
-            /* 初期状態：透明で少し手前に */
-            opacity: 0; transform: translateY(30px) scale(0.9);
-            animation: card-appear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s;
+            display: flex; flex-direction: column; align-items: center;
+            
+            /* アニメーション初期値 */
+            opacity: 0; transform: translateY(50px) rotate(var(--rot));
+            animation: deal-card 0.6s forwards;
+            animation-delay: var(--delay);
+        }
+
+        /* カードのホバー効果 */
+        .char-card:hover {
+            transform: translateY(-15px) scale(1.05) rotate(0deg) !important;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.7);
+            z-index: 100;
+        }
+
+        /* カードの上部装飾 (テープ) */
+        .tape {
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%) rotate(-2deg);
+            width: 100px; height: 25px;
+            background: rgba(255,255,255,0.3);
+            backdrop-filter: blur(3px);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            z-index: 20;
+        }
+
+        /* キャラクター画像配置エリア */
+        .char-area {
+            position: relative;
+            width: 100%; height: 70%; /* カードの上7割を絵にする */
+            margin-top: 10px;
+            overflow: visible; /* キャラをはみ出させる */
+            display: flex; justify-content: center; align-items: flex-end;
+        }
+
+        /* キャラクター画像 */
+        .char-img {
+            max-width: 140%; max-height: 110%; /* 親枠からはみ出すサイズ感 */
+            object-fit: contain;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));
+            transition: transform 0.4s ease;
+            transform-origin: bottom center;
+        }
+        .char-card:hover .char-img {
+            transform: scale(1.1); /* ホバーで少し大きくなる */
+        }
+
+        /* 下部の情報エリア */
+        .info-area {
+            width: 100%; height: 30%;
+            background-image: repeating-linear-gradient(#eee 0 1px, transparent 1px 100%);
+            background-size: 100% 20px; /* ノートの罫線風 */
+            padding: 10px; box-sizing: border-box;
+            text-align: center;
+            border-top: 2px dashed #d7ccc8;
+            position: relative; z-index: 10;
+            background-color: var(--card-bg); /* 背景色で透過を防ぐ */
+            border-radius: 0 0 4px 4px;
+        }
+
+        .menu-title {
+            font-size: 1.4rem; font-weight: bold; margin: 5px 0 2px;
+            font-family: 'Impact', sans-serif; letter-spacing: 0.05em;
+            color: #5d4037;
+        }
+        .menu-desc {
+            font-size: 0.85rem; color: #795548; font-weight: bold;
+        }
+
+        /* --- 個別調整 (キャラごとの背景や回転角) --- */
+        /* YouTube (Toruma) */
+        .card-yt { --rot: -3deg; --delay: 0.1s; }
+        .card-yt .char-area::before { /* 背景にうっすら円を入れる */
+            content:''; position: absolute; width: 160px; height: 160px; background: #ffebee; border-radius: 50%; top: 20px; z-index: -1;
         }
         
-        /* ホバー時の挙動 */
-        .menu-item:hover {
-            transform: translateY(-10px) scale(1.05) !important; /* !importantで傾きを上書き維持しつつ持ち上げる */
-            z-index: 50;
+        /* Twitter (Lily) */
+        .card-tw { --rot: 2deg; --delay: 0.25s; }
+        .card-tw .char-area::before {
+            content:''; position: absolute; width: 160px; height: 160px; background: #e3f2fd; border-radius: 50%; top: 20px; z-index: -1;
         }
 
-        /* --- スタイルA: ポラロイド写真風 (YouTube) --- */
-        .style-polaroid {
-            background: #fff;
-            padding: 15px 15px 50px 15px; /* 下を広く */
-            width: 240px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            transform: rotate(-3deg);
-        }
-        .polaroid-img-box {
-            background: #333; height: 180px; width: 100%;
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden;
-            border: 1px solid #eee;
-        }
-        .polaroid-img-box img { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; transition: opacity 0.3s; }
-        .menu-item:hover .polaroid-img-box img { opacity: 1; transform: scale(1.1); }
-        .hand-text {
-            position: absolute; bottom: 15px; left: 0; width: 100%;
-            text-align: center; font-family: 'Bradley Hand', 'Brush Script MT', cursive;
-            font-size: 1.4rem; color: #333; transform: rotate(-2deg);
-        }
-        /* マスキングテープ */
-        .tape-top {
-            position: absolute; top: -12px; left: 50%; transform: translateX(-50%) rotate(2deg);
-            width: 90px; height: 25px;
-            background: rgba(255,255,255,0.4);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-            backdrop-filter: blur(2px);
+        /* Members (Yuzucha) */
+        .card-mem { --rot: -2deg; --delay: 0.4s; }
+        .card-mem .char-area::before {
+            content:''; position: absolute; width: 160px; height: 160px; background: #fffde7; border-radius: 50%; top: 20px; z-index: -1;
         }
 
-        /* --- スタイルB: チケット/カード風 (X/Twitter) --- */
-        .style-ticket {
-            background: var(--paper-cream);
-            width: 260px; height: 160px;
-            padding: 20px;
-            border-radius: 8px;
-            border-left: 8px solid var(--wood-dark);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-            display: flex; flex-direction: column; justify-content: center;
-            transform: rotate(2deg);
-            position: relative;
-            background-image: radial-gradient(#d7ccc8 1px, transparent 1px);
-            background-size: 10px 10px;
+        /* Gallery (Wakanagi) */
+        .card-gal { --rot: 3deg; --delay: 0.55s; }
+        .card-gal .char-area::before {
+            content:''; position: absolute; width: 160px; height: 160px; background: #e0f2f1; border-radius: 50%; top: 20px; z-index: -1;
         }
-        /* 穴あき表現 */
-        .style-ticket::after {
-            content: ''; position: absolute; right: -10px; top: 50%; transform: translateY(-50%);
-            width: 20px; height: 20px; background: #2c1e1a; /* 背景色と同じ */
-            border-radius: 50%; box-shadow: inset 2px 2px 2px rgba(0,0,0,0.5);
-        }
-        .ticket-title { font-size: 1.4rem; font-weight: bold; border-bottom: 2px dashed #8d6e63; padding-bottom: 5px; margin-bottom: 8px; }
-        .ticket-desc { font-size: 0.9rem; line-height: 1.4; color: #5d4037; }
 
-        /* --- スタイルC: メモ帳風 (Members / Gallery) --- */
-        .style-memo {
-            background: #fff9c4; /* 付箋っぽい黄色 */
-            width: 200px; height: 200px;
-            padding: 25px;
-            box-shadow: 2px 5px 15px rgba(0,0,0,0.3);
-            transform: rotate(4deg);
-            display: flex; align-items: center; justify-content: center; flex-direction: column;
-            text-align: center;
-            border-bottom-right-radius: 60px 5px; /* めくれ表現 */
+        @keyframes deal-card {
+            to { opacity: 1; transform: translateY(0) rotate(var(--rot)); }
         }
-        .pin {
-            position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
-            width: 14px; height: 14px; border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #ff5252, #b71c1c);
-            box-shadow: 2px 3px 5px rgba(0,0,0,0.4);
-            z-index: 10;
-        }
-        .memo-icon { font-size: 3rem; margin-bottom: 10px; opacity: 0.7; }
-        .memo-text { font-weight: bold; font-size: 1.1rem; color: #4e342e; }
-
-        /* --- アニメーション遅延設定 --- */
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.25s; }
-        .delay-3 { animation-delay: 0.4s; }
-        .delay-4 { animation-delay: 0.55s; }
-
-        @keyframes card-appear {
-            0% { opacity: 0; transform: translateY(50px) scale(0.8) rotate(0deg); }
-            100% { opacity: 1; transform: translateY(0) scale(1) var(--rotate-val); } /* 変数で傾きを維持 */
-        }
-        @keyframes fade-down { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 
         /* =========================================
-           4. フッター & 装飾 (コーヒー)
+           4. フッター
            ========================================= */
-        .footer-nav { margin-top: 60px; z-index: 10; }
+        .footer-nav { margin-top: 60px; }
         .back-btn {
-            color: #fffbe0; text-decoration: none;
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 12px 40px; border-radius: 30px;
-            font-size: 0.95rem; letter-spacing: 0.15em;
-            transition: all 0.3s;
-            background: rgba(0,0,0,0.4);
             display: inline-block;
+            color: #fffbe0; text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.4);
+            padding: 12px 50px; border-radius: 30px;
+            font-size: 1rem; letter-spacing: 0.15em;
+            transition: all 0.3s;
+            background: rgba(0,0,0,0.3);
         }
-        .back-btn:hover { background: var(--paper-cream); color: var(--wood-dark); transform: translateY(-2px); }
+        .back-btn:hover { background: var(--paper-bg); color: var(--wood-dark); transform: scale(1.05); }
 
-        /* コーヒーカップ (右下固定) */
-        .coffee-container {
-            position: fixed; bottom: 20px; right: 30px;
-            z-index: 20; pointer-events: none;
-            filter: drop-shadow(-10px 10px 15px rgba(0,0,0,0.6));
-            animation: float-coffee 5s ease-in-out infinite;
-        }
-        .cup-img { width: 120px; height: auto; display: block; }
-        /* 湯気 */
-        .steam-lobby {
-            position: absolute; top: 10px; left: 40px;
-            width: 8px; height: 20px; background: rgba(255,255,255,0.4);
-            border-radius: 50%; filter: blur(4px);
-            animation: steam-rise-lobby 3s infinite; opacity: 0;
-        }
-        .s1 { animation-delay: 0s; left: 30px; }
-        .s2 { animation-delay: 1.5s; left: 50px; height: 15px; }
-        .s3 { animation-delay: 2.5s; left: 70px; }
-
-        @keyframes steam-rise-lobby {
-            0% { transform: translateY(0) scaleX(1); opacity: 0; }
-            50% { opacity: 0.6; }
-            100% { transform: translateY(-30px) scaleX(1.5); opacity: 0; }
-        }
-        @keyframes float-coffee { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-
-        /* =========================================
-           5. レスポンシブ
-           ========================================= */
-        @media (max-width: 600px) {
-            .container { padding-top: 20px; }
-            .menu-grid { gap: 25px; }
-            .style-polaroid, .style-ticket, .style-memo { 
-                width: 80%; max-width: 300px; 
-                transform: rotate(0deg) !important; /* スマホでは見やすさ優先で真っ直ぐに */
-                --rotate-val: rotate(0deg); /* アニメーション用変数も上書き */
+        /* スマホ対応 */
+        @media (max-width: 768px) {
+            .card-grid { gap: 30px; }
+            .char-card { 
+                width: 44%; max-width: 200px; height: 280px;
+                transform: rotate(0deg) !important; /* スマホは見やすさ優先で真っ直ぐ */
+                --rot: 0deg; 
             }
-            .coffee-container { width: 80px; bottom: 10px; right: 10px; }
-            .cup-img { width: 100%; }
+            .menu-title { font-size: 1.1rem; }
+            .menu-desc { font-size: 0.75rem; }
         }
     </style>
 </head>
@@ -252,55 +218,58 @@
         <header>
             <img src="flat-cafe-logo.png" alt="Flat Cafe" class="mini-logo">
             <br>
-            <div class="page-title">ENTRANCE HALL</div>
+            <span class="header-text">Select Menu</span>
         </header>
 
-        <div class="menu-grid">
-            <a href="https://www.youtube.com/@flatcafe-official" target="_blank" class="menu-item style-polaroid delay-1" style="--rotate-val: rotate(-3deg);">
-                <div class="tape-top"></div>
-                <div class="polaroid-img-box">
-                    <span style="color:#fff; font-size:3rem;">▶</span>
+        <div class="card-grid">
+            <a href="https://www.youtube.com/@flatcafe-official" target="_blank" class="char-card card-yt">
+                <div class="tape"></div>
+                <div class="char-area">
+                    <img src="top_toruma.png" alt="Toruma" class="char-img">
                 </div>
-                <div class="hand-text">On Air</div>
-            </a>
-
-            <a href="https://twitter.com/" target="_blank" class="menu-item style-ticket delay-2" style="--rotate-val: rotate(2deg);">
-                <div class="ticket-title">Official X</div>
-                <div class="ticket-desc">
-                    最新情報やスケジュール。<br>
-                    #ふらっとcafe
+                <div class="info-area">
+                    <div class="menu-title">YouTube</div>
+                    <div class="menu-desc">配信・動画はこちら</div>
                 </div>
             </a>
 
-            <a href="#" class="menu-item style-memo delay-3" style="--rotate-val: rotate(-4deg);">
-                <div class="pin"></div>
-                <div class="memo-icon">☕</div>
-                <div class="memo-text">Members<br><span style="font-size:0.8rem; font-weight:normal;">スタッフ紹介(準備中)</span></div>
+            <a href="https://twitter.com/" target="_blank" class="char-card card-tw">
+                <div class="tape"></div>
+                <div class="char-area">
+                    <img src="top_lily00.png" alt="Lily" class="char-img">
+                </div>
+                <div class="info-area">
+                    <div class="menu-title">X (Twitter)</div>
+                    <div class="menu-desc">最新情報をお届け</div>
+                </div>
             </a>
 
-            <a href="#" class="menu-item style-memo delay-4" style="--rotate-val: rotate(3deg); background-color:#e1f5fe;">
-                <div class="pin" style="background: radial-gradient(circle at 30% 30%, #42a5f5, #1565c0);"></div>
-                <div class="memo-icon">📷</div>
-                <div class="memo-text">Gallery<br><span style="font-size:0.8rem; font-weight:normal;">思い出(準備中)</span></div>
+            <a href="#" class="char-card card-mem">
+                <div class="tape"></div>
+                <div class="char-area">
+                    <img src="top_yuzucha.png" alt="Yuzucha" class="char-img">
+                </div>
+                <div class="info-area">
+                    <div class="menu-title">Members</div>
+                    <div class="menu-desc">スタッフ紹介(準備中)</div>
+                </div>
+            </a>
+
+            <a href="#" class="char-card card-gal">
+                <div class="tape"></div>
+                <div class="char-area">
+                    <img src="top_wakanagi.png" alt="Wakanagi" class="char-img">
+                </div>
+                <div class="info-area">
+                    <div class="menu-title">Gallery</div>
+                    <div class="menu-desc">思い出のアルバム</div>
+                </div>
             </a>
         </div>
 
         <nav class="footer-nav">
-            <a href="index.html" class="back-btn">← お店の外へ</a>
+            <a href="index.html" class="back-btn">Exit</a>
         </nav>
     </div>
-
-    <div class="coffee-container">
-        <img src="coffee_cup_top_view.png" onerror="this.style.display='none'" alt="" class="cup-img">
-        
-        <div class="steam-lobby s1"></div>
-        <div class="steam-lobby s2"></div>
-        <div class="steam-lobby s3"></div>
-    </div>
-
-    <script>
-        // 画像読み込みエラー時にCSSだけのカップを表示するなどの処理が必要なら記述
-        // 今回はシンプルにCSSアニメーションのみ
-    </script>
 </body>
 </html>
