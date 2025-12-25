@@ -25,12 +25,12 @@
             position: fixed;
             width: 100%; height: 100%;
             background-image: 
-                linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+                linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
                 url('https://www.transparenttextures.com/patterns/wood-pattern.png');
             z-index: 1;
         }
 
-        /* --- 窓格子の光（影を一部分に限定） --- */
+        /* 窓格子の光 */
         .window-shadow {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -44,11 +44,11 @@
             pointer-events: none;
         }
 
-        /* --- ヘッダー：木の板（シェルフ） --- */
+        /* --- ヘッダー：4人集合画像 & 木の板 --- */
         header {
             position: relative;
             z-index: 50;
-            padding-top: 100px;
+            padding-top: 120px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -56,25 +56,25 @@
 
         .wood-board {
             position: relative;
-            width: 80%; /* 画面端まで行かない設定 */
-            max-width: 900px;
-            height: 25px;
+            width: 85%;
+            max-width: 1000px;
+            height: 20px;
             background: var(--wood-shelf);
             border-radius: 4px;
-            box-shadow: 
-                0 10px 20px rgba(0,0,0,0.5), /* 下への影 */
-                inset 0 2px 5px rgba(255,255,255,0.3); /* 上面の光沢 */
-            margin-bottom: 50px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+            margin-bottom: 60px;
         }
 
-        /* マイクラスキン（板の上に座らせる） */
-        .mc-skin {
+        /* 4人が座っている画像 */
+        .group-image {
             position: absolute;
-            bottom: 20px; /* 板の上面に合わせる */
+            bottom: 15px; /* 板の真上に設置 */
             left: 50%;
             transform: translateX(-50%);
-            height: 120px; /* スキンのサイズ調整 */
-            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.6)); /* 板に落ちる影 */
+            width: 90%; /* 板の幅に合わせる */
+            max-width: 800px;
+            height: auto;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.7));
             z-index: 51;
         }
 
@@ -82,52 +82,46 @@
         .main-content {
             position: relative;
             z-index: 60;
-            text-align: center; /* 全てセンタリング */
+            text-align: center;
             padding: 0 20px;
         }
 
-        .main-content h1 {
-            font-size: clamp(3rem, 10vw, 6rem);
-            margin: 0;
-            color: #fff5ca;
-            text-shadow: 0 5px 15px rgba(0,0,0,0.8);
+        /* ロゴ画像用スタイル */
+        .logo-img {
+            max-width: 350px;
+            width: 80%;
+            height: auto;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 20px rgba(255,245,200,0.5));
         }
 
         .main-content p {
-            font-size: 1.2rem;
-            margin: 20px 0;
+            font-size: 1.1rem;
+            margin: 15px 0;
             opacity: 0.9;
             line-height: 1.8;
+            letter-spacing: 1px;
         }
 
-        /* 立ち絵の配置（メインエリア中央下部） */
-        .standing-image {
-            margin-top: 30px;
-        }
+        /* 立ち絵（若凪） */
         .standing-image img {
-            max-height: 60vh;
+            max-height: 55vh;
+            margin-top: 20px;
             filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8));
         }
 
-        /* ボタン */
         .enter-btn {
             display: inline-block;
-            margin: 30px 0;
-            padding: 20px 60px;
-            background: white;
-            color: var(--room-dark);
+            margin: 25px 0;
+            padding: 18px 55px;
+            background: #fff;
+            color: #2c1e1a;
             text-decoration: none;
             font-weight: bold;
             border-radius: 2px;
             transition: 0.3s;
-            box-shadow: 0 0 20px rgba(255,245,200,0.3);
-        }
-        .enter-btn:hover {
-            transform: scale(1.05);
-            background: #fff5ca;
         }
 
-        /* 煌めき */
         .particle {
             position: fixed;
             background: white;
@@ -138,9 +132,16 @@
             animation: drift 15s infinite linear;
         }
         @keyframes drift {
-            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            0% { transform: translateY(105vh) translateX(0); opacity: 0; }
             50% { opacity: 0.4; }
-            100% { transform: translateY(-10vh) translateX(50px); opacity: 0; }
+            100% { transform: translateY(-5vh) translateX(40px); opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            header { padding-top: 80px; }
+            .wood-board { width: 95%; }
+            .logo-img { max-width: 250px; }
+            .standing-image img { max-height: 45vh; }
         }
     </style>
 </head>
@@ -151,13 +152,13 @@
 
     <header>
         <div class="wood-board">
-            <img src="mc-skin.png" alt="Skin" class="mc-skin">
+            <img src="group-shelf.png" alt="Flat Cafe Members" class="group-image">
         </div>
     </header>
 
     <main class="main-content">
-        <p style="letter-spacing: 8px; font-size: 1rem;">WELCOME TO THE STORY</p>
-        <h1>Flat Cafe</h1>
+        <img src="flat-cafe-logo.png" alt="Flat Cafe" class="logo-img">
+        
         <p>ふらっと立ち寄り、心が軽くなる場所。<br>
         常連客 1,000人の物語を、ここから。</p>
         
@@ -171,14 +172,13 @@
     </main>
 
     <script>
-        // 煌めきの生成
         for (let i = 0; i < 20; i++) {
             const p = document.createElement('div');
             p.className = 'particle';
             const size = Math.random() * 3 + 'px';
             p.style.width = size; p.style.height = size;
             p.style.left = Math.random() * 100 + 'vw';
-            p.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            p.style.animationDuration = (Math.random() * 10 + 12) + 's';
             p.style.animationDelay = (Math.random() * 5) + 's';
             document.body.appendChild(p);
         }
