@@ -43,25 +43,109 @@
             pointer-events: none;
         }
 
-        /* --- ヘッダー：ベンチの集合画像 --- */
+        /* --- ヘッダーエリア --- */
         header {
             position: relative;
             z-index: 50;
-            /* ここを変更：余白を詰めて上に移動させます */
-            padding-top: 40px; 
+            padding-top: 40px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* ヘッダー画像（サイズ45%） */
-        .header-hero-img {
-            width: 45%;
-            max-width: 425px;
-            height: auto;
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
+        /* ここから新しい変更点 
+           画像を一枚貼るのではなく、舞台（ステージ）を作ります
+        */
+        .header-scene {
+            position: relative;
+            width: 45%;          /* 前回のサイズ感を維持 */
+            max-width: 425px;    
             margin-bottom: 40px;
+            /* 影は全体にかける */
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
         }
+
+        /* 椅子の画像（ベース） */
+        .bench-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* キャラクター共通スタイル */
+        .char-img {
+            position: absolute;
+            bottom: 25%; /* 椅子の座面に合うように調整 */
+            width: 25%;  /* 4人並ぶのでこのくらいのサイズ感 */
+            height: auto;
+            transform-origin: bottom center; /* 揺れる基点を足元に */
+        }
+
+        /* 各キャラクターの配置と個別の動き設定 
+           leftの位置で横並びを調整しています
+        */
+        
+        /* 1人目：Toruma */
+        .char-1 {
+            left: 2%;
+            animation: talk-sway 3.2s infinite ease-in-out;
+            z-index: 2;
+        }
+
+        /* 2人目：Lily */
+        .char-2 {
+            left: 26%;
+            animation: talk-bounce 2.5s infinite ease-in-out;
+            animation-delay: 0.2s;
+            z-index: 3;
+        }
+
+        /* 3人目：Yuzucha */
+        .char-3 {
+            right: 26%;
+            animation: talk-sway-reverse 3.8s infinite ease-in-out;
+            animation-delay: 0.5s;
+            z-index: 3;
+        }
+
+        /* 4人目：Wakanagi */
+        .char-4 {
+            right: 2%;
+            animation: talk-nod 4.0s infinite ease-in-out;
+            animation-delay: 1.0s;
+            z-index: 2;
+        }
+
+        /* --- アニメーション定義 --- */
+        
+        /* ゆらゆら揺れる（会話風） */
+        @keyframes talk-sway {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-2deg); }
+            75% { transform: rotate(1deg); }
+        }
+
+        /* 逆方向に揺れる */
+        @keyframes talk-sway-reverse {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(2deg); }
+            75% { transform: rotate(-1.5deg); }
+        }
+
+        /* 楽しそうに少し跳ねる */
+        @keyframes talk-bounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-4px) rotate(1deg); }
+            60% { transform: translateY(0) rotate(0deg); }
+            80% { transform: translateY(-2px) rotate(-1deg); }
+        }
+
+        /* 落ち着いて頷くような動き */
+        @keyframes talk-nod {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(1px) scaleY(0.99); } /* ほんの少し沈む */
+        }
+
 
         /* メインコンテンツ */
         .main-content {
@@ -123,10 +207,11 @@
         }
 
         @media (max-width: 768px) {
-            /* スマホ表示時も余白を詰めます */
             header { padding-top: 30px; }
             
-            .header-hero-img { width: 70%; max-width: 350px; } 
+            /* スマホ時のサイズ調整 */
+            .header-scene { width: 70%; max-width: 350px; } 
+
             .logo-img { max-width: 250px; }
             .standing-image img { max-height: 45vh; }
         }
@@ -138,7 +223,14 @@
     <div class="window-shadow"></div>
 
     <header>
-        <img src="site_top.png" alt="Flat Cafe Members on Bench" class="header-hero-img">
+        <div class="header-scene">
+            <img src="isu.jpg" alt="Bench" class="bench-img">
+            
+            <img src="top_toruma.png" alt="Toruma" class="char-img char-1">
+            <img src="top_lily00.png" alt="Lily" class="char-img char-2">
+            <img src="top_yuzucha.png" alt="Yuzucha" class="char-img char-3">
+            <img src="top_wakanagi.png" alt="Wakanagi" class="char-img char-4">
+        </div>
     </header>
 
     <main class="main-content">
