@@ -72,46 +72,41 @@
         /* キャラクター共通スタイル */
         .char-img {
             position: absolute;
-            /* 修正：サイズをさらに大きくすると、足の位置が浮きがちなので少し下げて調整 */
-            bottom: 42%; 
-            /* 修正：思い切って55%まで大きくします */
+            /* 修正点：位置を下に下げました (42% -> 35%) */
+            bottom: 35%; 
             width: 55%;  
             height: auto;
             transform-origin: bottom center;
         }
 
-        /* 各キャラクターの配置
-           サイズを大きくした分、left/rightを大きくして中央に寄せないと
-           画面からはみ出したり、バラバラに見えてしまいます。
-           「肩が重なるくらい」を目指して数値を詰めました。
-        */
+        /* 各キャラクターの配置（前回調整した間隔を維持） */
         
         /* 1人目：Toruma (左端) */
         .char-1 {
-            left: 8%; /* 5% -> 8% : 内側へ */
+            left: 6%; 
             animation: talk-sway 3.2s infinite ease-in-out;
             z-index: 2;
         }
 
         /* 2人目：Lily (中央左) */
         .char-2 {
-            left: 28%; /* 18% -> 28% : 大幅に内側へ */
+            left: 22%; 
             animation: talk-bounce 2.5s infinite ease-in-out;
             animation-delay: 0.2s;
-            z-index: 3; /* 手前 */
+            z-index: 3;
         }
 
         /* 3人目：Yuzucha (中央右) */
         .char-3 {
-            right: 28%; /* 18% -> 28% : 大幅に内側へ */
+            right: 22%; 
             animation: talk-sway-reverse 3.8s infinite ease-in-out;
             animation-delay: 0.5s;
-            z-index: 3; /* 手前 */
+            z-index: 3;
         }
 
         /* 4人目：Wakanagi (右端) */
         .char-4 {
-            right: 8%; /* 5% -> 8% : 内側へ */
+            right: 6%; 
             animation: talk-nod 4.0s infinite ease-in-out;
             animation-delay: 1.0s;
             z-index: 2;
