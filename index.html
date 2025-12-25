@@ -8,13 +8,17 @@
         :root {
             --sun-light: rgba(255, 252, 220, 0.4);
             --room-dark: #2c1e1a;
+            /* カフェ風デザイン用の色を追加 */
+            --paper-color: #fcf6e6; /* 生成り色 */
+            --wood-dark: #5d4037;   /* 看板の焦げ茶 */
+            --accent-gold: #ffd54f; /* 金色アクセント */
         }
 
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
             background-color: #1a1210;
-            font-family: 'Georgia', 'serif', 'Noto Serif JP';
+            font-family: 'Georgia', 'Yu Mincho', 'Kozuka Mincho Pr6N', 'Hiragino Mincho ProN', 'serif';
             color: #fff9c4;
             overflow-x: hidden;
         }
@@ -58,7 +62,8 @@
             position: relative;
             width: 45%;          
             max-width: 425px;    
-            margin-bottom: 40px;
+            /* 下のマージンを少し減らしてロゴとの距離を詰める */
+            margin-bottom: 20px; 
             filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
         }
 
@@ -72,14 +77,14 @@
         /* キャラクター共通スタイル */
         .char-img {
             position: absolute;
-            /* 修正点：位置を下に下げました (42% -> 35%) */
+            /* 確定位置: 25% */
             bottom: 25%; 
             width: 55%;  
             height: auto;
             transform-origin: bottom center;
         }
 
-        /* 各キャラクターの配置（前回調整した間隔を維持） */
+        /* 各キャラクターの配置（確定版） */
         
         /* 1人目：Toruma (左端) */
         .char-1 {
@@ -134,50 +139,85 @@
             50% { transform: translateY(1px) scaleY(0.99); } 
         }
 
-
-        /* メインコンテンツ */
+        /* --- メインコンテンツ（デザイン適用） --- */
         .main-content {
             position: relative;
             z-index: 60;
             text-align: center;
             padding: 0 20px;
+            /* 一体感を出すために少し上に */
+            margin-top: -10px;
         }
 
         /* ロゴ画像用スタイル */
         .logo-img {
-            max-width: 350px;
-            width: 80%;
+            max-width: 300px;
+            width: 70%;
             height: auto;
-            margin-bottom: 10px;
-            filter: drop-shadow(0 0 20px rgba(255,245,200,0.5));
+            margin-bottom: 25px;
+            filter: drop-shadow(0 0 15px rgba(255,245,200,0.3));
         }
 
-        .main-content p {
-            font-size: 1.1rem;
-            margin: 15px 0;
-            opacity: 0.9;
-            line-height: 1.8;
-            letter-spacing: 1px;
+        /* キャッチコピーのスタイル */
+        .copy-text {
+            font-size: 1.15rem;
+            margin: 0 0 40px 0;
+            color: #fffbe0;
+            line-height: 2.2;
+            letter-spacing: 0.15em;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            font-weight: 500;
         }
 
         /* 立ち絵（若凪） */
         .standing-image img {
             max-height: 55vh;
             margin-top: 20px;
-            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8));
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.9));
         }
 
+        /* ボタン：カフェの看板風にリデザイン */
         .enter-btn {
+            position: relative;
             display: inline-block;
-            margin: 25px 0;
-            padding: 18px 55px;
-            background: #fff;
-            color: #2c1e1a;
+            margin: 10px 0 40px;
+            padding: 16px 60px;
+            
+            /* 木の看板のような質感 */
+            background-color: var(--wood-dark); 
+            border: 2px solid var(--paper-color); 
+            color: var(--paper-color);
+            
             text-decoration: none;
+            font-size: 1.1rem;
             font-weight: bold;
-            border-radius: 2px;
-            transition: 0.3s;
+            letter-spacing: 0.1em;
+            border-radius: 4px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+            overflow: hidden;
         }
+
+        /* ホバー時の演出：ふわっと光る */
+        .enter-btn:hover {
+            background-color: var(--paper-color);
+            color: var(--wood-dark);
+            box-shadow: 0 10px 25px rgba(255, 213, 79, 0.4); /* 金色の光 */
+            transform: translateY(-2px);
+        }
+        
+        /* ボタン内の装飾線 */
+        .enter-btn::before, .enter-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 10px; height: 1px;
+            background: currentColor;
+            transition: all 0.3s;
+        }
+        .enter-btn::before { left: 15px; }
+        .enter-btn::after { right: 15px; }
+
 
         .particle {
             position: fixed;
@@ -197,7 +237,9 @@
         @media (max-width: 768px) {
             header { padding-top: 30px; }
             .header-scene { width: 70%; max-width: 350px; } 
-            .logo-img { max-width: 250px; }
+            .logo-img { max-width: 220px; }
+            .copy-text { font-size: 1rem; }
+            .enter-btn { padding: 14px 45px; font-size: 1rem; }
             .standing-image img { max-height: 45vh; }
         }
     </style>
@@ -220,8 +262,10 @@
     <main class="main-content">
         <img src="flat-cafe-logo.png" alt="Flat Cafe" class="logo-img">
         
-        <p>ふらっと立ち寄り、心が軽くなる場所。<br>
-        常連客 1,000人の物語を、ここから。</p>
+        <p class="copy-text">
+            ふらっと立ち寄り、心が軽くなる場所。<br>
+            常連客 1,000人の物語を、ここから。
+        </p>
         
         <a href="https://www.youtube.com/@flatcafe-official?sub_confirmation=1" class="enter-btn">
             カフェに入店する
