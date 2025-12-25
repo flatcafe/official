@@ -11,6 +11,7 @@
             --paper-color: #fcf6e6;
             --wood-dark: #5d4037;
             --accent-gold: #ffd54f;
+            --pin-color: #a52a2a; /* 押しピンの色 */
         }
 
         body, html {
@@ -46,13 +47,64 @@
             pointer-events: none;
         }
 
-        /* --- ヘッダーシーン（キャラクター画像群） --- */
-        /* ヘッダータグは削除し、クラスのみ維持して配置調整 */
+        /* --- 追加：壁の写真ギャラリー --- */
+        .photo-gallery {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 3; /* 背景より手前、メインコンテンツより奥 */
+            pointer-events: none; /* クリックを透過させる */
+        }
+
+        .photo-item {
+            position: absolute;
+            width: 120px; /* 写真の基本サイズ（小さめ） */
+            padding: 6px 6px 20px 6px; /* ポラロイド風の枠 */
+            background-color: #f8f8f0;
+            box-shadow: 2px 4px 8px rgba(0,0,0,0.5);
+            transform-origin: top center; /* 回転の中心を上部中央（ピンの位置）に */
+            animation: photo-sway ease-in-out infinite alternate;
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: sepia(0.3) contrast(0.9); /* 少しレトロな雰囲気に */
+        }
+
+        /* 押しピンの表現（CSSで描画） */
+        .photo-item::after {
+            content: '';
+            position: absolute;
+            top: -4px; left: 50%;
+            width: 10px; height: 10px;
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, var(--pin-color)); /* 立体的な赤いピン */
+            border-radius: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 2px 3px rgba(0,0,0,0.6);
+            z-index: 1;
+        }
+
+        /* ゆらゆらアニメーション定義 */
+        @keyframes photo-sway {
+            0% { transform: rotate(-1.5deg); }
+            100% { transform: rotate(1.5deg); }
+        }
+
+        /* 各写真の個別の配置とアニメーション設定（散りばめる） */
+        .p1 { top: 8%; left: 5%; animation-duration: 4.5s; animation-delay: 0s; transform: rotate(-3deg); }
+        .p2 { top: 20%; right: 8%; width: 110px; animation-duration: 5.2s; animation-delay: 0.8s; transform: rotate(4deg); }
+        .p3 { top: 45%; left: 10%; width: 130px; animation-duration: 4.8s; animation-delay: 2s; transform: rotate(-2deg); }
+        .p4 { top: 60%; right: 12%; animation-duration: 5.5s; animation-delay: 1.5s; transform: rotate(5deg); }
+        .p5 { top: 80%; left: 18%; width: 115px; animation-duration: 5.0s; animation-delay: 0.3s; transform: rotate(-4deg); }
+
+
+        /* --- メインコンテンツ（以前のまま） --- */
         .header-scene {
             position: relative;
             width: 55%;           
             max-width: 425px;    
-            margin: 0 auto 30px auto; /* 中央揃えと下の余白 */
+            margin: 0 auto 30px auto;
             filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
             z-index: 50;
         }
@@ -77,29 +129,26 @@
         @keyframes talk-bounce { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-4px) rotate(1deg); } 60% { transform: translateY(0) rotate(0deg); } 80% { transform: translateY(-2px) rotate(-1deg); } }
         @keyframes talk-nod { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(1px) scaleY(0.99); } }
 
-        /* --- メインコンテンツ --- */
         .main-content {
             position: relative;
-            z-index: 60;
+            z-index: 60; /* 写真より手前に表示 */
             text-align: center;
-            padding: 80px 20px 0; /* 上部に余白を追加（ヘッダー削除分） */
+            padding: 80px 20px 0;
             display: block;
         }
 
-        /* 1. ロゴ */
         .logo-img {
             display: inline-block;
-            max-width: 180px; /* 少し大きくして存在感を調整 */
+            max-width: 180px;
             width: 40%;
             height: auto;
             margin-bottom: 30px;
             filter: drop-shadow(0 0 15px rgba(255,245,200,0.3));
         }
 
-        /* 2. メッセージ */
         .copy-text {
             font-size: 1.15rem;
-            margin: 0 auto 40px auto; /* キャラクター画像との間隔を調整 */
+            margin: 0 auto 40px auto;
             color: #fffbe0;
             line-height: 2.4; 
             letter-spacing: 0.1em; 
@@ -109,7 +158,6 @@
             width: 100%; 
         }
 
-        /* 3. 立ち絵（メイン） */
         .standing-image {
             width: 100%;
             margin-bottom: 20px;
@@ -120,7 +168,6 @@
             filter: drop-shadow(0 20px 40px rgba(0,0,0,0.9));
         }
 
-        /* 4. 入店ボタン */
         .enter-btn {
             position: relative;
             display: inline-block;
@@ -173,6 +220,7 @@
             100% { transform: translateY(-5vh) translateX(40px); opacity: 0; }
         }
 
+        /* レスポンシブ調整 */
         @media (max-width: 768px) {
             .main-content { padding-top: 60px; }
             .header-scene { width: 80%; max-width: 350px; } 
@@ -180,6 +228,13 @@
             .copy-text { font-size: 1rem; }
             .enter-btn { padding: 14px 45px; font-size: 1rem; }
             .standing-image img { max-height: 45vh; }
+
+            /* スマホ表示時の写真サイズと配置調整 */
+            .photo-item { width: 90px; }
+            .p2 { width: 85px; top: 18%; right: 2%; }
+            .p3 { width: 100px; top: 40%; left: 2%;}
+            .p4 { top: 55%; right: 5%; }
+            .p5 { width: 95px; top: 75%; left: 5%; }
         }
     </style>
 </head>
@@ -187,6 +242,14 @@
 
     <div class="background"></div>
     <div class="window-shadow"></div>
+
+    <div class="photo-gallery">
+        <div class="photo-item p1"><img src="photo_01.png" alt="Photo 1"></div>
+        <div class="photo-item p2"><img src="photo_02.png" alt="Photo 2"></div>
+        <div class="photo-item p3"><img src="photo_03.png" alt="Photo 3"></div>
+        <div class="photo-item p4"><img src="photo_04.png" alt="Photo 4"></div>
+        <div class="photo-item p5"><img src="photo_05.png" alt="Photo 5"></div>
+    </div>
 
     <main class="main-content">
         <img src="flat-cafe-logo.png" alt="Flat Cafe" class="logo-img">
