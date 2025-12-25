@@ -25,7 +25,7 @@
             font-family: 'Georgia', 'Yu Mincho', 'Kozuka Mincho Pr6N', 'Hiragino Mincho ProN', 'serif';
             color: #fff9c4;
             overflow-x: hidden;
-            perspective: 1000px; /* 3D演出のための奥行き */
+            perspective: 1000px;
         }
 
         /* =========================================
@@ -47,7 +47,6 @@
             color: var(--accent-gold); animation: pulse 2s infinite;
         }
 
-        /* コーヒーカップのアニメーション */
         .coffee-icon {
             width: 40px; height: 30px;
             border: 2px solid var(--paper-color); border-radius: 0 0 15px 15px;
@@ -76,7 +75,7 @@
         @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
 
         /* =========================================
-           3. 背景演出 (壁、窓の光、パーティクル)
+           3. 背景・前景演出 (壁,窓,写真,★植物)
            ========================================= */
         .background {
             position: fixed; width: 100%; height: 100%;
@@ -103,9 +102,7 @@
             100% { transform: translateY(-5vh) translateX(40px); opacity: 0; }
         }
 
-        /* =========================================
-           4. 壁の写真ギャラリー
-           ========================================= */
+        /* 壁の写真ギャラリー */
         .photo-gallery {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 70; pointer-events: none; 
@@ -122,7 +119,7 @@
         }
         .photo-item:hover { transform: scale(1.1) !important; z-index: 10; }
         .photo-item img { width: 100%; height: auto; display: block; filter: sepia(0.3) contrast(0.9); }
-        .photo-item::after { /* 押しピン */
+        .photo-item::after {
             content: ''; position: absolute; top: -4px; left: 50%;
             width: 10px; height: 10px;
             background: radial-gradient(circle at 30% 30%, #ff6b6b, var(--pin-color));
@@ -131,15 +128,37 @@
         }
         @keyframes photo-sway { 0% { transform: rotate(-1.5deg); } 100% { transform: rotate(1.5deg); } }
 
-        /* 個別の配置設定 (PC基準) */
         .p1 { top: 8%; left: 5%; animation-duration: 4.5s; transform: rotate(-3deg); }
         .p2 { top: 20%; right: 8%; width: 110px; animation-duration: 5.2s; animation-delay: 0.8s; transform: rotate(4deg); }
         .p3 { top: 45%; left: 10%; width: 130px; animation-duration: 4.8s; animation-delay: 2s; transform: rotate(-2deg); }
         .p4 { top: 60%; right: 12%; animation-duration: 5.5s; animation-delay: 1.5s; transform: rotate(5deg); }
         .p5 { top: 80%; left: 18%; width: 115px; animation-duration: 5.0s; animation-delay: 0.3s; transform: rotate(-4deg); }
 
+        /* ▼ 追加：手前の観葉植物（フレーム効果） ▼ */
+        .foreground-plants {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 80; /* 写真より手前、ローディングより奥 */
+            pointer-events: none; /* クリックを透過 */
+        }
+        .plant-img {
+            position: absolute;
+            width: 40%; /* 画面幅の40%程度 */
+            max-width: 300px;
+            height: auto;
+            filter: blur(5px); /* 少しぼかす */
+        }
+        .plant-left-bottom {
+            bottom: -5%; left: -5%; /* 少し画面外にはみ出させる */
+            transform: rotate(-10deg);
+        }
+        .plant-right-top {
+            top: -10%; right: -5%;
+            transform: scaleX(-1) rotate(15deg); /* 左右反転して角度をつける */
+        }
+
+
         /* =========================================
-           5. 写真の拡大＆飛んでいく演出 (3D Animation)
+           4. 写真の拡大＆飛んでいく演出 (3D Animation)
            ========================================= */
         #zoom-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -147,7 +166,7 @@
             display: flex; justify-content: center; align-items: center;
             opacity: 0; visibility: hidden;
             transition: opacity 0.5s ease; pointer-events: none;
-            perspective: 1200px; /* 3D空間の定義 */
+            perspective: 1200px;
         }
         #zoom-modal.active { opacity: 1; visibility: visible; }
         
@@ -160,7 +179,6 @@
         }
         #zoom-modal.active #zoom-img { transform: scale(1) rotateX(0) rotateY(0); opacity: 1; }
 
-        /* ▼ 風に吹かれて飛んでいくクラス ▼ */
         #zoom-img.blown-away {
             animation: paper-fly-3d 1.8s cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
             transition: none !important;
@@ -175,7 +193,7 @@
         }
 
         /* =========================================
-           6. メインコンテンツ (ロゴ・キャラ・ボタン)
+           5. メインコンテンツ (ロゴ・キャラ・ボタン)
            ========================================= */
         .main-content {
             position: relative; z-index: 60;
@@ -204,7 +222,6 @@
             -webkit-tap-highlight-color: transparent; outline: none;
         }
         
-        /* キャラクター個別アニメーション */
         .char-1 { left: 0%; animation: talk-sway 3.2s infinite ease-in-out; z-index: 2; }
         .char-2 { left: 15.5%; animation: talk-bounce 2.5s infinite ease-in-out; animation-delay: 0.2s; z-index: 3; }
         .char-3 { right: 15.5%; animation: talk-sway-reverse 3.8s infinite ease-in-out; animation-delay: 0.5s; z-index: 3; }
@@ -259,7 +276,7 @@
         .enter-btn::before { left: 15px; } .enter-btn::after { right: 15px; }
 
         /* =========================================
-           7. スマホ用レスポンシブ設定
+           6. スマホ用レスポンシブ設定
            ========================================= */
         @media (max-width: 768px) {
             .main-content { padding-top: 60px; }
@@ -269,13 +286,17 @@
             .enter-btn { padding: 14px 45px; font-size: 1rem; }
             .standing-image img { max-height: 45vh; }
 
-            /* スマホでの写真配置（小さく、端に寄せる） */
+            /* スマホでの写真配置 */
             .photo-item { width: 70px; padding: 4px 4px 12px 4px; } 
             .p1 { top: 4%; left: 2%; transform: rotate(-5deg); }
             .p2 { top: 10%; right: 2%; width: 65px; transform: rotate(5deg); }
             .p3 { top: 40%; left: -2%; width: 75px; transform: rotate(3deg); }
             .p4 { top: 55%; right: 1%; transform: rotate(-3deg); }
             .p5 { top: 78%; left: 3%; width: 68px; transform: rotate(-6deg); }
+
+            /* スマホでの植物配置（少し小さく調整） */
+            .plant-img { width: 50%; max-width: none; }
+            .plant-right-top { top: -5%; right: -15%; }
         }
     </style>
 </head>
@@ -289,6 +310,11 @@
 
     <div class="background"></div>
     <div class="window-shadow"></div>
+
+    <div class="foreground-plants">
+        <img src="plant_01.png" alt="Plant" class="plant-img plant-left-bottom">
+        <img src="plant_01.png" alt="Plant" class="plant-img plant-right-top">
+    </div>
 
     <div id="zoom-modal">
         <img id="zoom-img" src="" alt="Zoomed Photo">
@@ -341,7 +367,7 @@
             const loader = document.getElementById('loading-screen');
             setTimeout(() => {
                 loader.classList.add('hidden');
-            }, 1000); // 1秒待ってフェードアウト
+            }, 1000);
         });
 
         // --- 2. 背景パーティクルの生成 ---
@@ -364,14 +390,12 @@
             const modal = document.getElementById('zoom-modal');
             const img = document.getElementById('zoom-img');
             
-            // 連打対策: 前回のタイマーをクリア
             if(zoomTimeout) clearTimeout(zoomTimeout);
             if(resetTimeout) clearTimeout(resetTimeout);
             
-            // クラスをリセットして初期状態へ
             img.classList.remove('blown-away');
             modal.classList.remove('active');
-            void img.offsetWidth; // アニメーションリセット用のおまじない
+            void img.offsetWidth;
 
             img.src = src;
             modal.classList.add('active');
@@ -380,7 +404,7 @@
             zoomTimeout = setTimeout(() => {
                 img.classList.add('blown-away');
 
-                // 飛び去り完了後(1.8秒後)にモーダルを閉じる
+                // 1.8秒後にモーダルを閉じる
                 resetTimeout = setTimeout(() => {
                     modal.classList.remove('active');
                     img.classList.remove('blown-away');
