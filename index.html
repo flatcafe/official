@@ -46,22 +46,15 @@
             pointer-events: none;
         }
 
-        /* --- ヘッダーエリア --- */
-        header {
-            position: relative;
-            z-index: 50;
-            padding-top: 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
+        /* --- ヘッダーシーン（キャラクター画像群） --- */
+        /* ヘッダータグは削除し、クラスのみ維持して配置調整 */
         .header-scene {
             position: relative;
-            width: 45%;          
+            width: 55%;           
             max-width: 425px;    
-            margin-bottom: 20px; 
+            margin: 0 auto 30px auto; /* 中央揃えと下の余白 */
             filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
+            z-index: 50;
         }
 
         .bench-img { width: 100%; height: auto; display: block; }
@@ -85,30 +78,28 @@
         @keyframes talk-nod { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(1px) scaleY(0.99); } }
 
         /* --- メインコンテンツ --- */
-        /* Flexboxを廃止し、標準のブロック表示にします */
         .main-content {
             position: relative;
             z-index: 60;
-            text-align: center; /* 中身を中央揃え */
-            padding: 0 20px;
-            margin-top: -10px;
-            display: block; /* 標準の表示形式 */
+            text-align: center;
+            padding: 80px 20px 0; /* 上部に余白を追加（ヘッダー削除分） */
+            display: block;
         }
 
         /* 1. ロゴ */
         .logo-img {
-            display: inline-block; /* 画像をインラインブロック化 */
-            max-width: 150px;
-            width: 35%;
+            display: inline-block;
+            max-width: 180px; /* 少し大きくして存在感を調整 */
+            width: 40%;
             height: auto;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             filter: drop-shadow(0 0 15px rgba(255,245,200,0.3));
         }
 
         /* 2. メッセージ */
         .copy-text {
             font-size: 1.15rem;
-            margin: 0 auto 30px auto; /* 左右中央揃え */
+            margin: 0 auto 40px auto; /* キャラクター画像との間隔を調整 */
             color: #fffbe0;
             line-height: 2.4; 
             letter-spacing: 0.1em; 
@@ -118,7 +109,7 @@
             width: 100%; 
         }
 
-        /* 3. キャラクター（立ち絵） */
+        /* 3. 立ち絵（メイン） */
         .standing-image {
             width: 100%;
             margin-bottom: 20px;
@@ -183,9 +174,9 @@
         }
 
         @media (max-width: 768px) {
-            header { padding-top: 30px; }
-            .header-scene { width: 70%; max-width: 350px; } 
-            .logo-img { max-width: 110px; }
+            .main-content { padding-top: 60px; }
+            .header-scene { width: 80%; max-width: 350px; } 
+            .logo-img { max-width: 130px; }
             .copy-text { font-size: 1rem; }
             .enter-btn { padding: 14px 45px; font-size: 1rem; }
             .standing-image img { max-height: 45vh; }
@@ -197,16 +188,6 @@
     <div class="background"></div>
     <div class="window-shadow"></div>
 
-    <header>
-        <div class="header-scene">
-            <img src="isu.png" alt="Bench" class="bench-img">
-            <img src="top_toruma.png" alt="Toruma" class="char-img char-1">
-            <img src="top_lily00.png" alt="Lily" class="char-img char-2">
-            <img src="top_yuzucha.png" alt="Yuzucha" class="char-img char-3">
-            <img src="top_wakanagi.png" alt="Wakanagi" class="char-img char-4">
-        </div>
-    </header>
-
     <main class="main-content">
         <img src="flat-cafe-logo.png" alt="Flat Cafe" class="logo-img">
         
@@ -214,6 +195,14 @@
             ゲームと歌で、あなたに寄り添う。<br>
             ふらっと立ち寄り、心が軽くなる場所。
         </p>
+
+        <div class="header-scene">
+            <img src="isu.png" alt="Bench" class="bench-img">
+            <img src="top_toruma.png" alt="Toruma" class="char-img char-1">
+            <img src="top_lily00.png" alt="Lily" class="char-img char-2">
+            <img src="top_yuzucha.png" alt="Yuzucha" class="char-img char-3">
+            <img src="top_wakanagi.png" alt="Wakanagi" class="char-img char-4">
+        </div>
 
         <div class="standing-image">
             <img src="wakanagi-main.png" alt="若凪">
