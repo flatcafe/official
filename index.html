@@ -3,159 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ふらっとcafe Official</title>
+    <title>ふらっとcafe Official | 窓際の特等席</title>
     <style>
-        /* 変数定義：カフェの画像から抽出した色 */
         :root {
-            --wood-dark: #3e2723;
-            --sun-gold: #fff5ca; /* 画像の照明に近い色 */
-            --wakanagi-green: #81a182;
+            --wood-dark: #2c1e1a;
+            --sun-light: rgba(255, 252, 220, 0.4);
+            --shadow-color: rgba(0, 0, 0, 0.2);
         }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #2c1e1a; /* ベースを暗くして光を際立たせる */
-            overflow-x: hidden;
-            font-family: 'Georgia', serif;
-        }
-
-        /* 背景レイヤー：木の質感を全面に */
-        .wood-background {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(62, 39, 35, 0.7), rgba(62, 39, 35, 0.7)),
-                        url('https://www.transparenttextures.com/patterns/wood-pattern.png');
-            background-repeat: repeat;
-            z-index: 1;
-        }
-
-        /* --- 【最重要】光の筋レイヤー：絶対に見える設定 --- */
-        .light-shaft-container {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 100; /* コンテンツの手前に配置 */
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: #3e2723;
+            font-family: 'serif';
             overflow: hidden;
         }
 
-        .light-beam {
+        /* 木目の床（ベース） */
+        .floor {
+            position: fixed;
+            width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
+                url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+            z-index: 1;
+        }
+
+        /* --- 【最重要】窓格子の影レイヤー --- */
+        .window-shadow {
             position: absolute;
-            top: -20%;
-            right: -10%;
-            width: 40vw;
-            height: 150vh;
+            top: 0; left: 0; width: 100%; height: 100%;
+            /* 縦の格子 */
+            background-image: 
+                repeating-linear-gradient(90deg, transparent, transparent 80px, var(--shadow-color) 80px, var(--shadow-color) 100px),
+                /* 横の格子 */
+                repeating-linear-gradient(0deg, transparent, transparent 80px, var(--shadow-color) 80px, var(--shadow-color) 100px),
+                /* 全体的な光の差し込み */
+                radial-gradient(circle at 80% 20%, var(--sun-light), transparent 70%);
+            z-index: 2;
+            transform: skewX(-20deg) scale(1.5); /* 影を斜めに落とす */
+            filter: blur(8px); /* 影の輪郭を柔らかく */
+            pointer-events: none;
+        }
+
+        /* 光の粒（煌めき） */
+        .particles {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
             background: white;
-            /* 物理的な「光の筋」を作るための強力なぼかしと透明度 */
-            box-shadow: 0 0 100px 50px white;
-            opacity: 0.15;
-            transform: rotate(35deg);
-            filter: blur(80px); /* 輪郭を溶かす */
-            animation: beam-shimmer 10s infinite alternate;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float-particle 10s infinite linear;
         }
 
-        .light-glow {
-            position: absolute;
-            top: -10%;
-            right: -10%;
-            width: 60vw;
-            height: 60vw;
-            background: radial-gradient(circle, var(--sun-gold) 0%, transparent 70%);
-            opacity: 0.4;
-            z-index: 99;
-            filter: blur(50px);
+        @keyframes float-particle {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { transform: translateY(-10vh) translateX(50px); opacity: 0; }
         }
 
-        @keyframes beam-shimmer {
-            0% { opacity: 0.1; transform: rotate(35deg) translateX(0); }
-            100% { opacity: 0.25; transform: rotate(35deg) translateX(-50px); }
-        }
-
-        /* コンテンツエリア */
+        /* コンテンツ */
         .content {
             position: relative;
-            z-index: 50;
+            z-index: 10;
             height: 100vh;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-around;
             padding: 0 10%;
             color: #fff9c4;
         }
 
-        .text-area {
-            flex: 1;
-            text-shadow: 2px 2px 20px rgba(0,0,0,0.8);
-        }
-
-        .text-area h1 {
-            font-size: 5rem;
+        .text-section h1 {
+            font-size: clamp(3rem, 10vw, 6rem);
             margin: 0;
-            color: var(--sun-gold);
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
         }
 
-        .image-area {
-            flex: 1;
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .image-area img {
-            max-height: 85vh;
-            /* 立ち絵自体が光っているような効果 */
-            filter: drop-shadow(0 0 30px rgba(255,245,200,0.3)) 
-                    drop-shadow(20px 20px 40px rgba(0,0,0,0.6));
+        .character-img img {
+            max-height: 80vh;
+            filter: drop-shadow(20px 20px 50px rgba(0,0,0,0.5));
         }
 
         .enter-btn {
             display: inline-block;
-            margin-top: 40px;
+            margin-top: 30px;
             padding: 20px 50px;
-            background: var(--sun-gold);
+            background: rgba(255, 255, 255, 0.9);
             color: var(--wood-dark);
             text-decoration: none;
             font-weight: bold;
             border-radius: 2px;
-            box-shadow: 0 0 20px rgba(255,245,200,0.5);
             transition: 0.3s;
-            pointer-events: auto; /* ボタンは光の下でも触れるように */
         }
-
-        .enter-btn:hover {
-            transform: scale(1.05);
-            background: #fff;
-        }
-
     </style>
 </head>
 <body>
 
-    <div class="wood-background"></div>
-
-    <div class="light-shaft-container">
-        <div class="light-beam"></div>
-        <div class="light-glow"></div>
-    </div>
+    <div class="floor"></div>
+    <div class="window-shadow"></div>
+    
+    <div class="particles" id="particles"></div>
 
     <div class="content">
-        <div class="text-area">
-            <p style="letter-spacing: 5px;">EST. 2025</p>
-            <h1>Flat Cafe</h1>
-            <p style="font-size: 1.2rem; margin: 20px 0;">
-                この光の先に、新しい出会いがある。<br>
-                目指せ、常連客1,000人。
-            </p>
-            <a href="https://www.youtube.com/@flatcafe-official?sub_confirmation=1" class="enter-btn">
-                カフェに入店する
-            </a>
+        <div class="text-section">
+            <p style="letter-spacing: 10px; opacity: 0.7;">FLAT CAFE</p>
+            <h1>窓際の、<br>特等席。</h1>
+            <a href="https://www.youtube.com/@flatcafe-official?sub_confirmation=1" class="enter-btn">常連客として入店する</a>
         </div>
-        
-        <div class="image-area">
+        <div class="character-img">
             <img src="image_dd7e27.png" alt="若凪">
         </div>
     </div>
 
+    <script>
+        // 光の粒を動的に作成
+        const container = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const size = Math.random() * 4 + 'px';
+            p.style.width = size;
+            p.style.height = size;
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            p.style.animationDelay = (Math.random() * 10) + 's';
+            container.appendChild(p);
+        }
+    </script>
 </body>
 </html>
