@@ -106,8 +106,9 @@
         .photo-gallery {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 3;
-            pointer-events: none; 
+            /* 修正：メインコンテンツ(z-index:60)より手前に持ってくる */
+            z-index: 70;
+            pointer-events: none; /* 写真以外はクリックを透過させる */
         }
 
         .photo-item {
@@ -118,13 +119,16 @@
             box-shadow: 2px 4px 8px rgba(0,0,0,0.5);
             transform-origin: top center;
             animation: photo-sway ease-in-out infinite alternate;
-            cursor: pointer; /* クリックできることを示す */
-            pointer-events: auto; /* 写真だけクリック有効 */
+            cursor: pointer; 
+            pointer-events: auto; /* 写真自体のクリックは有効化 */
             transition: transform 0.3s;
+            /* 追加：タップ時のハイライトを無効化 */
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
         }
 
         .photo-item:hover {
-            transform: scale(1.1) !important; /* ホバー時に少し浮く */
+            transform: scale(1.1) !important;
             z-index: 10;
         }
 
@@ -167,7 +171,7 @@
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.5s ease;
-            pointer-events: none; /* 拡大中は操作不要 */
+            pointer-events: none;
         }
         #zoom-modal.active {
             opacity: 1;
@@ -200,13 +204,16 @@
         .char-img {
             position: absolute; bottom: 25%; width: 55%; height: auto;
             transform-origin: bottom center;
-            cursor: pointer; /* クリック可 */
+            cursor: pointer;
+            /* 追加：タップ時のハイライトを無効化 */
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
         }
 
         /* 吹き出しスタイル */
         .chat-bubble {
             position: absolute;
-            bottom: 85%; /* キャラの頭上 */
+            bottom: 85%;
             left: 50%;
             transform: translateX(-50%) scale(0);
             background: #fff;
@@ -217,18 +224,17 @@
             font-weight: bold;
             white-space: nowrap;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            pointer-events: none;
+            pointer-events: none; /* 通常時はクリックを阻害しない */
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 100;
         }
-        .chat-bubble::after { /* 吹き出しのしっぽ */
+        .chat-bubble::after {
             content: ''; position: absolute; bottom: -6px; left: 50%;
             margin-left: -6px;
             border-width: 6px 6px 0; border-style: solid;
             border-color: #fff transparent transparent transparent;
         }
-        /* 吹き出し表示時のクラス */
         .chat-bubble.show {
             transform: translateX(-50%) scale(1);
             opacity: 1;
@@ -239,11 +245,6 @@
         .char-2 { left: 15.5%; animation: talk-bounce 2.5s infinite ease-in-out; animation-delay: 0.2s; z-index: 3; }
         .char-3 { right: 15.5%; animation: talk-sway-reverse 3.8s infinite ease-in-out; animation-delay: 0.5s; z-index: 3; }
         .char-4 { right: 0%; animation: talk-nod 4.0s infinite ease-in-out; animation-delay: 1.0s; z-index: 2; }
-
-        @keyframes talk-sway { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-2deg); } 75% { transform: rotate(1deg); } }
-        @keyframes talk-sway-reverse { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(2deg); } 75% { transform: rotate(-1.5deg); } }
-        @keyframes talk-bounce { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-4px) rotate(1deg); } 60% { transform: translateY(0) rotate(0deg); } 80% { transform: translateY(-2px) rotate(-1deg); } }
-        @keyframes talk-nod { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(1px) scaleY(0.99); } }
 
         .main-content {
             position: relative;
@@ -391,10 +392,9 @@
         // 1. ローディング処理
         window.addEventListener('load', () => {
             const loader = document.getElementById('loading-screen');
-            // 少しだけ待ってからフェードアウト（演出のため）
             setTimeout(() => {
                 loader.classList.add('hidden');
-            }, 1000); // 1秒後に消える
+            }, 1000);
         });
 
         // 2. 背景パーティクル生成
@@ -415,13 +415,11 @@
             const modal = document.getElementById('zoom-modal');
             const img = document.getElementById('zoom-img');
             
-            // 既存のタイマーがあればキャンセル（連続クリック対策）
             if(zoomTimeout) clearTimeout(zoomTimeout);
 
             img.src = src;
             modal.classList.add('active');
 
-            // 2秒後にフェードアウト開始
             zoomTimeout = setTimeout(() => {
                 modal.classList.remove('active');
             }, 2000);
@@ -429,19 +427,14 @@
 
         // 4. キャラクターつぶやき処理
         function showSpeech(element, messages) {
-            // クリックされたキャラの直後の要素（bubble）を取得
             const bubble = element.nextElementSibling;
-            
-            // 既に表示中なら何もしない、または更新する
             if (bubble.classList.contains('show')) return;
 
-            // ランダムにメッセージを選択
             const text = messages[Math.floor(Math.random() * messages.length)];
             bubble.textContent = text;
             
             bubble.classList.add('show');
 
-            // 3秒後に消える
             setTimeout(() => {
                 bubble.classList.remove('show');
             }, 3000);
