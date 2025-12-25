@@ -72,7 +72,7 @@
         .card-grid {
             display: flex; flex-wrap: wrap; justify-content: center;
             gap: 40px; width: 100%;
-            perspective: 1200px; /* 3D効果用 */
+            perspective: 1200px;
         }
 
         .char-card {
@@ -86,20 +86,17 @@
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s;
             display: flex; flex-direction: column; align-items: center;
             
-            /* アニメーション初期値 */
             opacity: 0; transform: translateY(50px) rotate(var(--rot));
             animation: deal-card 0.6s forwards;
             animation-delay: var(--delay);
         }
 
-        /* カードのホバー効果 */
         .char-card:hover {
             transform: translateY(-15px) scale(1.05) rotate(0deg) !important;
             box-shadow: 0 25px 50px rgba(0,0,0,0.7);
             z-index: 100;
         }
 
-        /* カードの上部装飾 (テープ) */
         .tape {
             position: absolute; top: -12px; left: 50%; transform: translateX(-50%) rotate(-2deg);
             width: 100px; height: 25px;
@@ -109,37 +106,34 @@
             z-index: 20;
         }
 
-        /* キャラクター画像配置エリア */
         .char-area {
             position: relative;
-            width: 100%; height: 70%; /* カードの上7割を絵にする */
+            width: 100%; height: 70%;
             margin-top: 10px;
-            overflow: visible; /* キャラをはみ出させる */
+            overflow: visible; 
             display: flex; justify-content: center; align-items: flex-end;
         }
 
-        /* キャラクター画像 */
         .char-img {
-            max-width: 140%; max-height: 110%; /* 親枠からはみ出すサイズ感 */
+            max-width: 140%; max-height: 115%; /* 少し大きめに設定して飛び出しやすく */
             object-fit: contain;
             filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));
             transition: transform 0.4s ease;
             transform-origin: bottom center;
         }
         .char-card:hover .char-img {
-            transform: scale(1.1); /* ホバーで少し大きくなる */
+            transform: scale(1.1);
         }
 
-        /* 下部の情報エリア */
         .info-area {
             width: 100%; height: 30%;
             background-image: repeating-linear-gradient(#eee 0 1px, transparent 1px 100%);
-            background-size: 100% 20px; /* ノートの罫線風 */
+            background-size: 100% 20px;
             padding: 10px; box-sizing: border-box;
             text-align: center;
             border-top: 2px dashed #d7ccc8;
             position: relative; z-index: 10;
-            background-color: var(--card-bg); /* 背景色で透過を防ぐ */
+            background-color: var(--card-bg);
             border-radius: 0 0 4px 4px;
         }
 
@@ -152,26 +146,26 @@
             font-size: 0.85rem; color: #795548; font-weight: bold;
         }
 
-        /* --- 個別調整 (キャラごとの背景や回転角) --- */
-        /* YouTube (Toruma) */
+        /* --- 背景色設定 (キャラに合わせて調整可能) --- */
+        /* YouTube */
         .card-yt { --rot: -3deg; --delay: 0.1s; }
-        .card-yt .char-area::before { /* 背景にうっすら円を入れる */
+        .card-yt .char-area::before {
             content:''; position: absolute; width: 160px; height: 160px; background: #ffebee; border-radius: 50%; top: 20px; z-index: -1;
         }
         
-        /* Twitter (Lily) */
+        /* Twitter */
         .card-tw { --rot: 2deg; --delay: 0.25s; }
         .card-tw .char-area::before {
             content:''; position: absolute; width: 160px; height: 160px; background: #e3f2fd; border-radius: 50%; top: 20px; z-index: -1;
         }
 
-        /* Members (Yuzucha) */
+        /* Members */
         .card-mem { --rot: -2deg; --delay: 0.4s; }
         .card-mem .char-area::before {
             content:''; position: absolute; width: 160px; height: 160px; background: #fffde7; border-radius: 50%; top: 20px; z-index: -1;
         }
 
-        /* Gallery (Wakanagi) */
+        /* Gallery */
         .card-gal { --rot: 3deg; --delay: 0.55s; }
         .card-gal .char-area::before {
             content:''; position: absolute; width: 160px; height: 160px; background: #e0f2f1; border-radius: 50%; top: 20px; z-index: -1;
@@ -197,12 +191,11 @@
         }
         .back-btn:hover { background: var(--paper-bg); color: var(--wood-dark); transform: scale(1.05); }
 
-        /* スマホ対応 */
         @media (max-width: 768px) {
             .card-grid { gap: 30px; }
             .char-card { 
                 width: 44%; max-width: 200px; height: 280px;
-                transform: rotate(0deg) !important; /* スマホは見やすさ優先で真っ直ぐ */
+                transform: rotate(0deg) !important;
                 --rot: 0deg; 
             }
             .menu-title { font-size: 1.1rem; }
@@ -225,7 +218,7 @@
             <a href="https://www.youtube.com/@flatcafe-official" target="_blank" class="char-card card-yt">
                 <div class="tape"></div>
                 <div class="char-area">
-                    <img src="top_toruma.png" alt="Toruma" class="char-img">
+                    <img src="menu_youtube.png" alt="YouTube Character" class="char-img">
                 </div>
                 <div class="info-area">
                     <div class="menu-title">YouTube</div>
@@ -236,7 +229,7 @@
             <a href="https://twitter.com/" target="_blank" class="char-card card-tw">
                 <div class="tape"></div>
                 <div class="char-area">
-                    <img src="top_lily00.png" alt="Lily" class="char-img">
+                    <img src="menu_twitter.png" alt="Twitter Character" class="char-img">
                 </div>
                 <div class="info-area">
                     <div class="menu-title">X (Twitter)</div>
@@ -247,7 +240,7 @@
             <a href="#" class="char-card card-mem">
                 <div class="tape"></div>
                 <div class="char-area">
-                    <img src="top_yuzucha.png" alt="Yuzucha" class="char-img">
+                    <img src="menu_member.png" alt="Member Character" class="char-img">
                 </div>
                 <div class="info-area">
                     <div class="menu-title">Members</div>
@@ -258,7 +251,7 @@
             <a href="#" class="char-card card-gal">
                 <div class="tape"></div>
                 <div class="char-area">
-                    <img src="top_wakanagi.png" alt="Wakanagi" class="char-img">
+                    <img src="menu_gallery.png" alt="Gallery Character" class="char-img">
                 </div>
                 <div class="info-area">
                     <div class="menu-title">Gallery</div>
