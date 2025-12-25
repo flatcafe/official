@@ -47,7 +47,7 @@
             pointer-events: none;
         }
 
-        /* --- 追加：壁の写真ギャラリー --- */
+        /* --- 壁の写真ギャラリー --- */
         .photo-gallery {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -57,11 +57,11 @@
 
         .photo-item {
             position: absolute;
-            width: 120px; /* 写真の基本サイズ（小さめ） */
+            width: 120px; /* PCでの基本サイズ */
             padding: 6px 6px 20px 6px; /* ポラロイド風の枠 */
             background-color: #f8f8f0;
             box-shadow: 2px 4px 8px rgba(0,0,0,0.5);
-            transform-origin: top center; /* 回転の中心を上部中央（ピンの位置）に */
+            transform-origin: top center;
             animation: photo-sway ease-in-out infinite alternate;
         }
 
@@ -69,29 +69,28 @@
             width: 100%;
             height: auto;
             display: block;
-            filter: sepia(0.3) contrast(0.9); /* 少しレトロな雰囲気に */
+            filter: sepia(0.3) contrast(0.9);
         }
 
-        /* 押しピンの表現（CSSで描画） */
+        /* 押しピン */
         .photo-item::after {
             content: '';
             position: absolute;
             top: -4px; left: 50%;
             width: 10px; height: 10px;
-            background: radial-gradient(circle at 30% 30%, #ff6b6b, var(--pin-color)); /* 立体的な赤いピン */
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, var(--pin-color));
             border-radius: 50%;
             transform: translateX(-50%);
             box-shadow: 0 2px 3px rgba(0,0,0,0.6);
             z-index: 1;
         }
 
-        /* ゆらゆらアニメーション定義 */
         @keyframes photo-sway {
             0% { transform: rotate(-1.5deg); }
             100% { transform: rotate(1.5deg); }
         }
 
-        /* 各写真の個別の配置とアニメーション設定（散りばめる） */
+        /* PC配置（基本） */
         .p1 { top: 8%; left: 5%; animation-duration: 4.5s; animation-delay: 0s; transform: rotate(-3deg); }
         .p2 { top: 20%; right: 8%; width: 110px; animation-duration: 5.2s; animation-delay: 0.8s; transform: rotate(4deg); }
         .p3 { top: 45%; left: 10%; width: 130px; animation-duration: 4.8s; animation-delay: 2s; transform: rotate(-2deg); }
@@ -99,7 +98,7 @@
         .p5 { top: 80%; left: 18%; width: 115px; animation-duration: 5.0s; animation-delay: 0.3s; transform: rotate(-4deg); }
 
 
-        /* --- メインコンテンツ（以前のまま） --- */
+        /* --- メインコンテンツ --- */
         .header-scene {
             position: relative;
             width: 55%;           
@@ -131,7 +130,7 @@
 
         .main-content {
             position: relative;
-            z-index: 60; /* 写真より手前に表示 */
+            z-index: 60;
             text-align: center;
             padding: 80px 20px 0;
             display: block;
@@ -220,7 +219,7 @@
             100% { transform: translateY(-5vh) translateX(40px); opacity: 0; }
         }
 
-        /* レスポンシブ調整 */
+        /* レスポンシブ調整（スマホ対応） */
         @media (max-width: 768px) {
             .main-content { padding-top: 60px; }
             .header-scene { width: 80%; max-width: 350px; } 
@@ -229,12 +228,30 @@
             .enter-btn { padding: 14px 45px; font-size: 1rem; }
             .standing-image img { max-height: 45vh; }
 
-            /* スマホ表示時の写真サイズと配置調整 */
-            .photo-item { width: 90px; }
-            .p2 { width: 85px; top: 18%; right: 2%; }
-            .p3 { width: 100px; top: 40%; left: 2%;}
-            .p4 { top: 55%; right: 5%; }
-            .p5 { width: 95px; top: 75%; left: 5%; }
+            /* --- 変更箇所：スマホでの写真サイズと位置の調整 --- */
+            /* サイズを大幅に縮小し、余白も狭く */
+            .photo-item { 
+                width: 70px; 
+                padding: 4px 4px 12px 4px;
+            } 
+            
+            /* 位置調整：中央のコンテンツを避け、画面の端（左右）に寄せる */
+            /* topの%は画面縦位置、left/rightは端からの距離 */
+            
+            /* 1. ロゴの左上付近 */
+            .p1 { top: 4%; left: 2%; transform: rotate(-5deg); }
+            
+            /* 2. ロゴの右上～メッセージ横 */
+            .p2 { top: 10%; right: 2%; width: 65px; transform: rotate(5deg); }
+            
+            /* 3. キャラクターの左横（少し画面外にはみ出し気味に） */
+            .p3 { top: 40%; left: -2%; width: 75px; transform: rotate(3deg); }
+            
+            /* 4. キャラクターの右横 */
+            .p4 { top: 55%; right: 1%; transform: rotate(-3deg); }
+            
+            /* 5. ボタンの左下付近 */
+            .p5 { top: 78%; left: 3%; width: 68px; transform: rotate(-6deg); }
         }
     </style>
 </head>
