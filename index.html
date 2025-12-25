@@ -46,14 +46,13 @@
             color: var(--accent-gold);
             animation: pulse 2s infinite;
         }
-        /* 簡易的なコーヒーカップのアイコン */
         .coffee-icon {
             width: 40px; height: 30px;
             border: 2px solid var(--paper-color);
             border-radius: 0 0 15px 15px;
             position: relative;
         }
-        .coffee-icon::after { /* 取手 */
+        .coffee-icon::after { 
             content: ''; position: absolute; top: 5px; right: -12px;
             width: 8px; height: 12px;
             border: 2px solid var(--paper-color);
@@ -106,9 +105,8 @@
         .photo-gallery {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            /* 修正：メインコンテンツ(z-index:60)より手前に持ってくる */
             z-index: 70;
-            pointer-events: none; /* 写真以外はクリックを透過させる */
+            pointer-events: none; 
         }
 
         .photo-item {
@@ -120,9 +118,8 @@
             transform-origin: top center;
             animation: photo-sway ease-in-out infinite alternate;
             cursor: pointer; 
-            pointer-events: auto; /* 写真自体のクリックは有効化 */
+            pointer-events: auto; 
             transition: transform 0.3s;
-            /* 追加：タップ時のハイライトを無効化 */
             -webkit-tap-highlight-color: transparent;
             outline: none;
         }
@@ -183,11 +180,24 @@
             border: 10px solid #fff;
             box-shadow: 0 0 30px rgba(0,0,0,0.8);
             transform: scale(0.8);
-            transition: transform 0.5s ease-out;
+            opacity: 0; /* 初期状態は透明に */
+            /* transition時間を少し長くし、opacityも追加 */
+            transition: transform 0.8s ease-out, opacity 0.8s ease-out;
         }
         #zoom-modal.active #zoom-img {
             transform: scale(1);
+            opacity: 1; /* 表示時に不透明に */
         }
+
+        /* --- 追加：風に吹かれて飛んでいくアニメーション用のクラス --- */
+        #zoom-img.blown-away {
+            /* 右上方向に回転しながら飛び去り、透明になる */
+            transform: translate(60vw, -80vh) rotate(720deg) scale(0.5) !important;
+            opacity: 0 !important;
+            /* ゆっくりと加速しながら飛んでいく */
+            transition: all 1.5s ease-in !important;
+        }
+
 
         /* --- メインコンテンツ --- */
         .header-scene {
@@ -205,7 +215,6 @@
             position: absolute; bottom: 25%; width: 55%; height: auto;
             transform-origin: bottom center;
             cursor: pointer;
-            /* 追加：タップ時のハイライトを無効化 */
             -webkit-tap-highlight-color: transparent;
             outline: none;
         }
@@ -224,7 +233,7 @@
             font-weight: bold;
             white-space: nowrap;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            pointer-events: none; /* 通常時はクリックを阻害しない */
+            pointer-events: none;
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 100;
@@ -409,19 +418,35 @@
             document.body.appendChild(p);
         }
 
-        // 3. 写真ズーム処理（2秒で消える）
+        // 3. 写真ズーム処理（風に吹かれて飛んでいく）
         let zoomTimeout;
+        let resetTimeout; // リセット用のタイマー
+
         function zoomPhoto(src) {
             const modal = document.getElementById('zoom-modal');
             const img = document.getElementById('zoom-img');
             
+            // 連続クリック対策：既存のタイマーとクラスをリセット
             if(zoomTimeout) clearTimeout(zoomTimeout);
+            if(resetTimeout) clearTimeout(resetTimeout);
+            img.classList.remove('blown-away');
+            modal.classList.remove('active');
+            
+            // リフローを強制してアニメーションをリセット（おまじない）
+            void img.offsetWidth;
 
             img.src = src;
             modal.classList.add('active');
 
+            // 2秒後に「吹き飛ばす」アニメーションを開始
             zoomTimeout = setTimeout(() => {
-                modal.classList.remove('active');
+                img.classList.add('blown-away');
+
+                // 吹き飛びアニメーション完了後（1.5秒後）にモーダルを閉じる
+                resetTimeout = setTimeout(() => {
+                    modal.classList.remove('active');
+                    img.classList.remove('blown-away'); // 次回のためにクラスを戻す
+                }, 1500); // CSSのtransition時間と合わせる
             }, 2000);
         }
 
