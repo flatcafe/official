@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ふらっとcafe Official</title>
+    <title>ふらっとcafe Official - Ver.Final</title>
     <style>
         :root {
             --sun-light: rgba(255, 252, 220, 0.4);
@@ -85,20 +85,19 @@
         @keyframes talk-nod { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(1px) scaleY(0.99); } }
 
         /* --- メインコンテンツ --- */
+        /* Flexboxを廃止し、標準のブロック表示にします */
         .main-content {
             position: relative;
             z-index: 60;
-            text-align: center;
+            text-align: center; /* 中身を中央揃え */
             padding: 0 20px;
             margin-top: -10px;
-            /* Flexboxで縦並びにする（orderは削除） */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            display: block; /* 標準の表示形式 */
         }
 
         /* 1. ロゴ */
         .logo-img {
+            display: inline-block; /* 画像をインラインブロック化 */
             max-width: 150px;
             width: 35%;
             height: auto;
@@ -109,7 +108,7 @@
         /* 2. メッセージ */
         .copy-text {
             font-size: 1.15rem;
-            margin: 0 0 30px 0; 
+            margin: 0 auto 30px auto; /* 左右中央揃え */
             color: #fffbe0;
             line-height: 2.4; 
             letter-spacing: 0.1em; 
@@ -122,7 +121,7 @@
         /* 3. キャラクター（立ち絵） */
         .standing-image {
             width: 100%;
-            margin-bottom: 20px; /* ボタンとの間隔 */
+            margin-bottom: 20px;
         }
         .standing-image img {
             max-height: 55vh;
