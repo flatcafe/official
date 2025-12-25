@@ -6,7 +6,6 @@
     <title>ふらっとcafe Official</title>
     <style>
         :root {
-            --wood-shelf: #a1887f; /* 少し明るめの木の板 */
             --sun-light: rgba(255, 252, 220, 0.4);
             --room-dark: #2c1e1a;
         }
@@ -44,38 +43,23 @@
             pointer-events: none;
         }
 
-        /* --- ヘッダー：4人集合画像 & 木の板 --- */
+        /* --- ヘッダー：ベンチの集合画像 --- */
         header {
             position: relative;
             z-index: 50;
-            padding-top: 120px;
+            padding-top: 100px; /* 画像の位置に合わせて少し調整 */
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        .wood-board {
-            position: relative;
-            width: 85%;
-            max-width: 1000px;
-            height: 20px;
-            background: var(--wood-shelf);
-            border-radius: 4px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.6);
-            margin-bottom: 60px;
-        }
-
-        /* 4人が座っている画像 */
-        .group-image {
-            position: absolute;
-            bottom: 15px; /* 板の真上に設置 */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%; /* 板の幅に合わせる */
-            max-width: 800px;
+        /* 新しいヘッダー画像のスタイル */
+        .header-hero-img {
+            width: 90%;
+            max-width: 850px; /* 画像サイズに合わせて調整 */
             height: auto;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.7));
-            z-index: 51;
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.6)); /* 浮き出るような影 */
+            margin-bottom: 40px;
         }
 
         /* メインコンテンツ */
@@ -139,7 +123,6 @@
 
         @media (max-width: 768px) {
             header { padding-top: 80px; }
-            .wood-board { width: 95%; }
             .logo-img { max-width: 250px; }
             .standing-image img { max-height: 45vh; }
         }
@@ -151,9 +134,7 @@
     <div class="window-shadow"></div>
 
     <header>
-        <div class="wood-board">
-            <img src="group-shelf.png" alt="Flat Cafe Members" class="group-image">
-        </div>
+        <img src="site_top.jpg" alt="Flat Cafe Members on Bench" class="header-hero-img">
     </header>
 
     <main class="main-content">
