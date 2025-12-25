@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -71,8 +72,10 @@
            ========================================= */
         .card-grid {
             display: flex; flex-wrap: wrap; justify-content: center;
-            gap: 40px; width: 100%;
+            gap: 50px; /* カード間の隙間を少し広げた */
+            width: 100%;
             perspective: 1200px;
+            padding-top: 30px; /* 上への飛び出し考慮 */
         }
 
         .char-card {
@@ -89,6 +92,7 @@
             opacity: 0; transform: translateY(50px) rotate(var(--rot));
             animation: deal-card 0.6s forwards;
             animation-delay: var(--delay);
+            /* overflowはvisibleのまま、上への飛び出しを許可 */
         }
 
         .char-card:hover {
@@ -103,28 +107,45 @@
             background: rgba(255,255,255,0.3);
             backdrop-filter: blur(3px);
             box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-            z-index: 20;
+            z-index: 30; /* テープは一番上 */
         }
 
+        /* ▼▼▼ 画像配置エリアの修正 ▼▼▼ */
         .char-area {
             position: relative;
             width: 100%; height: 70%;
-            margin-top: 10px;
-            overflow: visible; 
-            display: flex; justify-content: center; align-items: flex-end;
+            /* Flexbox設定を解除し、単純な配置基準とする */
         }
 
+        /* ▼▼▼ バストアップ画像用の設定 ▼▼▼ */
         .char-img {
-            max-width: 140%; max-height: 115%; /* 少し大きめに設定して飛び出しやすく */
-            object-fit: contain;
-            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));
-            transition: transform 0.4s ease;
-            transform-origin: bottom center;
-        }
-        .char-card:hover .char-img {
-            transform: scale(1.1);
+            position: absolute;
+            /* 親の上端を基準に配置 */
+            top: 0;
+            left: 50%;
+            /* 横は中央揃え、縦は「上へ25%ずらす」ことで飛び出させる */
+            transform: translateX(-50%) translateY(-25%);
+            
+            width: auto; /* 幅はなりゆき */
+            height: 160%; /* 高さを親エリアの1.6倍にして巨大化 */
+            max-width: none; /* 制限解除 */
+            max-height: none; /* 制限解除 */
+
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.4));
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            
+            z-index: 5; /* info-area(z:10)より下、背景円(z:-1)より上 */
         }
 
+        /* ホバー時の動き（さらに少し上へ持ち上がる） */
+        .char-card:hover .char-img {
+            /* 元のtransformに加えて、さらに上へ移動し、少し拡大 */
+            transform: translateX(-50%) translateY(-30%) scale(1.05);
+        }
+        /* ▲▲▲ 修正ここまで ▲▲▲ */
+
+
+        /* 情報エリア (画像の下半分を隠す役割も兼ねる) */
         .info-area {
             width: 100%; height: 30%;
             background-image: repeating-linear-gradient(#eee 0 1px, transparent 1px 100%);
@@ -132,7 +153,8 @@
             padding: 10px; box-sizing: border-box;
             text-align: center;
             border-top: 2px dashed #d7ccc8;
-            position: relative; z-index: 10;
+            position: relative; 
+            z-index: 10; /* 画像より上に来るように設定 */
             background-color: var(--card-bg);
             border-radius: 0 0 4px 4px;
         }
@@ -146,29 +168,34 @@
             font-size: 0.85rem; color: #795548; font-weight: bold;
         }
 
-        /* --- 背景色設定 (キャラに合わせて調整可能) --- */
+        /* --- 背景色設定 --- */
         /* YouTube */
         .card-yt { --rot: -3deg; --delay: 0.1s; }
         .card-yt .char-area::before {
-            content:''; position: absolute; width: 160px; height: 160px; background: #ffebee; border-radius: 50%; top: 20px; z-index: -1;
+            content:''; position: absolute; width: 160px; height: 160px; background: #ffebee; border-radius: 50%; 
+            top: 50%; left: 50%; transform: translate(-50%, -50%); /* 円を中央配置に変更 */
+            z-index: -1;
         }
-        
         /* Twitter */
         .card-tw { --rot: 2deg; --delay: 0.25s; }
         .card-tw .char-area::before {
-            content:''; position: absolute; width: 160px; height: 160px; background: #e3f2fd; border-radius: 50%; top: 20px; z-index: -1;
+            content:''; position: absolute; width: 160px; height: 160px; background: #e3f2fd; border-radius: 50%;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: -1;
         }
-
         /* Members */
         .card-mem { --rot: -2deg; --delay: 0.4s; }
         .card-mem .char-area::before {
-            content:''; position: absolute; width: 160px; height: 160px; background: #fffde7; border-radius: 50%; top: 20px; z-index: -1;
+            content:''; position: absolute; width: 160px; height: 160px; background: #fffde7; border-radius: 50%;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: -1;
         }
-
         /* Gallery */
         .card-gal { --rot: 3deg; --delay: 0.55s; }
         .card-gal .char-area::before {
-            content:''; position: absolute; width: 160px; height: 160px; background: #e0f2f1; border-radius: 50%; top: 20px; z-index: -1;
+            content:''; position: absolute; width: 160px; height: 160px; background: #e0f2f1; border-radius: 50%;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: -1;
         }
 
         @keyframes deal-card {
@@ -192,14 +219,18 @@
         .back-btn:hover { background: var(--paper-bg); color: var(--wood-dark); transform: scale(1.05); }
 
         @media (max-width: 768px) {
-            .card-grid { gap: 30px; }
+            .card-grid { gap: 40px 20px; } /* 縦の隙間を広めに */
             .char-card { 
-                width: 44%; max-width: 200px; height: 280px;
+                width: 46%; max-width: 200px; height: 260px; /* スマホは少し高さを抑える */
                 transform: rotate(0deg) !important;
                 --rot: 0deg; 
+                margin-top: 30px; /* 上のカードとの重なり防止 */
             }
             .menu-title { font-size: 1.1rem; }
             .menu-desc { font-size: 0.75rem; }
+            /* スマホでの画像の飛び出し具合を微調整 */
+            .char-img { height: 150%; transform: translateX(-50%) translateY(-20%); }
+            .char-card:hover .char-img { transform: translateX(-50%) translateY(-25%) scale(1.05); }
         }
     </style>
 </head>
