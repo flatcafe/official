@@ -59,87 +59,77 @@
             width: 45%;          
             max-width: 425px;    
             margin-bottom: 40px;
-            /* 全体に影を落とす */
             filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
         }
 
-        /* 椅子の画像（isu.png） */
+        /* 椅子の画像 */
         .bench-img {
             width: 100%;
             height: auto;
             display: block;
         }
 
-        /* キャラクター共通スタイル（修正箇所） */
+        /* キャラクター共通スタイル（今回の大幅な変更点） */
         .char-img {
             position: absolute;
-            /* 高さを調整：座面に座っているように見える高さへ */
-            bottom: 48%; 
-            /* サイズを調整：少し大きくして重なりを持たせる */
-            width: 32%;  
+            /* 高さを少し下げる：座面により深く座らせる */
+            bottom: 45%; /* 48% -> 45% に変更 */
+            /* サイズをさらに大きくする：存在感をアップ */
+            width: 40%;  /* 32% -> 40% に変更 */
             height: auto;
-            transform-origin: bottom center; /* 足元を基点に揺らす */
+            transform-origin: bottom center;
         }
 
-        /* 各キャラクターの配置と個別の動き設定 */
-        /* 左右の位置(left/right)は重なり具合を見て微調整してください */
+        /* 各キャラクターの配置を中央に寄せる */
         
-        /* 1人目：Toruma (左端) */
+        /* 1人目：Toruma (左端 -> 少し内側へ) */
         .char-1 {
-            left: 0%;
+            left: 5%; /* 0% -> 5% に変更 */
             animation: talk-sway 3.2s infinite ease-in-out;
             z-index: 2;
         }
 
-        /* 2人目：Lily (中央左) */
+        /* 2人目：Lily (中央左 -> より内側へ) */
         .char-2 {
-            left: 24%;
+            left: 18%; /* 24% -> 18% に変更 */
             animation: talk-bounce 2.5s infinite ease-in-out;
             animation-delay: 0.2s;
-            z-index: 3;
+            z-index: 3; /* 手前に表示 */
         }
 
-        /* 3人目：Yuzucha (中央右) */
+        /* 3人目：Yuzucha (中央右 -> より内側へ) */
         .char-3 {
-            right: 24%;
+            right: 18%; /* 24% -> 18% に変更 */
             animation: talk-sway-reverse 3.8s infinite ease-in-out;
             animation-delay: 0.5s;
-            z-index: 3;
+            z-index: 3; /* 手前に表示 */
         }
 
-        /* 4人目：Wakanagi (右端) */
+        /* 4人目：Wakanagi (右端 -> 少し内側へ) */
         .char-4 {
-            right: 0%;
+            right: 5%; /* 0% -> 5% に変更 */
             animation: talk-nod 4.0s infinite ease-in-out;
             animation-delay: 1.0s;
             z-index: 2;
         }
 
         /* --- アニメーション定義 --- */
-        
-        /* ゆらゆら揺れる（会話風） */
         @keyframes talk-sway {
             0%, 100% { transform: rotate(0deg); }
             25% { transform: rotate(-2deg); }
             75% { transform: rotate(1deg); }
         }
-
-        /* 逆方向に揺れる */
         @keyframes talk-sway-reverse {
             0%, 100% { transform: rotate(0deg); }
             25% { transform: rotate(2deg); }
             75% { transform: rotate(-1.5deg); }
         }
-
-        /* 楽しそうに少し跳ねる */
         @keyframes talk-bounce {
             0%, 100% { transform: translateY(0) rotate(0deg); }
             50% { transform: translateY(-4px) rotate(1deg); }
             60% { transform: translateY(0) rotate(0deg); }
             80% { transform: translateY(-2px) rotate(-1deg); }
         }
-
-        /* 落ち着いて頷くような動き */
         @keyframes talk-nod {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(1px) scaleY(0.99); } 
@@ -221,7 +211,6 @@
     <header>
         <div class="header-scene">
             <img src="isu.png" alt="Bench" class="bench-img">
-            
             <img src="top_toruma.png" alt="Toruma" class="char-img char-1">
             <img src="top_lily00.png" alt="Lily" class="char-img char-2">
             <img src="top_yuzucha.png" alt="Yuzucha" class="char-img char-3">
