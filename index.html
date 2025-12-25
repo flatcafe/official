@@ -5,139 +5,157 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ふらっとcafe Official</title>
     <style>
+        /* 変数定義：カフェの画像から抽出した色 */
         :root {
             --wood-dark: #3e2723;
-            --wood-main: #5d4037;
-            --sun-beam: rgba(255, 250, 200, 0.4); /* 差し込む光の束 */
+            --sun-gold: #fff5ca; /* 画像の照明に近い色 */
+            --wakanagi-green: #81a182;
         }
 
-        body {
+        body, html {
             margin: 0;
             padding: 0;
-            font-family: 'Georgia', serif;
-            background-color: #e0d5c5; /* 木の質感に近いベースカラー */
-            color: var(--wood-dark);
+            width: 100%;
+            height: 100%;
+            background-color: #2c1e1a; /* ベースを暗くして光を際立たせる */
             overflow-x: hidden;
-            min-height: 100vh;
+            font-family: 'Georgia', serif;
         }
 
-        /* --- 劇的な光の筋（ライトビーム）の強制描画 --- */
-        .light-system {
+        /* 背景レイヤー：木の質感を全面に */
+        .wood-background {
             position: fixed;
-            top: 0; right: 0; bottom: 0; left: 0;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(62, 39, 35, 0.7), rgba(62, 39, 35, 0.7)),
+                        url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+            background-repeat: repeat;
+            z-index: 1;
+        }
+
+        /* --- 【最重要】光の筋レイヤー：絶対に見える設定 --- */
+        .light-shaft-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none;
-            z-index: 999; /* 最前面に配置 */
+            z-index: 100; /* コンテンツの手前に配置 */
             overflow: hidden;
         }
 
-        /* 光の筋 その1 */
-        .beam {
+        .light-beam {
             position: absolute;
-            top: -50%;
+            top: -20%;
             right: -10%;
-            width: 300px;
-            height: 200%;
-            background: linear-gradient(to bottom, var(--sun-beam), transparent);
-            transform: rotate(35deg); /* 斜めに差し込む角度 */
-            filter: blur(40px);
-            mix-blend-mode: overlay; /* 背景と馴染ませつつ発光 */
-            animation: shimmer 6s infinite alternate;
-        }
-
-        /* 光の筋 その2（少しずらす） */
-        .beam-sub {
-            position: absolute;
-            top: -50%;
-            right: 15%;
-            width: 150px;
-            height: 200%;
-            background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+            width: 40vw;
+            height: 150vh;
+            background: white;
+            /* 物理的な「光の筋」を作るための強力なぼかしと透明度 */
+            box-shadow: 0 0 100px 50px white;
+            opacity: 0.15;
             transform: rotate(35deg);
-            filter: blur(60px);
-            mix-blend-mode: screen;
-            animation: shimmer 8s infinite alternate-reverse;
+            filter: blur(80px); /* 輪郭を溶かす */
+            animation: beam-shimmer 10s infinite alternate;
         }
 
-        @keyframes shimmer {
-            from { opacity: 0.3; transform: rotate(35deg) translateX(0); }
-            to { opacity: 0.7; transform: rotate(35deg) translateX(-30px); }
+        .light-glow {
+            position: absolute;
+            top: -10%;
+            right: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, var(--sun-gold) 0%, transparent 70%);
+            opacity: 0.4;
+            z-index: 99;
+            filter: blur(50px);
         }
 
-        /* ヒーローエリア */
-        .entrance {
+        @keyframes beam-shimmer {
+            0% { opacity: 0.1; transform: rotate(35deg) translateX(0); }
+            100% { opacity: 0.25; transform: rotate(35deg) translateX(-50px); }
+        }
+
+        /* コンテンツエリア */
+        .content {
+            position: relative;
+            z-index: 50;
             height: 100vh;
             display: flex;
             align-items: center;
-            justify-content: space-around;
+            justify-content: center;
             padding: 0 10%;
-            background-image: 
-                linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.2)),
-                url('https://www.transparenttextures.com/patterns/wood-pattern.png'); /* 木目 */
+            color: #fff9c4;
         }
 
-        .entrance-sign {
-            z-index: 5;
-            max-width: 500px;
+        .text-area {
+            flex: 1;
+            text-shadow: 2px 2px 20px rgba(0,0,0,0.8);
         }
 
-        .entrance-sign h1 {
+        .text-area h1 {
             font-size: 5rem;
             margin: 0;
-            line-height: 1;
+            color: var(--sun-gold);
         }
 
-        .waiter-img {
-            z-index: 2;
+        .image-area {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
         }
 
-        .waiter-img img {
-            max-height: 80vh;
-            filter: drop-shadow(20px 20px 40px rgba(0,0,0,0.3));
+        .image-area img {
+            max-height: 85vh;
+            /* 立ち絵自体が光っているような効果 */
+            filter: drop-shadow(0 0 30px rgba(255,245,200,0.3)) 
+                    drop-shadow(20px 20px 40px rgba(0,0,0,0.6));
         }
 
-        /* 入店ボタン */
         .enter-btn {
             display: inline-block;
-            margin-top: 30px;
+            margin-top: 40px;
             padding: 20px 50px;
-            background: var(--wood-dark);
-            color: #fff;
+            background: var(--sun-gold);
+            color: var(--wood-dark);
             text-decoration: none;
             font-weight: bold;
-            border-radius: 5px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            position: relative;
-            z-index: 1000; /* ボタンは確実にクリック可能に */
+            border-radius: 2px;
+            box-shadow: 0 0 20px rgba(255,245,200,0.5);
+            transition: 0.3s;
+            pointer-events: auto; /* ボタンは光の下でも触れるように */
         }
 
-        @media (max-width: 768px) {
-            .entrance { flex-direction: column; text-align: center; }
-            .entrance-sign h1 { font-size: 3rem; }
-            .waiter-img img { max-height: 50vh; }
+        .enter-btn:hover {
+            transform: scale(1.05);
+            background: #fff;
         }
+
     </style>
 </head>
 <body>
 
-    <div class="light-system">
-        <div class="beam"></div>
-        <div class="beam-sub"></div>
+    <div class="wood-background"></div>
+
+    <div class="light-shaft-container">
+        <div class="light-beam"></div>
+        <div class="light-glow"></div>
     </div>
 
-    <section class="entrance">
-        <div class="entrance-sign">
-            <p>Welcome to</p>
+    <div class="content">
+        <div class="text-area">
+            <p style="letter-spacing: 5px;">EST. 2025</p>
             <h1>Flat Cafe</h1>
-            <p>目指せ、常連客1,000人。<br>あなたの日常に、ひとときの安らぎを。</p>
+            <p style="font-size: 1.2rem; margin: 20px 0;">
+                この光の先に、新しい出会いがある。<br>
+                目指せ、常連客1,000人。
+            </p>
             <a href="https://www.youtube.com/@flatcafe-official?sub_confirmation=1" class="enter-btn">
-                常連客として入店する
+                カフェに入店する
             </a>
         </div>
         
-        <div class="waiter-img">
+        <div class="image-area">
             <img src="image_dd7e27.png" alt="若凪">
         </div>
-    </section>
+    </div>
 
 </body>
 </html>
