@@ -91,7 +91,7 @@
             text-align: center;
             padding: 0 20px;
             margin-top: -10px;
-            /* 順序を強制するためにFlexboxを使用 */
+            /* Flexboxで中央揃えにするが、順序はHTML依存にする */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -99,7 +99,6 @@
 
         /* 1. ロゴ */
         .logo-img {
-            order: 1; /* 1番目 */
             max-width: 150px;
             width: 35%;
             height: auto;
@@ -109,36 +108,34 @@
 
         /* 2. メッセージ */
         .copy-text {
-            order: 2; /* 2番目 */
             font-size: 1.15rem;
-            margin: 0 0 20px 0;
+            margin: 0 0 30px 0; /* キャラクターとの間隔 */
             color: #fffbe0;
             line-height: 2.4; 
             letter-spacing: 0.1em; 
             text-shadow: 0 2px 4px rgba(0,0,0,0.8);
             font-weight: 500;
             font-feature-settings: "palt"; 
-            width: 100%; /* 幅を確保して折り返しを綺麗に */
+            width: 100%; 
         }
 
         /* 3. キャラクター（立ち絵） */
         .standing-image {
-            order: 3; /* 3番目 */
             width: 100%;
+            /* ボタンとの間隔調整 */
+            margin-bottom: 20px; 
         }
         .standing-image img {
             max-height: 55vh;
             margin-top: 10px;
-            margin-bottom: 30px; /* ボタンとの間隔を確保 */
             filter: drop-shadow(0 20px 40px rgba(0,0,0,0.9));
         }
 
         /* 4. 入店ボタン */
         .enter-btn {
-            order: 4; /* 4番目 */
             position: relative;
             display: inline-block;
-            margin: 0 0 80px; /* 画面下部との余白 */
+            margin: 0 0 80px; /* 画面下部の余白 */
             padding: 16px 60px;
             background-color: var(--wood-dark); 
             border: 2px solid var(--paper-color); 
