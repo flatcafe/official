@@ -3,155 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ふらっとcafe Official | 窓際の静寂</title>
+    <title>ふらっとcafe Official | 窓際の特等席</title>
     <style>
         :root {
-            --room-dark: #1a1210; /* 部屋の暗い部分 */
-            --sun-bright: rgba(255, 250, 200, 0.4); /* 差し込む光の色 */
-            --wood-texture: rgba(62, 39, 35, 0.8);
+            --wood-dark: #2c1e1a;
+            --sun-light: rgba(255, 252, 220, 0.35);
+            --shadow-color: rgba(0, 0, 0, 0.4); /* 影を少し濃くして本数を際立たせる */
         }
 
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
-            background-color: var(--room-dark);
+            background-color: #1a1210; /* 全体を少し暗くして落ち着かせる */
             font-family: 'Georgia', serif;
             overflow: hidden;
         }
 
-        /* 木目のベース（暗い状態） */
+        /* 木目の床（ベース） */
         .floor {
             position: fixed;
             width: 100%; height: 100%;
             background-image: 
-                linear-gradient(var(--room-dark), var(--room-dark)),
+                linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
                 url('https://www.transparenttextures.com/patterns/wood-pattern.png');
             z-index: 1;
         }
 
-        /* --- 【最重要】一部分だけに光を通すマスク構造 --- */
-        .window-light-mask {
+        /* --- 【修正】窓格子の影レイヤー（本数を減らし、間隔を広く） --- */
+        .window-shadow {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 2;
-            /* 画面の右上一部分だけを明るくし、他を真っ暗にする */
-            background: radial-gradient(
-                circle at 80% 20%, 
-                transparent 10%, 
-                var(--room-dark) 60%
-            );
-            pointer-events: none;
-        }
-
-        /* 光の筋（格子状） */
-        .light-beams {
-            position: absolute;
-            top: -20%; right: -10%;
-            width: 80%; height: 150%;
-            /* 縦横の格子模様を光として描画 */
+            /* 縦の格子：間隔を300pxに拡大 */
             background-image: 
-                repeating-linear-gradient(90deg, var(--sun-bright), var(--sun-bright) 40px, transparent 40px, transparent 120px),
-                repeating-linear-gradient(0deg, var(--sun-bright), var(--sun-bright) 40px, transparent 40px, transparent 120px);
-            z-index: 3;
-            transform: rotate(30deg) skewX(-15deg);
-            filter: blur(15px); /* 光の境界をぼかす */
-            mask-image: radial-gradient(circle at 70% 30%, black 20%, transparent 60%);
-            -webkit-mask-image: radial-gradient(circle at 70% 30%, black 20%, transparent 60%);
+                repeating-linear-gradient(90deg, transparent, transparent 300px, var(--shadow-color) 300px, var(--shadow-color) 340px),
+                /* 横の格子：間隔を300pxに拡大 */
+                repeating-linear-gradient(0deg, transparent, transparent 300px, var(--shadow-color) 300px, var(--shadow-color) 340px),
+                /* 全体的な光の差し込み（一部分を明るく） */
+                radial-gradient(circle at 75% 25%, var(--sun-light), transparent 60%);
+            z-index: 2;
+            transform: skewX(-15deg) scale(1.8); /* 斜めの角度を調整 */
+            filter: blur(12px); /* 影をより柔らかくぼかす */
             pointer-events: none;
         }
 
-        /* 煌めき（埃） */
-        .sparkles {
+        /* 光の粒（煌めき） */
+        .particles {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: 100;
             pointer-events: none;
         }
-        .sparkle {
+
+        .particle {
             position: absolute;
             background: white;
             border-radius: 50%;
-            opacity: 0;
-            animation: drift 15s infinite linear;
-        }
-        @keyframes drift {
-            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
-            20% { opacity: 0.4; }
-            80% { opacity: 0.4; }
-            100% { transform: translateY(-10vh) translateX(100px); opacity: 0; }
+            opacity: 0.3;
+            animation: float-particle 10s infinite linear;
         }
 
-        /* コンテンツ表示（光が当たっている場所に配置） */
+        @keyframes float-particle {
+            0% { transform: translateY(102vh) translateX(0); opacity: 0; }
+            50% { opacity: 0.4; }
+            100% { transform: translateY(-10vh) translateX(30px); opacity: 0; }
+        }
+
+        /* コンテンツ */
         .content {
             position: relative;
-            z-index: 50;
+            z-index: 10;
             height: 100vh;
             display: flex;
             align-items: center;
-            justify-content: flex-end; /* 右側に寄せる */
+            justify-content: space-around;
             padding: 0 10%;
-            color: #fff;
+            color: #fff9c4;
+            box-sizing: border-box;
         }
 
-        .hero-text {
-            text-align: right;
-            max-width: 500px;
+        .text-section {
+            z-index: 20;
+            text-shadow: 2px 2px 15px rgba(0,0,0,0.8);
         }
 
-        .hero-text h1 {
-            font-size: 4rem;
-            color: #fff5ca;
-            margin-bottom: 10px;
-            text-shadow: 0 0 20px rgba(0,0,0,1);
+        .text-section h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            margin: 0;
+            line-height: 1.2;
         }
 
         .character-img {
-            position: absolute;
-            left: 10%;
-            bottom: 0;
-            z-index: 40;
+            z-index: 15;
+            display: flex;
+            align-items: flex-end;
         }
+
         .character-img img {
-            max-height: 90vh;
-            /* 暗い部屋にいるため、少しコントラストを落とす */
-            filter: brightness(0.7) drop-shadow(0 0 50px rgba(0,0,0,1));
+            max-height: 85vh;
+            width: auto;
+            filter: drop-shadow(20px 20px 50px rgba(0,0,0,0.7));
+        }
+
+        .enter-btn {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 18px 45px;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--wood-dark);
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 2px;
+            transition: 0.4s;
+            border: 1px solid transparent;
+        }
+
+        .enter-btn:hover {
+            background: var(--wood-dark);
+            color: white;
+            border-color: white;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 850px) {
+            .content { flex-direction: column; text-align: center; justify-content: center; }
+            .text-section { margin-bottom: 30px; }
+            .character-img img { max-height: 50vh; }
+            .window-shadow { transform: skewX(-10deg) scale(1.2); }
         }
     </style>
 </head>
 <body>
 
     <div class="floor"></div>
-    <div class="light-beams"></div>
-    <div class="window-light-mask"></div>
-    <div class="sparkles" id="sparkle-box"></div>
+    <div class="window-shadow"></div>
+    
+    <div class="particles" id="particles"></div>
 
     <div class="content">
-        <div class="hero-text">
-            <h1>Flat Cafe</h1>
-            <p>目指せ、常連客1,000人。<br>
-            暗闇の中にこそ、確かな光がある。</p>
-            <a href="#" style="color:#fff5ca; font-weight:bold; font-size:1.2rem; text-decoration:none; border: 1px solid #fff5ca; padding: 15px 30px; display:inline-block; margin-top:20px;">
-                カフェに入店する
-            </a>
+        <div class="text-section">
+            <p style="letter-spacing: 10px; opacity: 0.8; font-size: 0.9rem;">EST. 2025</p>
+            <h1>窓際の、<br>特等席。</h1>
+            <p style="margin: 20px 0; font-size: 1.1rem; opacity: 0.9;">
+                光と影が交差する、<br>穏やかな時間をご一緒に。
+            </p>
+            <a href="https://www.youtube.com/@flatcafe-official?sub_confirmation=1" class="enter-btn">カフェに入店する</a>
+        </div>
+        <div class="character-img">
+            <img src="image_dd7e27.png" alt="若凪">
         </div>
     </div>
 
-    <div class="character-img">
-        <img src="image_dd7e27.png" alt="若凪">
-    </div>
-
     <script>
-        // 煌めき粒の生成
-        const box = document.getElementById('sparkle-box');
-        for (let i = 0; i < 40; i++) {
-            const s = document.createElement('div');
-            s.className = 'sparkle';
-            const size = Math.random() * 3 + 'px';
-            s.style.width = size; s.style.height = size;
-            s.style.left = Math.random() * 100 + 'vw';
-            s.style.animationDuration = (Math.random() * 10 + 10) + 's';
-            s.style.animationDelay = (Math.random() * 5) + 's';
-            box.appendChild(s);
+        // 光の粒を動的に作成
+        const container = document.getElementById('particles');
+        for (let i = 0; i < 25; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const size = (Math.random() * 3 + 1) + 'px';
+            p.style.width = size;
+            p.style.height = size;
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.animationDuration = (Math.random() * 8 + 12) + 's';
+            p.style.animationDelay = (Math.random() * 10) + 's';
+            container.appendChild(p);
         }
     </script>
 </body>
