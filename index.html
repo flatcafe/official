@@ -47,18 +47,18 @@
         header {
             position: relative;
             z-index: 50;
-            padding-top: 100px; /* 画像の位置に合わせて少し調整 */
+            padding-top: 100px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* 新しいヘッダー画像のスタイル */
+        /* 新しいヘッダー画像のスタイル（サイズを半分に変更） */
         .header-hero-img {
-            width: 90%;
-            max-width: 850px; /* 画像サイズに合わせて調整 */
+            width: 45%;          /* 90% → 45% に変更 */
+            max-width: 425px;    /* 850px → 425px に変更 */
             height: auto;
-            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.6)); /* 浮き出るような影 */
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6)); /* 影も少し小さく調整 */
             margin-bottom: 40px;
         }
 
@@ -123,6 +123,8 @@
 
         @media (max-width: 768px) {
             header { padding-top: 80px; }
+            /* スマホ表示時も少し小さく調整 */
+            .header-hero-img { width: 70%; max-width: 350px; } 
             .logo-img { max-width: 250px; }
             .standing-image img { max-height: 45vh; }
         }
