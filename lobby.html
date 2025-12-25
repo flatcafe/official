@@ -1,1 +1,217 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ふらっとcafe - Lobby</title>
+
+    <style>
+        /* =========================================
+           共通デザイン設定 (index.htmlと統一)
+           ========================================= */
+        :root {
+            --sun-light: rgba(255, 252, 220, 0.4);
+            --room-dark: #2c1e1a;
+            --paper-color: #fcf6e6;
+            --wood-dark: #5d4037;
+            --accent-gold: #ffd54f;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; min-height: 100%;
+            background-color: #1a1210;
+            font-family: 'Georgia', 'Yu Mincho', serif;
+            color: #4a3b32; /* 文字色を濃く（紙の上の文字） */
+            overflow-x: hidden;
+        }
+
+        /* フェードイン演出 */
+        body {
+            opacity: 0; 
+            transition: opacity 1s ease-in-out;
+        }
+        body.loaded { opacity: 1; }
+
+        /* 背景：少し暗めの落ち着いた店内 */
+        .background {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+            z-index: -2;
+        }
+        .texture-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1;
+            background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.8) 100%);
+            mix-blend-mode: multiply;
+        }
+
+        /* =========================================
+           レイアウト
+           ========================================= */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ヘッダー */
+        header { text-align: center; margin-bottom: 40px; }
+        .mini-logo {
+            width: 120px; height: auto;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+            margin-bottom: 10px;
+        }
+        .page-title {
+            color: #fffbe0; font-size: 1.5rem; letter-spacing: 0.2em;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            display: inline-block; padding-bottom: 10px;
+        }
+
+        /* メニューグリッド */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            width: 100%;
+        }
+
+        /* メニューカード (ポラロイド風・手紙風) */
+        .menu-card {
+            background-color: var(--paper-color);
+            padding: 20px;
+            border-radius: 2px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: var(--wood-dark);
+            position: relative;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        
+        .menu-card:hover {
+            transform: translateY(-5px) rotate(1deg);
+            box-shadow: 0 15px 30px rgba(255, 213, 79, 0.2);
+            z-index: 10;
+        }
+
+        /* テープ留め演出 */
+        .tape {
+            position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(-2deg);
+            width: 80px; height: 30px;
+            background-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            backdrop-filter: blur(2px);
+        }
+
+        .card-icon {
+            font-size: 2.5rem; margin-bottom: 15px;
+            color: var(--pin-color);
+        }
+        .card-title {
+            font-size: 1.2rem; font-weight: bold; margin-bottom: 10px;
+            border-bottom: 2px dotted var(--wood-dark);
+        }
+        .card-desc {
+            font-size: 0.9rem; line-height: 1.6; text-align: center;
+        }
+
+        /* 特定カードごとのアクセント */
+        .youtube-card .card-icon { color: #ff0000; }
+        .twitter-card .card-icon { color: #1da1f2; }
+
+        /* =========================================
+           フッター (戻るボタン)
+           ========================================= */
+        .footer-nav {
+            margin-top: 60px;
+        }
+        .back-btn {
+            color: #fffbe0; text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 10px 30px; border-radius: 30px;
+            font-size: 0.9rem; letter-spacing: 0.1em;
+            transition: all 0.3s;
+            background: rgba(0,0,0,0.3);
+        }
+        .back-btn:hover {
+            background: var(--paper-color); color: var(--wood-dark);
+        }
+
+        /* スマホ調整 */
+        @media (max-width: 600px) {
+            .container { padding: 30px 15px; }
+            .menu-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    <div class="texture-overlay"></div>
+
+    <div class="container">
+        <header>
+            <img src="flat-cafe-logo.png" alt="Flat Cafe" class="mini-logo">
+            <br>
+            <span class="page-title">MAIN MENU</span>
+        </header>
+
+        <div class="menu-grid">
+            <a href="https://www.youtube.com/@flatcafe-official" target="_blank" class="menu-card youtube-card">
+                <div class="tape"></div>
+                <div class="card-icon">▶</div>
+                <div class="card-title">YouTube Channel</div>
+                <div class="card-desc">
+                    メインの活動場所です。<br>
+                    ゲーム配信や歌枠はこちらから。
+                </div>
+            </a>
+
+            <a href="https://twitter.com/" target="_blank" class="menu-card twitter-card">
+                <div class="tape"></div>
+                <div class="card-icon">✦</div> <div class="card-title">Official X</div>
+                <div class="card-desc">
+                    最新情報やスケジュールの<br>
+                    お知らせをしています。
+                </div>
+            </a>
+
+            <a href="#" class="menu-card">
+                <div class="tape"></div>
+                <div class="card-icon">☺</div>
+                <div class="card-title">Members</div>
+                <div class="card-desc">
+                    ふらっとcafeの<br>
+                    メンバー紹介ページ（準備中）
+                </div>
+            </a>
+
+            <a href="#" class="menu-card">
+                <div class="tape"></div>
+                <div class="card-icon">📷</div>
+                <div class="card-title">Gallery</div>
+                <div class="card-desc">
+                    思い出の写真や<br>
+                    ファンアートの展示室（準備中）
+                </div>
+            </a>
+        </div>
+
+        <nav class="footer-nav">
+            <a href="index.html" class="back-btn">← お店の外へ戻る</a>
+        </nav>
+    </div>
+
+    <script>
+        // ページ読み込み時にふわっと表示する
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
+        });
+    </script>
+</body>
+</html>
 
