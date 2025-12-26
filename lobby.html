@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -71,21 +72,21 @@
             gap: 40px; width: 100%; perspective: 1200px;
         }
 
+        /* カードの共通スタイル */
         .char-card {
             position: relative;
             width: 240px; height: 320px;
             background-color: var(--card-bg);
             border-radius: 4px;
-            text-decoration: none;
+            text-decoration: none; /* リンクの下線消し */
             color: var(--wood-dark);
             box-shadow: 0 10px 25px rgba(0,0,0,0.4);
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s;
             display: flex; flex-direction: column; align-items: center;
-            
             opacity: 0; transform: translateY(50px) rotate(var(--rot));
             animation: deal-card 0.6s forwards; animation-delay: var(--delay);
-            
-            overflow: hidden; /* はみ出し防止 */
+            overflow: hidden;
+            cursor: pointer; /* クリックできる感 */
         }
 
         .char-card:hover {
@@ -127,53 +128,26 @@
         .card-mem .char-area::before { background: radial-gradient(circle at 50% 120%, #fff9c4, transparent 70%); }
         .card-gal .char-area::before { background: radial-gradient(circle at 50% 120%, #b2dfdb, transparent 70%); }
 
-
-        /* --- キャラクター画像 (基本設定) --- */
+        /* キャラクター画像 */
         .char-img {
             width: 100%; height: 100%;
-            object-fit: cover;
-            object-position: top center;
+            object-fit: cover; object-position: top center;
             position: relative; z-index: 10;
-            transition: transform 0.5s ease;
-            transform-origin: top center;
+            transition: transform 0.5s ease; transform-origin: top center;
         }
 
-        /* ▼▼▼ 個別画像調整 (ここを修正！) ▼▼▼ */
+        /* 個別画像調整 */
+        .card-tw .char-img { transform: scale(1.2); }
+        .card-tw:hover .char-img { transform: scale(1.3); }
 
-        /* 1. X (Twitter): 強めに拡大 (1.2倍) */
-        .card-tw .char-img {
-            transform: scale(1.2);
-        }
-        .card-tw:hover .char-img {
-            transform: scale(1.3);
-        }
+        .card-mem .char-img { transform: scale(1.25); }
+        .card-mem:hover .char-img { transform: scale(1.35); }
 
-        /* 2. Members: さらに拡大 (1.25倍) ← ここを追加・変更 */
-        .card-mem .char-img {
-            transform: scale(1.25); /* 1.2 * 1.04 ≒ 1.25 */
-        }
-        .card-mem:hover .char-img {
-            transform: scale(1.35);
-        }
+        .card-yt .char-img { transform: scale(1.05) translateY(-15px); }
+        .card-yt:hover .char-img { transform: scale(1.15) translateY(-15px); }
 
-        /* 3. YouTube: 少し拡大しつつ上に移動 */
-        .card-yt .char-img {
-            transform: scale(1.05) translateY(-15px);
-        }
-        .card-yt:hover .char-img {
-            transform: scale(1.15) translateY(-15px);
-        }
-
-        /* 4. Gallery: 少し縮小 (0.98倍) */
-        .card-gal .char-img {
-            transform: scale(0.98);
-        }
-        .card-gal:hover .char-img {
-            transform: scale(1.08);
-        }
-
-        /* ▲▲▲ 調整ここまで ▲▲▲ */
-
+        .card-gal .char-img { transform: scale(0.98); }
+        .card-gal:hover .char-img { transform: scale(1.08); }
 
         /* 情報エリア */
         .info-area {
@@ -187,12 +161,12 @@
             position: relative; z-index: 20;
         }
         .menu-title {
-            font-size: 1.3rem; font-weight: bold; margin: 3px 0 2px;
+            font-size: 1.15rem; font-weight: bold; margin: 3px 0 2px;
             font-family: 'Impact', sans-serif; letter-spacing: 0.05em; color: #5d4037;
         }
         .menu-desc { font-size: 0.8rem; color: #795548; font-weight: bold; }
 
-        /* カードの出現演出 */
+        /* カード出現アニメ */
         .card-yt { --rot: -3deg; --delay: 0.1s; }
         .card-tw { --rot: 2deg; --delay: 0.25s; }
         .card-mem { --rot: -2deg; --delay: 0.4s; }
@@ -202,7 +176,50 @@
         @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 
         /* =========================================
-           4. フッター & スマホ対応
+           4. Video選択モーダル (ポップアップメニュー)
+           ========================================= */
+        #video-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.8); z-index: 2000;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: all 0.3s ease;
+        }
+        #video-modal.active { opacity: 1; visibility: visible; }
+
+        .modal-content {
+            background: var(--paper-bg);
+            padding: 30px; border-radius: 8px;
+            text-align: center; width: 90%; max-width: 320px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 4px solid var(--wood-dark);
+            position: relative;
+        }
+        #video-modal.active .modal-content { transform: scale(1); }
+
+        .modal-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 20px; color: var(--wood-dark); border-bottom: 2px dotted #ccc; padding-bottom: 10px;}
+        
+        .platform-btn {
+            display: block; width: 100%; padding: 12px; margin-bottom: 12px;
+            text-decoration: none; font-weight: bold; border-radius: 30px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            color: white; box-sizing: border-box;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            position: relative; overflow: hidden;
+        }
+        .platform-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.3); }
+
+        /* 各プラットフォームの色 */
+        .btn-yt { background: #ff0000; }
+        .btn-twitch { background: #9146ff; }
+        .btn-tiktok { background: #000000; }
+        
+        .close-modal {
+            margin-top: 15px; font-size: 0.9rem; color: #666; cursor: pointer; text-decoration: underline;
+        }
+
+        /* =========================================
+           5. フッター & スマホ対応
            ========================================= */
         .footer-nav { margin-top: 50px; }
         .back-btn {
@@ -218,7 +235,7 @@
                 width: 45%; max-width: 180px; height: 240px;
                 transform: rotate(0deg) !important; --rot: 0deg; margin-top: 15px;
             }
-            .menu-title { font-size: 1.05rem; } .menu-desc { font-size: 0.7rem; }
+            .menu-title { font-size: 1.0rem; } .menu-desc { font-size: 0.7rem; }
             .tape { width: 70px; height: 22px; top: -10px; left: -10px; }
         }
     </style>
@@ -235,18 +252,18 @@
         </header>
 
         <div class="card-grid">
-            <a href="https://www.youtube.com/@flatcafe-official" target="_blank" class="char-card card-yt">
+            <a href="javascript:void(0)" class="char-card card-yt" onclick="openVideoModal()">
                 <div class="tape"></div>
                 <div class="char-area">
-                    <img src="menu_youtube.png" alt="YouTube Character" class="char-img">
+                    <img src="menu_youtube.png" alt="Video Character" class="char-img">
                 </div>
                 <div class="info-area">
-                    <div class="menu-title">YouTube</div>
-                    <div class="menu-desc">配信・動画はこちら</div>
+                    <div class="menu-title">Video Contents</div>
+                    <div class="menu-desc">YouTube / Twitch / TikTok</div>
                 </div>
             </a>
 
-            <a href="https://twitter.com/" target="_blank" class="char-card card-tw">
+            <a href="" target="_blank" class="char-card card-tw" id="link-twitter">
                 <div class="tape"></div>
                 <div class="char-area">
                     <img src="menu_twitter.png" alt="Twitter Character" class="char-img">
@@ -257,7 +274,7 @@
                 </div>
             </a>
 
-            <a href="#" class="char-card card-mem">
+            <a href="" target="_blank" class="char-card card-mem" id="link-members">
                 <div class="tape"></div>
                 <div class="char-area">
                     <img src="menu_member.png" alt="Member Character" class="char-img">
@@ -268,7 +285,7 @@
                 </div>
             </a>
 
-            <a href="#" class="char-card card-gal">
+            <a href="" target="_blank" class="char-card card-gal" id="link-gallery">
                 <div class="tape"></div>
                 <div class="char-area">
                     <img src="menu_gallery.png" alt="Gallery Character" class="char-img">
@@ -284,5 +301,59 @@
             <a href="index.html" class="back-btn">Exit</a>
         </nav>
     </div>
+
+    <div id="video-modal" onclick="closeVideoModal(event)">
+        <div class="modal-content">
+            <div class="modal-title">Select Platform</div>
+            
+            <a href="" target="_blank" class="platform-btn btn-yt" id="link-youtube">YouTube Channel</a>
+            
+            <a href="" target="_blank" class="platform-btn btn-twitch" id="link-twitch">Twitch</a>
+            
+            <a href="" target="_blank" class="platform-btn btn-tiktok" id="link-tiktok">TikTok</a>
+            
+            <div class="close-modal" onclick="closeVideoModal(event)">Close</div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        //  ▼▼▼ リンク先の設定エリア (ここでURLを変更！) ▼▼▼
+        // ==========================================
+        
+        // 1. YouTubeのURL
+        document.getElementById('link-youtube').href = "https://www.youtube.com/@flatcafe-official";
+        
+        // 2. TwitchのURL
+        document.getElementById('link-twitch').href = "https://www.twitch.tv/"; 
+        
+        // 3. TikTokのURL
+        document.getElementById('link-tiktok').href = "https://www.tiktok.com/";
+        
+        // 4. X (Twitter) のURL
+        document.getElementById('link-twitter').href = "https://twitter.com/";
+        
+        // 5. MembersページのURL (まだなければ # のまま)
+        document.getElementById('link-members').href = "#";
+        
+        // 6. GalleryページのURL (まだなければ # のまま)
+        document.getElementById('link-gallery').href = "#";
+
+        // ==========================================
+        //  ▲▲▲ 設定ここまで ▲▲▲
+        // ==========================================
+
+
+        // モーダル開閉処理
+        function openVideoModal() {
+            document.getElementById('video-modal').classList.add('active');
+        }
+        function closeVideoModal(e) {
+            // 背景クリックかCloseボタンで閉じる
+            if (e.target.id === 'video-modal' || e.target.classList.contains('close-modal')) {
+                document.getElementById('video-modal').classList.remove('active');
+            }
+        }
+    </script>
 </body>
 </html>
