@@ -154,7 +154,7 @@
         .bg-yt { background: #ff0000; } .bg-x { background: #000000; }
         .bg-twitch { background: #9146ff; } .bg-tiktok { background: linear-gradient(45deg, #000000, #333); }
 
-        /* メンバーグリッド */
+        /* メンバーグリッド (SNS内) */
         .member-list {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
             gap: 20px 15px;
@@ -181,7 +181,7 @@
         .mini-sub { font-size: 0.75rem; color: #666; margin-top: 2px; }
 
         /* =========================================
-           ▼▼▼ Membersステージ (ぴょこぴょこ完全版) ▼▼▼
+           ▼▼▼ Membersステージ (立ち絵演出・サイズ調整) ▼▼▼
            ========================================= */
         .members-stage {
             display: flex; 
@@ -205,55 +205,61 @@
 
         /* 立ち絵の基本設定 */
         .char-tachi img {
-            max-width: 180%; max-height: 95%; 
             object-fit: contain; object-position: bottom center;
             filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
             transition: all 0.5s;
         }
 
-        /* ▼ 座りポーズ (若凪・柚茶) の調整 (1.25倍 & 位置ずらし) ▼ */
-        .char-tachi.tachi-sit img {
-            max-height: 90%; /* 高さを増やす */
-            max-width: 275%; /* 幅も増やす (1.25倍) */
+        /* ▼▼▼ 個別キャラのサイズ微調整 (ここが重要！) ▼▼▼ */
+
+        /* 1. 柚茶 & 若凪 (座り): 一番大きくする (頭を大きく見せるため) */
+        #tachi-yuzu img, #tachi-wakanagi img {
+            max-width: 280%; /* かなり大きく広げる */
+            max-height: 85%; /* 高さは抑える */
         }
-        /* 左右に離す設定 */
-        #tachi-yuzu { left: -10px; } /* 左へずらす */
-        #tachi-wakanagi { left: 10px; } /* 右へずらす */
+
+        /* 2. とるま (立ち): 中くらい */
+        #tachi-toruma img {
+            max-width: 170%; /* 柚茶たちより控えめに */
+            max-height: 95%;
+        }
+
+        /* 3. lily00 (立ち・長身): 一番幅を狭くする (頭を小さく見せるため) */
+        #tachi-lily img {
+            max-width: 145%; /* 幅を狭めることで、相対的に頭が小さく、背が高く見える */
+            max-height: 98%;
+        }
+
+        /* 位置の微調整 (重なり防止) */
+        #tachi-yuzu { left: -5px; }
+        #tachi-wakanagi { left: 5px; }
 
 
-        /* ▼ ぴょこぴょこアニメーション (未選択時) ▼ */
+        /* ぴょこぴょこアニメーション (未選択時) */
         @keyframes pyoko {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-8px); }
         }
-        .char-tachi.idle {
-            animation: pyoko 2s infinite ease-in-out;
-        }
-        /* バラバラに動くようにタイミングをずらす */
+        .char-tachi.idle { animation: pyoko 2s infinite ease-in-out; }
         #tachi-toruma.idle { animation-delay: 0s; }
         #tachi-yuzu.idle { animation-delay: 0.5s; }
         #tachi-wakanagi.idle { animation-delay: 0.2s; }
         #tachi-lily.idle { animation-delay: 0.7s; }
 
-
-        /* 選択されていない状態（薄くする） */
+        /* 選択/非選択状態 */
         .char-tachi.dimmed {
             opacity: 0.4;
             transform: scale(0.9) translateY(10px);
             filter: grayscale(0.5);
             z-index: 1;
         }
-
-        /* 選択された状態（前に出る） */
         .char-tachi.active {
             opacity: 1;
             transform: scale(1.15) translateY(0);
             z-index: 100;
-            animation: none; /* アニメーション停止 */
+            animation: none;
         }
-        .char-tachi.active img {
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
-        }
+        .char-tachi.active img { filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); }
 
         /* プロフィールカード */
         .char-bio-box {
@@ -282,7 +288,6 @@
             font-size: 0.8rem; cursor: pointer; text-decoration: none; border: 1px solid #4a3b32;
         }
 
-        /* アニメーション定義 */
         @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slide-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -310,8 +315,11 @@
             
             /* スマホでの立ち絵調整 */
             .members-stage { height: 260px; }
-            .char-tachi img { max-width: 250%; } 
-            .char-tachi.tachi-sit img { max-width: 300%; max-height: 85%; } 
+            
+            /* スマホではさらに倍率を上げて迫力を出す */
+            #tachi-yuzu img, #tachi-wakanagi img { max-width: 320%; max-height: 80%; }
+            #tachi-toruma img { max-width: 200%; }
+            #tachi-lily img { max-width: 170%; }
         }
     </style>
 </head>
@@ -350,6 +358,7 @@
                             <div class="sns-btn bg-tiktok" onclick="switchSns('sns-tiktok')"><span class="sns-icon-char">🎵</span><span class="sns-label">TikTok</span></div>
                         </div>
                     </div>
+                    
                     <div id="sns-x" class="sns-slide">
                         <div onclick="switchSns('sns-home')" class="back-btn-internal">← Back</div>
                         <div class="panel-header"><div class="panel-title-text" style="color:#333">X (Twitter)</div></div>
@@ -445,7 +454,6 @@
     <script>
         // URL設定
         document.getElementById('link-yt').href = "https://www.youtube.com/@flatcafe-official";
-        // SNSリンク (適宜変更)
         document.getElementById('x-official').href = "https://twitter.com/";
         document.getElementById('x-1').href = "https://twitter.com/"; 
         document.getElementById('x-2').href = "https://twitter.com/";
@@ -461,13 +469,11 @@
         document.getElementById('tt-3').href = "https://tiktok.com/";
         document.getElementById('tt-4').href = "https://tiktok.com/";
 
-        // ★ 初期ロード時の動作 ★
+        // 初期ロード時
         window.addEventListener('load', function() {
-            // Membersタブを自動で開く
             const membersTab = document.getElementById('tab-members');
             if(membersTab) openTab('members', membersTab);
-            
-            // ★重要: 初期は誰も選択せず「idle (ぴょこぴょこ)」状態を維持するため、selectMemberは呼ばない
+            // 最初は誰も選択せずぴょこぴょこさせる
         });
 
         function openTab(tabName, elem) {
@@ -480,9 +486,9 @@
 
             if(tabName === 'sns') switchSns('sns-home');
             
-            // Membersタブを開いた時、もし誰も選択されてなければidle状態に戻すことも可能だが
-            // シンプルにそのまま表示
-            
+            // Membersを開いた時はキャラの選択解除（ぴょこぴょこ再開）
+            if(tabName === 'members') closeBio();
+
             if(window.innerWidth <= 768 && document.readyState === 'complete') {
                 const offset = display.getBoundingClientRect().top + window.pageYOffset - 20;
                 window.scrollTo({top: offset, behavior: 'smooth'});
@@ -500,34 +506,28 @@
             document.getElementById(slideId).classList.add('active');
         }
 
-        // キャラクター選択処理
         function selectMember(name, elem) {
-            // 全員から idle (アニメーション) を削除
+            // アニメーション停止
             document.querySelectorAll('.char-tachi').forEach(c => c.classList.remove('idle'));
             
-            // 全員を dimmed にする
             document.querySelectorAll('.char-tachi').forEach(c => {
                 c.classList.remove('active');
                 c.classList.add('dimmed');
             });
-
-            // クリックした人だけ active にする
             elem.classList.remove('dimmed');
             elem.classList.add('active');
             
-            // 説明文表示
             document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show'));
             const bio = document.getElementById('bio-' + name);
             if(bio) bio.classList.add('show');
         }
 
         function closeBio() {
-            // 閉じるボタンを押したら、全員 idle (ぴょこぴょこ) に戻す？
-            // それとも単に選択解除？ -> 今回は「ぴょこぴょこ」に戻す設定にしてみます
+            // アニメーション再開
             document.querySelectorAll('.char-tachi').forEach(c => {
                 c.classList.remove('active');
                 c.classList.remove('dimmed');
-                c.classList.add('idle'); // アニメーション再開
+                c.classList.add('idle');
             });
             document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show'));
         }
