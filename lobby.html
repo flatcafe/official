@@ -181,7 +181,7 @@
         .mini-sub { font-size: 0.75rem; color: #666; margin-top: 2px; }
 
         /* =========================================
-           ▼▼▼ Membersステージ (立ち絵演出・サイズ調整) ▼▼▼
+           ▼▼▼ Membersステージ (立ち絵演出) ▼▼▼
            ========================================= */
         .members-stage {
             display: flex; 
@@ -203,39 +203,24 @@
             transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        /* 立ち絵の基本設定 */
         .char-tachi img {
             object-fit: contain; object-position: bottom center;
             filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
             transition: all 0.5s;
         }
 
-        /* ▼▼▼ 個別キャラのサイズ微調整 (ここが重要！) ▼▼▼ */
+        /* 柚茶 & 若凪 (座り) */
+        #tachi-yuzu img, #tachi-wakanagi img { max-width: 280%; max-height: 85%; }
+        /* とるま (立ち) */
+        #tachi-toruma img { max-width: 170%; max-height: 95%; }
+        /* lily00 (立ち・長身) */
+        #tachi-lily img { max-width: 145%; max-height: 98%; }
 
-        /* 1. 柚茶 & 若凪 (座り): 一番大きくする (頭を大きく見せるため) */
-        #tachi-yuzu img, #tachi-wakanagi img {
-            max-width: 280%; /* かなり大きく広げる */
-            max-height: 85%; /* 高さは抑える */
-        }
-
-        /* 2. とるま (立ち): 中くらい */
-        #tachi-toruma img {
-            max-width: 170%; /* 柚茶たちより控えめに */
-            max-height: 95%;
-        }
-
-        /* 3. lily00 (立ち・長身): 一番幅を狭くする (頭を小さく見せるため) */
-        #tachi-lily img {
-            max-width: 145%; /* 幅を狭めることで、相対的に頭が小さく、背が高く見える */
-            max-height: 98%;
-        }
-
-        /* 位置の微調整 (重なり防止) */
+        /* 位置微調整 */
         #tachi-yuzu { left: -5px; }
         #tachi-wakanagi { left: 5px; }
 
-
-        /* ぴょこぴょこアニメーション (未選択時) */
+        /* アニメーション */
         @keyframes pyoko {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-8px); }
@@ -246,19 +231,8 @@
         #tachi-wakanagi.idle { animation-delay: 0.2s; }
         #tachi-lily.idle { animation-delay: 0.7s; }
 
-        /* 選択/非選択状態 */
-        .char-tachi.dimmed {
-            opacity: 0.4;
-            transform: scale(0.9) translateY(10px);
-            filter: grayscale(0.5);
-            z-index: 1;
-        }
-        .char-tachi.active {
-            opacity: 1;
-            transform: scale(1.15) translateY(0);
-            z-index: 100;
-            animation: none;
-        }
+        .char-tachi.dimmed { opacity: 0.4; transform: scale(0.9) translateY(10px); filter: grayscale(0.5); z-index: 1; }
+        .char-tachi.active { opacity: 1; transform: scale(1.15) translateY(0); z-index: 100; animation: none; }
         .char-tachi.active img { filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); }
 
         /* プロフィールカード */
@@ -275,7 +249,7 @@
         .bio-comment { font-size: 0.85rem; color: #d84315; margin-top: 8px; font-weight: bold; font-family:'Bradley Hand', cursive; }
         .bio-close { position: absolute; top: 5px; right: 10px; font-size: 1.2rem; cursor: pointer; color: #888; }
 
-        /* 戻る・閉じるボタン */
+        /* フッター */
         .panel-footer { margin-top: 20px; text-align: center; position: relative; z-index: 30;}
         .close-btn {
             display: inline-block; padding: 8px 30px; background: #8d6e63; color: #fff;
@@ -315,8 +289,6 @@
             
             /* スマホでの立ち絵調整 */
             .members-stage { height: 260px; }
-            
-            /* スマホではさらに倍率を上げて迫力を出す */
             #tachi-yuzu img, #tachi-wakanagi img { max-width: 320%; max-height: 80%; }
             #tachi-toruma img { max-width: 200%; }
             #tachi-lily img { max-width: 170%; }
@@ -364,20 +336,20 @@
                         <div class="panel-header"><div class="panel-title-text" style="color:#333">X (Twitter)</div></div>
                         <div class="member-list">
                             <a href="" target="_blank" class="mini-card" id="x-official"><img src="flat-cafe-logo.png" class="mini-img" style="object-fit:contain"><span class="mini-name">Official</span></a>
-                            <a href="" target="_blank" class="mini-card" id="x-1"><img src="menu_youtube.png" class="mini-img"><span class="mini-name">とるま</span></a>
-                            <a href="" target="_blank" class="mini-card" id="x-2"><img src="menu_twitter.png" class="mini-img"><span class="mini-name">柚茶</span></a>
-                            <a href="" target="_blank" class="mini-card" id="x-3"><img src="menu_member.png" class="mini-img"><span class="mini-name">若凪</span></a>
-                            <a href="" target="_blank" class="mini-card" id="x-4"><img src="menu_gallery.png" class="mini-img"><span class="mini-name">lily00</span></a>
+                            <a href="" target="_blank" class="mini-card" id="x-toruma"><img src="menu_youtube.png" class="mini-img"><span class="mini-name">とるま</span></a>
+                            <a href="" target="_blank" class="mini-card" id="x-yuzu"><img src="menu_twitter.png" class="mini-img"><span class="mini-name">柚茶</span></a>
+                            <a href="" target="_blank" class="mini-card" id="x-wakanagi"><img src="menu_member.png" class="mini-img"><span class="mini-name">若凪</span></a>
+                            <a href="" target="_blank" class="mini-card" id="x-lily"><img src="menu_gallery.png" class="mini-img"><span class="mini-name">lily00</span></a>
                         </div>
                     </div>
                     <div id="sns-twitch" class="sns-slide">
                         <div onclick="switchSns('sns-home')" class="back-btn-internal">← Back</div>
                         <div class="panel-header"><div class="panel-title-text" style="color:#9146ff">Twitch Channels</div></div>
                         <div class="member-list">
-                            <a href="" target="_blank" class="mini-card" id="tw-1"><img src="menu_youtube.png" class="mini-img"><span class="mini-name">とるま</span></a>
-                            <a href="" target="_blank" class="mini-card" id="tw-2"><img src="menu_twitter.png" class="mini-img"><span class="mini-name">柚茶</span></a>
-                            <a href="" target="_blank" class="mini-card" id="tw-3"><img src="menu_member.png" class="mini-img"><span class="mini-name">若凪</span></a>
-                            <a href="" target="_blank" class="mini-card" id="tw-4"><img src="menu_gallery.png" class="mini-img"><span class="mini-name">lily00</span></a>
+                            <a href="" target="_blank" class="mini-card" id="tw-toruma"><img src="menu_youtube.png" class="mini-img"><span class="mini-name">とるま</span></a>
+                            <a href="" target="_blank" class="mini-card" id="tw-yuzu"><img src="menu_twitter.png" class="mini-img"><span class="mini-name">柚茶</span></a>
+                            <a href="" target="_blank" class="mini-card" id="tw-wakanagi"><img src="menu_member.png" class="mini-img"><span class="mini-name">若凪</span></a>
+                            <a href="" target="_blank" class="mini-card" id="tw-lily"><img src="menu_gallery.png" class="mini-img"><span class="mini-name">lily00</span></a>
                         </div>
                     </div>
                     <div id="sns-tiktok" class="sns-slide">
@@ -385,10 +357,10 @@
                         <div class="panel-header"><div class="panel-title-text" style="color:#333">TikTok Channels</div></div>
                         <div class="member-list">
                             <a href="" target="_blank" class="mini-card" id="tt-official"><img src="flat-cafe-logo.png" class="mini-img" style="object-fit:contain"><span class="mini-name">Official</span></a>
-                            <a href="" target="_blank" class="mini-card" id="tt-1"><img src="menu_youtube.png" class="mini-img"><span class="mini-name">とるま</span></a>
-                            <a href="" target="_blank" class="mini-card" id="tt-2"><img src="menu_twitter.png" class="mini-img"><span class="mini-name">柚茶</span></a>
-                            <a href="" target="_blank" class="mini-card" id="tt-3"><img src="menu_member.png" class="mini-img"><span class="mini-name">若凪</span></a>
-                            <a href="" target="_blank" class="mini-card" id="tt-4"><img src="menu_gallery.png" class="mini-img"><span class="mini-name">lily00</span></a>
+                            <a href="" target="_blank" class="mini-card" id="tt-toruma"><img src="menu_youtube.png" class="mini-img"><span class="mini-name">とるま</span></a>
+                            <a href="" target="_blank" class="mini-card" id="tt-yuzu"><img src="menu_twitter.png" class="mini-img"><span class="mini-name">柚茶</span></a>
+                            <a href="" target="_blank" class="mini-card" id="tt-wakanagi"><img src="menu_member.png" class="mini-img"><span class="mini-name">若凪</span></a>
+                            <a href="" target="_blank" class="mini-card" id="tt-lily"><img src="menu_gallery.png" class="mini-img"><span class="mini-name">lily00</span></a>
                         </div>
                     </div>
                 </div>
@@ -452,28 +424,37 @@
     </div>
 
     <script>
-        // URL設定
-        document.getElementById('link-yt').href = "https://www.youtube.com/@flatcafe-official";
-        document.getElementById('x-official').href = "https://twitter.com/";
-        document.getElementById('x-1').href = "https://twitter.com/"; 
-        document.getElementById('x-2').href = "https://twitter.com/";
-        document.getElementById('x-3').href = "https://twitter.com/";
-        document.getElementById('x-4').href = "https://twitter.com/";
-        document.getElementById('tw-1').href = "https://twitch.tv/";
-        document.getElementById('tw-2').href = "https://twitch.tv/";
-        document.getElementById('tw-3').href = "https://twitch.tv/";
-        document.getElementById('tw-4').href = "https://twitch.tv/";
-        document.getElementById('tt-official').href = "https://tiktok.com/";
-        document.getElementById('tt-1').href = "https://tiktok.com/";
-        document.getElementById('tt-2').href = "https://tiktok.com/";
-        document.getElementById('tt-3').href = "https://tiktok.com/";
-        document.getElementById('tt-4').href = "https://tiktok.com/";
+        // ==========================================
+        //  ▼▼▼ URL・設定エリア ▼▼▼
+        // ==========================================
+        
+        // --- YouTube (Official) ---
+        document.getElementById('link-yt').href = "https://www.youtube.com/@flatcafe_games/live";
 
-        // 初期ロード時
+        // --- X (Twitter) ---
+        document.getElementById('x-official').href = "https://x.com/flca_official";
+        document.getElementById('x-toruma').href = "https://x.com/tourma_flca";
+        document.getElementById('x-yuzu').href = "https://x.com/yuzucha_flca";
+        document.getElementById('x-wakanagi').href = "https://x.com/wakanagi_flca";
+        document.getElementById('x-lily').href = "https://x.com/Lily00_flca";
+
+        // --- Twitch (Members) ---
+        document.getElementById('tw-toruma').href = "https://www.twitch.tv/tourma_flca";
+        document.getElementById('tw-yuzu').href = "https://www.twitch.tv/yuzucha08";
+        document.getElementById('tw-wakanagi').href = "https://www.twitch.tv/wakanagi";
+        document.getElementById('tw-lily').href = "https://www.twitch.tv/lily00_flca";
+
+        // --- TikTok (Placeholders) ---
+        document.getElementById('tt-official').href = "https://tiktok.com/";
+        document.getElementById('tt-toruma').href = "https://tiktok.com/";
+        document.getElementById('tt-yuzu').href = "https://tiktok.com/";
+        document.getElementById('tt-wakanagi').href = "https://tiktok.com/";
+        document.getElementById('tt-lily').href = "https://tiktok.com/";
+
+        // ==========================================
+
         window.addEventListener('load', function() {
-            const membersTab = document.getElementById('tab-members');
-            if(membersTab) openTab('members', membersTab);
-            // 最初は誰も選択せずぴょこぴょこさせる
+            // 最初は誰も選択せずアニメーションのみ
         });
 
         function openTab(tabName, elem) {
@@ -485,9 +466,7 @@
             elem.classList.add('active-tab');
 
             if(tabName === 'sns') switchSns('sns-home');
-            
-            // Membersを開いた時はキャラの選択解除（ぴょこぴょこ再開）
-            if(tabName === 'members') closeBio();
+            if(tabName === 'members') closeBio(); // ぴょこぴょこリセット
 
             if(window.innerWidth <= 768 && document.readyState === 'complete') {
                 const offset = display.getBoundingClientRect().top + window.pageYOffset - 20;
@@ -507,23 +486,19 @@
         }
 
         function selectMember(name, elem) {
-            // アニメーション停止
             document.querySelectorAll('.char-tachi').forEach(c => c.classList.remove('idle'));
-            
             document.querySelectorAll('.char-tachi').forEach(c => {
                 c.classList.remove('active');
                 c.classList.add('dimmed');
             });
             elem.classList.remove('dimmed');
             elem.classList.add('active');
-            
             document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show'));
             const bio = document.getElementById('bio-' + name);
             if(bio) bio.classList.add('show');
         }
 
         function closeBio() {
-            // アニメーション再開
             document.querySelectorAll('.char-tachi').forEach(c => {
                 c.classList.remove('active');
                 c.classList.remove('dimmed');
