@@ -160,27 +160,21 @@
         /* =========================================
            Hybrid Menu System (PC: Split / Mobile: Accordion)
            ========================================= */
-        
         .menu-wrapper {
             background: #fff; border: 1px solid #ccc;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
         }
-
-        /* --- PC用レイアウト (769px以上) --- */
         @media (min-width: 769px) {
             .menu-wrapper {
                 display: grid;
                 grid-template-columns: 260px 1fr; 
                 grid-template-rows: repeat(10, min-content);
-                align-items: start;
-                min-height: 400px;
-                padding: 10px; position: relative;
+                align-items: start; min-height: 400px; padding: 10px; position: relative;
             }
             .menu-wrapper::before {
                 content: ''; position: absolute; top: -10px; left: 130px; transform: translateX(-50%);
                 width: 100px; height: 20px; background: #5d4037; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 10;
             }
-
             .menu-trigger, .menu-link {
                 grid-column: 1; width: 100%;
                 display: flex; align-items: center; padding: 15px 10px;
@@ -189,7 +183,6 @@
             }
             .menu-trigger:hover, .menu-link:hover { background: rgba(0,0,0,0.05); }
             .menu-trigger.active { background: var(--accent-gold); font-weight: bold; color: #3e2723; border-right: 3px solid #d84315; }
-
             .menu-content {
                 grid-column: 2; grid-row: 1 / 99;
                 display: none; padding: 20px; margin-left: 20px;
@@ -198,15 +191,12 @@
             }
             .menu-content.active { display: block; animation: fade-in 0.3s; }
             .accordion-close { display: none; }
-            
             .menu-placeholder {
                 grid-column: 2; grid-row: 1 / 99;
                 display: flex; justify-content: center; align-items: center; height: 100%;
                 color: #888; font-family: 'Yu Mincho', serif;
             }
         }
-
-        /* --- スマホ用レイアウト (768px以下) --- */
         @media (max-width: 768px) {
             .menu-wrapper { display: block; padding: 0; }
             .menu-trigger, .menu-link {
@@ -217,7 +207,6 @@
             .menu-trigger:active, .menu-link:active { background: #f5f5f5; }
             .menu-trigger.active { background: #fffde7; border-bottom: none; }
             .menu-trigger.active .menu-price { transform: rotate(90deg); }
-
             .menu-content {
                 display: none; background: #fdfbf7; padding: 15px;
                 border-bottom: 1px solid #ccc; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
@@ -264,7 +253,7 @@
         .zoom-btn { position: absolute; top: 8px; left: 10px; background: #fff; border: 1px solid #ccc; border-radius: 12px; padding: 2px 8px; font-size: 0.75rem; color: #555; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .zoom-btn:active { transform: scale(0.95); }
 
-        /* Receipt Log Styles (Animation Ready) */
+        /* Receipt Log */
         .receipt-btn { margin-top: 30px; text-align: center; font-size: 0.8rem; text-decoration: underline; cursor: pointer; color: rgba(255,255,255,0.6); }
         #receipt-modal { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 5000; display: flex; justify-content: center; align-items: flex-end; transition: bottom 0.5s ease; }
         #receipt-modal.active { bottom: 0; }
@@ -272,16 +261,62 @@
         .receipt-paper { width: 300px; max-height: 80vh; background: #fff; padding: 20px; font-family: 'Courier New', monospace; font-size: 0.8rem; color: #333; position: relative; margin-bottom: 20px; box-shadow: 0 0 20px rgba(0,0,0,0.5); overflow-y: auto; transform: translateY(20px); }
         .receipt-paper::before { content: ""; position: absolute; top: -10px; left: 0; width: 100%; height: 10px; background: linear-gradient(45deg, transparent 33.333%, #fff 33.333%, #fff 66.667%, transparent 66.667%), linear-gradient(-45deg, transparent 33.333%, #fff 33.333%, #fff 66.667%, transparent 66.667%); background-size: 10px 20px; }
         
-        /* ★★★ 印字演出用の隠しスタイル ★★★ */
         .receipt-line, .receipt-total, .receipt-close {
             opacity: 0; transform: translateY(-5px); transition: all 0.2s;
             display: flex; justify-content: space-between; margin-bottom: 5px; border-bottom: 1px dashed #eee;
         }
         .receipt-total { border-top: 2px solid #333; margin-top: 10px; padding-top: 5px; font-weight: bold; text-align: right; display: block; }
         .receipt-close { text-align: center; margin-top: 15px; cursor: pointer; color: #888; border: 1px solid #ccc; padding: 5px; display: block; }
-        
-        /* 印字クラス */
         .receipt-element-show { opacity: 1 !important; transform: translateY(0) !important; }
+
+        /* =========================================
+           ★ NEW ★ Gallery - Cheki Style
+           ========================================= */
+        .gallery-grid {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; padding: 20px;
+        }
+        .polaroid {
+            background: #fff; padding: 10px 10px 35px 10px;
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.4);
+            transform: rotate(-2deg); transition: transform 0.3s, z-index 0s;
+            position: relative; cursor: pointer; text-decoration: none; color: #333;
+            width: 140px; 
+        }
+        .polaroid:hover {
+            transform: scale(1.1) rotate(0deg); z-index: 10;
+            box-shadow: 5px 10px 20px rgba(0,0,0,0.5);
+        }
+        .polaroid img {
+            width: 100%; height: 120px; object-fit: cover; background: #eee;
+            border: 1px solid #ccc;
+        }
+        .caption {
+            font-family: 'Bradley Hand', cursive; font-weight: bold;
+            text-align: center; margin-top: 10px; font-size: 0.9rem;
+        }
+        /* バリエーション */
+        .polaroid:nth-child(even) { transform: rotate(3deg); }
+        .polaroid:nth-child(3n) { transform: rotate(-4deg); }
+        
+        /* 画鋲 */
+        .pin {
+            position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+            width: 12px; height: 12px; border-radius: 50%;
+            background: var(--pin-color); box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+        /* テープ */
+        .tape-corner {
+            position: absolute; top: -10px; right: -5px;
+            width: 40px; height: 15px; background: rgba(255,255,255,0.6);
+            transform: rotate(45deg); box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        /* Webスタンプ */
+        .stamp {
+            position: absolute; bottom: 8px; right: 8px;
+            border: 2px solid #1976d2; color: #1976d2;
+            font-weight: bold; font-size: 0.7rem; padding: 1px 4px;
+            transform: rotate(-15deg); opacity: 0.7; border-radius: 4px;
+        }
 
         /* Full View & Footer */
         #full-view-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: all 0.3s; cursor: pointer; }
@@ -304,6 +339,7 @@
             #tachi-yuzu img, #tachi-wakanagi img { max-width: 320%; max-height: 80%; }
             #tachi-toruma img { max-width: 200%; }
             #tachi-lily img { max-width: 170%; }
+            .polaroid { width: 45%; max-width: 160px; }
         }
     </style>
 </head>
@@ -339,7 +375,6 @@
                 
                 <div id="view-menu" class="section-view">
                     <div class="panel-header"><div class="panel-title-text">Today's Menu</div></div>
-                    
                     <div class="menu-wrapper">
                         <div class="menu-placeholder">← 左のメニューからお選びください</div>
 
@@ -348,7 +383,6 @@
                             <div class="menu-text-group"><div class="menu-name">YouTube (Official)</div><div class="menu-desc">公式配信はこちら。</div></div>
                             <div class="menu-price">Free</div>
                         </a>
-
                         <div class="menu-trigger js-accordion" data-target="content-twitch">
                             <div class="menu-icon" style="color:#9146ff">👾</div>
                             <div class="menu-text-group"><div class="menu-name">Twitch Live</div><div class="menu-desc">メンバー個人配信。</div></div>
@@ -363,7 +397,6 @@
                                 <a href="" target="_blank" class="mini-card" id="tw-lily"><img src="menu_gallery.png" class="mini-img"><span class="mini-name">lily00</span></a>
                             </div>
                         </div>
-
                         <div class="menu-trigger js-accordion" data-target="content-x">
                             <div class="menu-icon" style="color:#333">𝕏</div>
                             <div class="menu-text-group"><div class="menu-name">X (Twitter)</div><div class="menu-desc">最新情報や日常。</div></div>
@@ -379,7 +412,6 @@
                                 <a href="" target="_blank" class="mini-card" id="x-lily"><img src="menu_gallery.png" class="mini-img"><span class="mini-name">lily00</span></a>
                             </div>
                         </div>
-
                         <div class="menu-trigger js-accordion" data-target="content-tiktok">
                             <div class="menu-icon" style="color:#333">🎵</div>
                             <div class="menu-text-group"><div class="menu-name">TikTok</div><div class="menu-desc">ショート動画。</div></div>
@@ -395,14 +427,12 @@
                                 <a href="" target="_blank" class="mini-card" id="tt-lily"><img src="menu_gallery.png" class="mini-img"><span class="mini-name">lily00</span></a>
                             </div>
                         </div>
-
                         <a href="#" target="_blank" class="menu-link">
                             <div class="menu-icon">✎</div>
                             <div class="menu-text-group"><div class="menu-name">Guest Note</div><div class="menu-desc">ご意見・リクエスト。</div></div>
                             <div class="menu-price">Write</div>
                         </a>
                     </div>
-
                 </div>
 
                 <div id="view-members" class="section-view">
@@ -453,7 +483,24 @@
 
                 <div id="view-gallery" class="section-view">
                     <div class="panel-header"><div class="panel-title-text">Photo Gallery</div></div>
-                    <div style="text-align:center; padding:30px; color:#666;">Coming Soon...</div>
+                    <div class="gallery-grid">
+                        <div class="polaroid" onclick="openFullView('menu_gallery.png')">
+                            <div class="pin"></div>
+                            <img src="menu_gallery.png" alt="Halloween 2024">
+                            <div class="caption">Halloween 2024</div>
+                        </div>
+                        <a href="#" target="_blank" class="polaroid">
+                            <div class="tape-corner"></div>
+                            <img src="menu_member.png" alt="Xmas Site">
+                            <div class="caption">Xmas Site <span style="color:#e53935;">♥</span></div>
+                            <div class="stamp">WEB</div>
+                        </a>
+                        <div class="polaroid" onclick="openFullView('flat-cafe-logo.png')">
+                            <div class="pin"></div>
+                            <img src="flat-cafe-logo.png" alt="Logo">
+                            <div class="caption">My Logo</div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="panel-footer"><div class="close-btn" onclick="closeContent()">Close ×</div></div>
@@ -476,9 +523,8 @@
             <div class="receipt-line"><span>2025-12-25</span><span>Xmas Party</span></div>
             <div class="receipt-line"><span>2025-12-26</span><span>Menu Renewal</span></div>
             <div class="receipt-line"><span>2025-12-26</span><span>Add Fortune</span></div>
-            <div class="receipt-line"><span>2025-12-27</span><span>Gallery Open?</span></div>
-            <div class="receipt-line"><span>2026-01-01</span><span>New Year</span></div>
-            <div class="receipt-total">Total: 6 Updates</div>
+            <div class="receipt-line"><span>2025-12-27</span><span>Gallery Open</span></div>
+            <div class="receipt-total">Total: 5 Updates</div>
             <div class="receipt-close" onclick="closeReceipt()">Close Receipt</div>
         </div>
     </div>
@@ -532,7 +578,6 @@
             if(window.innerWidth <= 768 && document.readyState === 'complete') {
                 window.scrollTo({top: document.getElementById('content-display').offsetTop - 20, behavior: 'smooth'});
             }
-            // PC版メニューの初期化（リセット）
             if(tabName === 'menu' && window.innerWidth > 768) { 
                 const placeholder = document.querySelector('.menu-placeholder');
                 if(placeholder) placeholder.style.display = 'flex';
@@ -546,58 +591,37 @@
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        /* --- Accordion (Hybrid) Setup --- */
+        /* --- Accordion --- */
         function setupAccordion() {
             document.querySelectorAll('.js-accordion').forEach(trigger => {
                 trigger.addEventListener('click', function() {
                     const targetId = this.getAttribute('data-target');
                     const targetContent = document.getElementById(targetId);
                     const isActive = this.classList.contains('active');
-
-                    // リセット: すべて閉じる
                     document.querySelectorAll('.js-accordion').forEach(el => el.classList.remove('active'));
                     document.querySelectorAll('.menu-content').forEach(el => el.classList.remove('active'));
-                    
                     const placeholder = document.querySelector('.menu-placeholder');
                     if(placeholder) placeholder.style.display = 'none';
-
-                    // Mobile: Toggle logic / PC: Always Open if selected
                     if (!isActive) {
                         this.classList.add('active');
                         targetContent.classList.add('active');
                     } else {
-                        // PCで閉じた場合はプレースホルダー戻す
                         if(window.innerWidth > 768 && placeholder) placeholder.style.display = 'flex';
                     }
                 });
             });
         }
 
-        /* --- Receipt Animation Logic --- */
+        /* --- Receipt & Bio --- */
         function openReceipt() { 
-            const modal = document.getElementById('receipt-modal');
-            modal.classList.add('active'); 
-            
-            // 1. Reset all elements to hidden
+            const modal = document.getElementById('receipt-modal'); modal.classList.add('active'); 
             const lines = document.querySelectorAll('.receipt-line, .receipt-total, .receipt-close');
-            lines.forEach(line => {
-                line.classList.remove('receipt-element-show');
-            });
-
-            // 2. Animate one by one
+            lines.forEach(line => { line.classList.remove('receipt-element-show'); });
             let delay = 300; 
-            lines.forEach((line, index) => {
-                setTimeout(() => {
-                    line.classList.add('receipt-element-show');
-                }, delay);
-                delay += 150; // Speed of printing
-            });
+            lines.forEach((line) => { setTimeout(() => { line.classList.add('receipt-element-show'); }, delay); delay += 150; });
         }
-        function closeReceipt() { 
-            document.getElementById('receipt-modal').classList.remove('active'); 
-        }
+        function closeReceipt() { document.getElementById('receipt-modal').classList.remove('active'); }
 
-        /* --- Other Functions --- */
         function selectMember(name, elem, imgSrc) { document.querySelectorAll('.char-tachi').forEach(c => { c.classList.remove('idle'); c.classList.remove('active'); c.classList.add('dimmed'); }); elem.classList.remove('dimmed'); elem.classList.add('active'); document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show')); const bio = document.getElementById('bio-' + name); if(bio) bio.classList.add('show'); }
         function closeBio() { document.querySelectorAll('.char-tachi').forEach(c => { c.classList.remove('active'); c.classList.remove('dimmed'); c.classList.add('idle'); }); document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show')); }
         function openFullView(imgSrc) { const modal = document.getElementById('full-view-modal'); const img = document.getElementById('full-view-img'); img.src = imgSrc; modal.classList.add('active'); }
