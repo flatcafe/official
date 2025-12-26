@@ -15,7 +15,6 @@
             --card-bg: #fffcf5;
             --wood-dark: #4a3b32;
             --accent-gold: #ffd54f;
-            --shadow-color: rgba(0,0,0,0.4);
             --pin-color: #e53935; 
             --cork-bg: #e6d6ac;
         }
@@ -27,6 +26,7 @@
             font-family: 'Georgia', 'Yu Mincho', serif;
             color: var(--wood-dark);
             overflow-x: hidden;
+            scroll-behavior: smooth; /* スムーズスクロール */
         }
 
         /* 背景 */
@@ -43,15 +43,15 @@
         }
 
         /* =========================================
-           2. レイアウト & ヘッダー
+           2. コンテナ & ヘッダー
            ========================================= */
         .container {
-            max-width: 1200px; margin: 0 auto; padding: 40px 20px 100px;
+            max-width: 1000px; margin: 0 auto; padding: 40px 20px 100px;
             display: flex; flex-direction: column; align-items: center;
         }
 
         header { 
-            text-align: center; margin-bottom: 50px; 
+            text-align: center; margin-bottom: 40px; 
             animation: fade-in 1.2s ease-out;
         }
         .mini-logo {
@@ -67,32 +67,43 @@
         }
 
         /* =========================================
-           3. キャラクターカード
+           3. メニューカード (タブとして機能)
            ========================================= */
         .card-grid {
             display: flex; flex-wrap: wrap; justify-content: center;
-            gap: 40px; width: 100%; perspective: 1200px;
+            gap: 30px; width: 100%; perspective: 1200px;
+            margin-bottom: 40px; /* 下にコンテンツが出るための余白 */
         }
 
         .char-card {
             position: relative;
-            width: 240px; height: 320px;
+            width: 220px; height: 300px; /* 少しコンパクトに */
             background-color: var(--card-bg);
             border-radius: 4px;
             text-decoration: none; color: var(--wood-dark);
             box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s;
+            transition: all 0.3s ease;
             display: flex; flex-direction: column; align-items: center;
             opacity: 0; transform: translateY(50px) rotate(var(--rot));
             animation: deal-card 0.6s forwards; animation-delay: var(--delay);
             overflow: hidden; cursor: pointer;
-        }
-        .char-card:hover {
-            transform: translateY(-10px) scale(1.02) rotate(0deg) !important;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6); z-index: 100;
+            border: 4px solid transparent; /* 選択時の枠線用 */
         }
 
-        /* テープ */
+        /* ホバー & アクティブ状態 */
+        .char-card:hover {
+            transform: translateY(-10px) scale(1.02) rotate(0deg) !important;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6); z-index: 10;
+        }
+        /* 選択中のカードのデザイン */
+        .char-card.active-tab {
+            transform: translateY(-5px) scale(1.05) rotate(0deg) !important;
+            box-shadow: 0 0 15px var(--accent-gold);
+            border-color: var(--accent-gold);
+            z-index: 20;
+        }
+
+        /* --- 共通パーツ (テープ・画像・背景円) --- */
         .tape {
             position: absolute; top: -12px; left: -15px;
             transform: rotate(-35deg); width: 90px; height: 28px;
@@ -101,58 +112,33 @@
         }
         .tape::after {
             content: ''; position: absolute; right: -5px; top: 0; width: 10px; height: 100%;
-            background: inherit; 
-            clip-path: polygon(0 0, 100% 15%, 0 30%, 100% 45%, 0 60%, 100% 75%, 0 90%, 100% 100%);
+            background: inherit; clip-path: polygon(0 0, 100% 15%, 0 30%, 100% 45%, 0 60%, 100% 75%, 0 90%, 100% 100%);
         }
 
-        /* 画像エリア */
         .char-area {
             position: relative; width: 100%; height: 70%;
             margin-top: 0; background-color: #f0f0f0;
         }
-        /* 背景の円 */
-        .card-yt .char-area::before, .card-tw .char-area::before,
-        .card-mem .char-area::before, .card-gal .char-area::before {
+        
+        /* 背景円 */
+        .card-yt .char-area::before, .card-mem .char-area::before, .card-gal .char-area::before {
             content:''; position: absolute; width: 100%; height: 100%;
             top: 0; left: 0; opacity: 0.5; z-index: 0;
         }
-        /* トルマ(YouTube) */
         .card-yt .char-area::before { background: radial-gradient(circle at 50% 120%, #ffcdd2, transparent 70%); }
-        /* ゆずちゃん(Twitter) -> 黄色系 */
-        .card-tw .char-area::before { background: radial-gradient(circle at 50% 120%, #fff9c4, transparent 70%); }
-        /* ワカナギ(Members) -> 緑系 */
         .card-mem .char-area::before { background: radial-gradient(circle at 50% 120%, #b2dfdb, transparent 70%); }
-        /* Lily(Gallery) -> 青系 */
         .card-gal .char-area::before { background: radial-gradient(circle at 50% 120%, #bbdefb, transparent 70%); }
 
-        /* キャラクター画像 */
+        /* キャラ画像 */
         .char-img {
             width: 100%; height: 100%;
             object-fit: cover; object-position: top center;
             position: relative; z-index: 10;
             transition: transform 0.5s ease; transform-origin: top center;
         }
-        
-        /* ▼▼▼ 個別画像調整 (キャラ変更に合わせてCSS移動) ▼▼▼ */
-
-        /* 1. トルマ (YouTube): 1.05倍, 上-15px */
         .card-yt .char-img { transform: scale(1.05) translateY(-15px); }
-        .card-yt:hover .char-img { transform: scale(1.15) translateY(-15px); }
-
-        /* 2. ゆずちゃん (Twitter): 1.25倍 */
-        .card-tw .char-img { transform: scale(1.25); } 
-        .card-tw:hover .char-img { transform: scale(1.35); }
-
-        /* 3. ワカナギ (Members): 0.98倍 */
-        .card-mem .char-img { transform: scale(0.98); } 
-        .card-mem:hover .char-img { transform: scale(1.08); }
-
-        /* 4. Lily (Gallery): 1.2倍 */
-        .card-gal .char-img { transform: scale(1.2); } 
-        .card-gal:hover .char-img { transform: scale(1.3); }
-
-        /* ▲▲▲ 調整ここまで ▲▲▲ */
-
+        .card-mem .char-img { transform: scale(0.98); }
+        .card-gal .char-img { transform: scale(1.2); }
 
         /* 情報エリア */
         .info-area {
@@ -164,133 +150,131 @@
             border-top: 3px solid rgba(0,0,0,0.08); position: relative; z-index: 20;
         }
         .menu-title {
-            font-size: 1.15rem; font-weight: bold; margin: 3px 0 2px;
+            font-size: 1.1rem; font-weight: bold; margin: 3px 0 2px;
             font-family: 'Impact', sans-serif; letter-spacing: 0.05em; color: #5d4037;
         }
-        .menu-desc { font-size: 0.8rem; color: #795548; font-weight: bold; }
+        .menu-desc { font-size: 0.75rem; color: #795548; font-weight: bold; }
 
-        /* アニメーション */
-        .card-yt { --rot: -3deg; --delay: 0.1s; } .card-tw { --rot: 2deg; --delay: 0.25s; }
-        .card-mem { --rot: -2deg; --delay: 0.4s; } .card-gal { --rot: 3deg; --delay: 0.55s; }
+        /* カードアニメーション */
+        .card-yt { --rot: -3deg; --delay: 0.1s; } 
+        .card-mem { --rot: 2deg; --delay: 0.25s; } 
+        .card-gal { --rot: -1deg; --delay: 0.4s; }
         @keyframes deal-card { to { opacity: 1; transform: translateY(0) rotate(var(--rot)); } }
         @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 
-        /* =========================================
-           4. 多機能モーダル (アイコン選択式)
-           ========================================= */
-        #video-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.85); z-index: 2000;
-            display: flex; justify-content: center; align-items: center;
-            opacity: 0; visibility: hidden; transition: all 0.3s ease;
-            perspective: 1000px;
-        }
-        #video-modal.active { opacity: 1; visibility: visible; }
 
-        .modal-content {
+        /* =========================================
+           4. コンテンツ表示エリア (画面下部)
+           ========================================= */
+        #content-display {
+            width: 100%; min-height: 200px;
+            display: none; /* 最初は非表示 */
+            animation: slide-up 0.5s ease-out;
+        }
+        #content-display.active { display: block; }
+
+        .content-panel {
             background-color: var(--cork-bg);
             background-image: url('https://www.transparenttextures.com/patterns/cork-board.png');
-            padding: 40px 30px; border-radius: 8px;
-            text-align: center; width: 90%; max-width: 520px;
-            border: 12px solid transparent;
+            border: 10px solid transparent;
             border-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png') 30 round;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.6), inset 0 0 20px rgba(0,0,0,0.2);
-            transform: scale(0.9) rotateX(5deg); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5) inset;
+            padding: 30px;
             position: relative;
-            max-height: 85vh; overflow-y: auto; overflow-x: hidden;
         }
-        #video-modal.active .modal-content { transform: scale(1) rotateX(0deg); }
-
-        .modal-content::before, .modal-content::after {
-            content: ''; position: absolute; width: 20px; height: 20px;
+        
+        /* パネルの上のピン */
+        .content-panel::before, .content-panel::after {
+            content: ''; position: absolute; width: 16px; height: 16px; top: 10px;
             background: radial-gradient(circle at 30% 30%, #ff6b6b, var(--pin-color));
-            border-radius: 50%; z-index: 10; box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+            border-radius: 50%; box-shadow: 1px 1px 3px rgba(0,0,0,0.5); z-index: 10;
         }
-        .modal-content::before { top: 10px; left: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.5), 480px 0 0 var(--pin-shadow); }
-        .modal-content::after { bottom: 10px; left: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.5), 480px 0 0 var(--pin-shadow); }
+        .content-panel::before { left: 10px; } .content-panel::after { right: 10px; }
 
-        .modal-title {
-            font-size: 1.4rem; font-weight: bold; margin-bottom: 30px; color: #4a3b32;
-            text-shadow: 0 1px 1px rgba(255,255,255,0.5);
-            border-bottom: 2px dashed #8d6e63; padding-bottom: 10px;
-            display: inline-block; background: rgba(255,255,255,0.3); padding: 5px 20px;
-            transform: rotate(-1deg); box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        .panel-title {
+            font-size: 1.8rem; color: #4a3b32; text-align: center; margin-bottom: 30px;
+            text-shadow: 0 1px 1px rgba(255,255,255,0.5); font-family: 'Impact', sans-serif; letter-spacing: 0.05em;
         }
 
-        /* アイコングリッド */
+        /* セクション切り替え */
+        .section-view { display: none; }
+        .section-view.show { display: block; animation: fade-in-panel 0.4s; }
+
+        @keyframes slide-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fade-in-panel { from { opacity: 0; } to { opacity: 1; } }
+
+
+        /* --- SNS用スタイル (旧モーダルの中身) --- */
+        .sns-nav { display: none; text-align: center; margin-bottom: 20px; }
+        .sns-nav.active { display: block; }
+        
         .icon-grid {
-            display: flex; justify-content: center; gap: 20px;
-            margin-bottom: 20px; flex-wrap: wrap;
+            display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;
         }
         .platform-icon {
-            width: 100px; height: 100px;
-            border-radius: 20px;
+            width: 90px; height: 90px; border-radius: 18px;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-decoration: none; color: white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            text-decoration: none; color: white; box-shadow: 0 5px 10px rgba(0,0,0,0.3);
             transition: transform 0.2s; position: relative; cursor: pointer;
         }
-        .platform-icon:hover { transform: scale(1.1); box-shadow: 0 8px 20px rgba(0,0,0,0.4); z-index: 10; }
+        .platform-icon:hover { transform: scale(1.1); z-index: 10; }
         .platform-icon::after {
-            content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
-            width: 14px; height: 14px; border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #ef9a9a, var(--pin-color));
-            box-shadow: 1px 2px 4px rgba(0,0,0,0.4);
+            content: ''; position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
+            width: 10px; height: 10px; border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ef9a9a, var(--pin-color)); box-shadow: 1px 1px 2px rgba(0,0,0,0.4);
         }
-        .icon-symbol { font-size: 2.5rem; margin-bottom: 5px; line-height: 1; }
-        .icon-label { font-size: 0.8rem; font-weight: bold; }
+        .icon-symbol { font-size: 2rem; margin-bottom: 4px; line-height: 1; }
+        .icon-label { font-size: 0.7rem; font-weight: bold; }
 
         .bg-yt { background: linear-gradient(135deg, #ff0000, #cc0000); }
         .bg-twitch { background: linear-gradient(135deg, #9146ff, #6441a5); }
         .bg-tiktok { background: linear-gradient(135deg, #000000, #333333); }
-
-        .btn-back {
-            background: #8d6e63; color: #fffbe0; border: none;
-            text-align: center; padding: 10px 30px; width: auto; display: inline-block;
-            margin-top: 20px; border-radius: 30px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3), inset 0 2px 2px rgba(255,255,255,0.2); cursor: pointer;
-        }
+        .bg-x { background: linear-gradient(135deg, #000000, #333333); }
 
         /* チェキ風グリッド */
         .sub-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr);
-            gap: 20px; margin-bottom: 25px; padding: 10px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 20px; padding: 10px;
         }
         .mini-card {
-            background: #fff; padding: 10px 10px 25px 10px;
-            text-decoration: none; color: #333;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            background: #fff; padding: 8px 8px 20px 8px;
+            text-decoration: none; color: #333; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             display: flex; flex-direction: column; align-items: center;
-            transition: transform 0.3s; opacity: 0; 
-            animation: mini-deal 0.5s forwards; position: relative;
-            transform: rotate(var(--mini-rot));
+            transition: transform 0.2s; position: relative;
         }
-        .mini-card:hover { transform: scale(1.05) rotate(0deg) !important; z-index: 10; }
+        .mini-card:hover { transform: scale(1.05) !important; z-index: 10; }
         .mini-card::before {
             content: ''; position: absolute; top: -5px; left: 50%; transform: translateX(-50%);
-            width: 14px; height: 14px; border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #ef9a9a, var(--pin-color));
-            box-shadow: 1px 2px 4px rgba(0,0,0,0.4); z-index: 5;
+            width: 12px; height: 12px; border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ef9a9a, var(--pin-color)); box-shadow: 1px 1px 2px rgba(0,0,0,0.4);
         }
         .mini-icon {
-            width: 90%; aspect-ratio: 1 / 1;
-            object-fit: cover; object-position: top center; 
-            background: #eee; border: 1px solid #ccc;
-            margin-bottom: 10px; filter: sepia(0.2);
+            width: 100%; aspect-ratio: 1/1; object-fit: cover; object-position: top center;
+            background: #eee; margin-bottom: 8px; filter: sepia(0.2); border: 1px solid #ccc;
         }
-        .official .mini-icon { object-fit: contain; padding: 5px; }
-        .mini-name { font-family: 'Bradley Hand', cursive; font-weight: bold; font-size: 1.1rem; color: #444; }
+        .mini-name { font-family: 'Bradley Hand', cursive; font-weight: bold; font-size: 1rem; color: #444; }
 
-        @keyframes mini-deal {
-            from { opacity: 0; transform: translateY(30px) scale(0.8) rotate(var(--mini-rot)); }
-            to { opacity: 1; transform: translateY(0) scale(1) rotate(var(--mini-rot)); }
+        /* 戻るボタンなど */
+        .btn-close {
+            display: block; width: 100px; margin: 30px auto 0; padding: 10px;
+            background: #8d6e63; color: #fffbe0; text-align: center; border-radius: 20px;
+            cursor: pointer; box-shadow: 0 3px 6px rgba(0,0,0,0.3); font-weight: bold;
+        }
+        .btn-back-sm {
+            display: inline-block; padding: 5px 20px; background: #6d4c41; color: #fff;
+            border-radius: 15px; cursor: pointer; margin-top: 15px; font-size: 0.9rem;
         }
 
-        .view-section { display: none; }
-        .view-section.active { display: block; animation: fade-in 0.3s ease-out; }
+        /* メンバー・ギャラリー用プレースホルダー */
+        .placeholder-box {
+            background: rgba(255,255,255,0.6); padding: 40px; border-radius: 4px;
+            text-align: center; font-size: 1.2rem; color: #5d4037; font-weight: bold;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+        }
 
         /* =========================================
-           5. フッター & スマホ対応
+           5. フッター & スマホ
            ========================================= */
         .footer-nav { margin-top: 50px; }
         .back-btn {
@@ -301,16 +285,10 @@
         .back-btn:hover { background: var(--paper-bg); color: var(--wood-dark); transform: scale(1.05); }
 
         @media (max-width: 768px) {
-            .card-grid { gap: 35px 20px; }
-            .char-card { width: 45%; max-width: 180px; height: 240px; transform: rotate(0deg) !important; --rot: 0deg; margin-top: 15px; }
-            .menu-title { font-size: 1.0rem; } .menu-desc { font-size: 0.7rem; }
-            .tape { width: 70px; height: 22px; top: -10px; left: -10px; }
-            /* モーダル内調整 */
-            .icon-grid { gap: 10px; }
-            .platform-icon { width: 80px; height: 80px; }
-            .icon-symbol { font-size: 2rem; }
-            .sub-grid { gap: 15px; }
-            .mini-card { transform: rotate(0deg) !important; --mini-rot: 0deg; }
+            .card-grid { gap: 20px; }
+            .char-card { width: 45%; max-width: 160px; height: 220px; transform: rotate(0deg) !important; --rot: 0deg; margin-top: 0; }
+            .tape { width: 60px; height: 20px; }
+            .sub-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
@@ -326,41 +304,97 @@
         </header>
 
         <div class="card-grid">
-            <a href="javascript:void(0)" class="char-card card-yt" onclick="openVideoModal()">
+            <div class="char-card card-yt" onclick="showSection('section-sns', this)">
                 <div class="tape"></div>
                 <div class="char-area"><img src="menu_youtube.png" class="char-img"></div>
                 <div class="info-area">
-                    <div class="menu-title">Video Contents</div>
-                    <div class="menu-desc">YouTube / Twitch / TikTok</div>
+                    <div class="menu-title">SNS & Media</div>
+                    <div class="menu-desc">YouTube / X / Twitch / TikTok</div>
                 </div>
-            </a>
+            </div>
 
-            <a href="" target="_blank" class="char-card card-tw" id="link-twitter">
-                <div class="tape"></div>
-                <div class="char-area"><img src="menu_twitter.png" class="char-img"></div>
-                <div class="info-area">
-                    <div class="menu-title">X (Twitter)</div>
-                    <div class="menu-desc">最新情報をお届け</div>
-                </div>
-            </a>
-
-            <a href="" target="_blank" class="char-card card-mem" id="link-members">
+            <div class="char-card card-mem" onclick="showSection('section-members', this)">
                 <div class="tape"></div>
                 <div class="char-area"><img src="menu_member.png" class="char-img"></div>
                 <div class="info-area">
                     <div class="menu-title">Members</div>
                     <div class="menu-desc">スタッフ紹介(準備中)</div>
                 </div>
-            </a>
+            </div>
 
-            <a href="" target="_blank" class="char-card card-gal" id="link-gallery">
+            <div class="char-card card-gal" onclick="showSection('section-gallery', this)">
                 <div class="tape"></div>
                 <div class="char-area"><img src="menu_gallery.png" class="char-img"></div>
                 <div class="info-area">
                     <div class="menu-title">Gallery</div>
                     <div class="menu-desc">思い出のアルバム</div>
                 </div>
-            </a>
+            </div>
+        </div>
+
+        <div id="content-display">
+            <div class="content-panel">
+                
+                <div id="section-sns" class="section-view">
+                    <div class="panel-title">SNS & Media Link</div>
+                    
+                    <div id="sns-main" class="sns-nav active">
+                        <div class="icon-grid">
+                            <a href="" target="_blank" class="platform-icon bg-yt" id="link-yt">
+                                <span class="icon-symbol">▶</span><span class="icon-label">YouTube</span>
+                            </a>
+                            <a href="" target="_blank" class="platform-icon bg-x" id="link-x">
+                                <span class="icon-symbol">𝕏</span><span class="icon-label">X (Twitter)</span>
+                            </a>
+                            <div class="platform-icon bg-twitch" onclick="switchSnsView('sns-twitch')">
+                                <span class="icon-symbol">👾</span><span class="icon-label">Twitch</span>
+                            </div>
+                            <div class="platform-icon bg-tiktok" onclick="switchSnsView('sns-tiktok')">
+                                <span class="icon-symbol">🎵</span><span class="icon-label">TikTok</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="sns-twitch" class="sns-nav">
+                        <div style="margin-bottom:15px; font-weight:bold; color:#9146ff;">Twitch Channels</div>
+                        <div class="sub-grid">
+                            <a href="" target="_blank" class="mini-card" id="tw-1"><img src="menu_youtube.png" class="mini-icon"><span class="mini-name">Toruma</span></a>
+                            <a href="" target="_blank" class="mini-card" id="tw-2"><img src="menu_twitter.png" class="mini-icon"><span class="mini-name">Yuzucha</span></a>
+                            <a href="" target="_blank" class="mini-card" id="tw-3"><img src="menu_member.png" class="mini-icon"><span class="mini-name">Wakanagi</span></a>
+                            <a href="" target="_blank" class="mini-card" id="tw-4"><img src="menu_gallery.png" class="mini-icon"><span class="mini-name">Lily</span></a>
+                        </div>
+                        <div class="btn-back-sm" onclick="switchSnsView('sns-main')">Back</div>
+                    </div>
+
+                    <div id="sns-tiktok" class="sns-nav">
+                        <div style="margin-bottom:15px; font-weight:bold; color:#333;">TikTok Channels</div>
+                        <div class="sub-grid">
+                            <a href="" target="_blank" class="mini-card" id="tt-official"><img src="flat-cafe-logo.png" class="mini-icon" style="object-fit:contain"><span class="mini-name">Official</span></a>
+                            <a href="" target="_blank" class="mini-card" id="tt-1"><img src="menu_youtube.png" class="mini-icon"><span class="mini-name">Toruma</span></a>
+                            <a href="" target="_blank" class="mini-card" id="tt-2"><img src="menu_twitter.png" class="mini-icon"><span class="mini-name">Yuzucha</span></a>
+                            <a href="" target="_blank" class="mini-card" id="tt-3"><img src="menu_member.png" class="mini-icon"><span class="mini-name">Wakanagi</span></a>
+                        </div>
+                        <div class="btn-back-sm" onclick="switchSnsView('sns-main')">Back</div>
+                    </div>
+                </div>
+
+                <div id="section-members" class="section-view">
+                    <div class="panel-title">Member Profiles</div>
+                    <div class="placeholder-box">
+                        <p>メンバー紹介ページ<br>Coming Soon...</p>
+                    </div>
+                </div>
+
+                <div id="section-gallery" class="section-view">
+                    <div class="panel-title">Photo Gallery</div>
+                    <div class="placeholder-box">
+                        <p>ギャラリーページ<br>Coming Soon...</p>
+                    </div>
+                </div>
+                
+                <div class="btn-close" onclick="closeSection()">Close</div>
+
+            </div>
         </div>
 
         <nav class="footer-nav">
@@ -368,129 +402,55 @@
         </nav>
     </div>
 
-    <div id="video-modal" onclick="closeVideoModal(event)">
-        <div class="modal-content">
-            
-            <div id="view-main" class="view-section active">
-                <div class="modal-title">Select Platform</div>
-                
-                <div class="icon-grid">
-                    <a href="" target="_blank" class="platform-icon bg-yt" id="link-youtube-main">
-                        <span class="icon-symbol">▶</span>
-                        <span class="icon-label">YouTube</span>
-                    </a>
-                    <div class="platform-icon bg-twitch" onclick="switchView('view-twitch')">
-                        <span class="icon-symbol">👾</span>
-                        <span class="icon-label">Twitch</span>
-                    </div>
-                    <div class="platform-icon bg-tiktok" onclick="switchView('view-tiktok')">
-                        <span class="icon-symbol">🎵</span>
-                        <span class="icon-label">TikTok</span>
-                    </div>
-                </div>
-                
-                <div class="close-modal" onclick="closeVideoModalForce()" style="margin-top:25px; text-decoration:underline; cursor:pointer; color:#4a3b32;">Close Menu</div>
-            </div>
-
-            <div id="view-twitch" class="view-section">
-                <div class="modal-title" style="color:#9146ff; transform: rotate(1deg);">Twitch Members</div>
-                <div class="sub-grid">
-                    <a href="" target="_blank" class="mini-card" id="twitch-mem1" style="--mini-rot:-2deg; animation-delay:0.1s">
-                        <img src="menu_youtube.png" class="mini-icon">
-                        <span class="mini-name">Toruma</span>
-                    </a>
-                    <a href="" target="_blank" class="mini-card" id="twitch-mem2" style="--mini-rot:1.5deg; animation-delay:0.2s">
-                        <img src="menu_twitter.png" class="mini-icon">
-                        <span class="mini-name">Yuzucha</span>
-                    </a>
-                    <a href="" target="_blank" class="mini-card" id="twitch-mem3" style="--mini-rot:-1deg; animation-delay:0.3s">
-                        <img src="menu_member.png" class="mini-icon">
-                        <span class="mini-name">Wakanagi</span>
-                    </a>
-                    <a href="" target="_blank" class="mini-card" id="twitch-mem4" style="--mini-rot:2deg; animation-delay:0.4s">
-                        <img src="menu_gallery.png" class="mini-icon">
-                        <span class="mini-name">Lily</span>
-                    </a>
-                </div>
-                <div class="btn-back" onclick="switchView('view-main')">Back</div>
-            </div>
-
-            <div id="view-tiktok" class="view-section">
-                <div class="modal-title" style="color:#333; transform: rotate(-1.5deg);">TikTok Channels</div>
-                <div class="sub-grid">
-                    <a href="" target="_blank" class="mini-card official" id="tiktok-official" style="--mini-rot:1deg; animation-delay:0.1s">
-                        <img src="flat-cafe-logo.png" class="mini-icon">
-                        <span class="mini-name">Official</span>
-                    </a>
-                    <a href="" target="_blank" class="mini-card" id="tiktok-mem1" style="--mini-rot:-2deg; animation-delay:0.2s">
-                        <img src="menu_youtube.png" class="mini-icon">
-                        <span class="mini-name">Toruma</span>
-                    </a>
-                    <a href="" target="_blank" class="mini-card" id="tiktok-mem2" style="--mini-rot:1.5deg; animation-delay:0.3s">
-                        <img src="menu_twitter.png" class="mini-icon">
-                        <span class="mini-name">Yuzucha</span>
-                    </a>
-                    <a href="" target="_blank" class="mini-card" id="tiktok-mem3" style="--mini-rot:-1deg; animation-delay:0.4s">
-                        <img src="menu_member.png" class="mini-icon">
-                        <span class="mini-name">Wakanagi</span>
-                    </a>
-                    <a href="" target="_blank" class="mini-card" id="tiktok-mem4" style="--mini-rot:2deg; animation-delay:0.5s">
-                        <img src="menu_gallery.png" class="mini-icon">
-                        <span class="mini-name">Lily</span>
-                    </a>
-                </div>
-                <div class="btn-back" onclick="switchView('view-main')">Back</div>
-            </div>
-
-        </div>
-    </div>
-
     <script>
         // ==========================================
         //  ▼▼▼ URL設定エリア ▼▼▼
         // ==========================================
-        
-        // 1. YouTubeチャンネル
-        document.getElementById('link-youtube-main').href = "https://www.youtube.com/@flatcafe-official";
-        
-        // 2. X (Twitter)
-        document.getElementById('link-twitter').href = "https://twitter.com/";
-        
-        // 3. Members & Gallery
-        document.getElementById('link-members').href = "#";
-        document.getElementById('link-gallery').href = "#";
+        document.getElementById('link-yt').href = "https://www.youtube.com/@flatcafe-official";
+        document.getElementById('link-x').href = "https://twitter.com/";
 
-        /* --- TwitchのメンバーURL --- */
-        document.getElementById('twitch-mem1').href = "https://twitch.tv/"; // Toruma
-        document.getElementById('twitch-mem2').href = "https://twitch.tv/"; // Yuzucha
-        document.getElementById('twitch-mem3').href = "https://twitch.tv/"; // Wakanagi
-        document.getElementById('twitch-mem4').href = "https://twitch.tv/"; // Lily
+        // Twitch Links
+        document.getElementById('tw-1').href = "https://twitch.tv/";
+        document.getElementById('tw-2').href = "https://twitch.tv/";
+        document.getElementById('tw-3').href = "https://twitch.tv/";
+        document.getElementById('tw-4').href = "https://twitch.tv/";
 
-        /* --- TikTokのURL --- */
-        document.getElementById('tiktok-official').href = "https://tiktok.com/"; // Official
-        document.getElementById('tiktok-mem1').href = "https://tiktok.com/"; // Toruma
-        document.getElementById('tiktok-mem2').href = "https://tiktok.com/"; // Yuzucha
-        document.getElementById('tiktok-mem3').href = "https://tiktok.com/"; // Wakanagi
-        document.getElementById('tiktok-mem4').href = "https://tiktok.com/"; // Lily
-
-        // ==========================================
-        //  ▲▲▲ 設定ここまで ▲▲▲
+        // TikTok Links
+        document.getElementById('tt-official').href = "https://tiktok.com/";
+        document.getElementById('tt-1').href = "https://tiktok.com/";
+        document.getElementById('tt-2').href = "https://tiktok.com/";
+        document.getElementById('tt-3').href = "https://tiktok.com/";
         // ==========================================
 
-        function openVideoModal() {
-            document.getElementById('video-modal').classList.add('active');
-            switchView('view-main');
+        function showSection(sectionId, cardElem) {
+            // エリアを表示
+            const display = document.getElementById('content-display');
+            display.classList.add('active');
+
+            // すべてのセクションを隠す
+            document.querySelectorAll('.section-view').forEach(el => el.classList.remove('show'));
+            // ターゲットを表示
+            document.getElementById(sectionId).classList.add('show');
+
+            // カードの選択状態更新
+            document.querySelectorAll('.char-card').forEach(el => el.classList.remove('active-tab'));
+            cardElem.classList.add('active-tab');
+
+            // SNSメニューは常にメインに戻しておく
+            switchSnsView('sns-main');
+
+            // スクロール移動
+            display.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-        function closeVideoModal(e) {
-            if (e.target.id === 'video-modal') {
-                document.getElementById('video-modal').classList.remove('active');
-            }
+
+        function closeSection() {
+            document.getElementById('content-display').classList.remove('active');
+            document.querySelectorAll('.char-card').forEach(el => el.classList.remove('active-tab'));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-        function closeVideoModalForce() {
-            document.getElementById('video-modal').classList.remove('active');
-        }
-        function switchView(viewId) {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+
+        function switchSnsView(viewId) {
+            document.querySelectorAll('.sns-nav').forEach(el => el.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
         }
     </script>
