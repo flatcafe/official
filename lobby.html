@@ -18,6 +18,7 @@
             --cork-bg: #e6d6ac;
         }
 
+        /* ハイライト削除 */
         * { -webkit-tap-highlight-color: transparent; outline: none; }
 
         body, html {
@@ -27,16 +28,45 @@
             font-family: 'Georgia', 'Yu Mincho', serif;
             color: var(--wood-dark);
             overflow-x: hidden;
-            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+            /* ベースの木目 */
+            background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
             background-attachment: fixed;
+            transition: background-color 1.5s ease; /* 色の変化をじわっと */
         }
 
-        .texture-overlay {
+        /* ★★★ 時間帯フィルター (Lighting Overlay) ★★★ */
+        #lighting-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: -1;
-            background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.8) 100%);
-            mix-blend-mode: multiply;
+            transition: background 2s ease;
+            mix-blend-mode: overlay; /* 背景と馴染ませる */
         }
+
+        /* 朝: 爽やかな白～青味 */
+        body.time-morning { background-color: #5d4037; } /* 標準より少し明るめ */
+        body.time-morning #lighting-overlay {
+            background: linear-gradient(135deg, rgba(255, 255, 240, 0.3), rgba(200, 230, 255, 0.2));
+        }
+
+        /* 昼: 明るい標準 */
+        body.time-day { background-color: #4a3b32; } /* 標準 */
+        body.time-day #lighting-overlay {
+            background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.15), transparent 70%);
+        }
+
+        /* 夕方: 温かいオレンジ */
+        body.time-sunset { background-color: #3e2723; }
+        body.time-sunset #lighting-overlay {
+            background: linear-gradient(to bottom right, rgba(255, 160, 0, 0.3), rgba(100, 50, 0, 0.4));
+            mix-blend-mode: soft-light;
+        }
+
+        /* 夜: 深い青と四隅の暗がり (Vignette) */
+        body.time-night { background-color: #1a1210; }
+        body.time-night #lighting-overlay {
+            background: radial-gradient(circle at 50% 50%, rgba(40, 50, 80, 0.2) 20%, rgba(0, 0, 10, 0.8) 100%);
+        }
+
 
         /* =========================================
            2. レイアウト & ヘッダー
@@ -62,6 +92,12 @@
             border-top: 1px solid rgba(255,255,255,0.4);
             border-bottom: 1px solid rgba(255,255,255,0.4);
             padding: 3px 15px; display: inline-block;
+        }
+
+        /* 挨拶メッセージ (時間で変わる) */
+        #greeting-msg {
+            font-size: 0.8rem; color: #fffbe0; margin-top: 5px; opacity: 0.8;
+            font-family: 'Yu Mincho', serif;
         }
 
         /* =========================================
@@ -203,7 +239,7 @@
         .mini-sub { font-size: 0.75rem; color: #666; margin-top: 2px; }
 
         /* =========================================
-           ▼▼▼ Membersステージ ▼▼▼
+           ▼▼▼ Membersステージ (立ち絵演出) ▼▼▼
            ========================================= */
         .members-stage {
             display: flex; 
@@ -242,7 +278,7 @@
         #tachi-yuzu { left: -5px; }
         #tachi-wakanagi { left: 5px; }
 
-        /* アニメーション (アイドル時) */
+        /* アニメーション */
         @keyframes pyoko {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-8px); }
@@ -349,7 +385,8 @@
         }
     </style>
 </head>
-<body>
+<body class="time-day"> <div id="lighting-overlay"></div>
+
     <div class="texture-overlay"></div>
 
     <div class="container">
@@ -357,6 +394,7 @@
             <img src="flat-cafe-logo.png" alt="Flat Cafe" class="mini-logo">
             <br>
             <span class="header-text">Select Menu</span>
+            <div id="greeting-msg">いらっしゃいませ。</div>
         </header>
 
         <div class="card-grid">
@@ -512,8 +550,32 @@
         document.getElementById('tt-lily').href = "https://tiktok.com/";
 
         window.addEventListener('load', function() {
-            // 初期動作
+            updateTimeOfDay(); // 時間帯判定
         });
+
+        // ★★★ 時間帯による背景切り替え ★★★
+        function updateTimeOfDay() {
+            const hour = new Date().getHours();
+            const body = document.body;
+            const greeting = document.getElementById('greeting-msg');
+            
+            // クラスリセット
+            body.classList.remove('time-morning', 'time-day', 'time-sunset', 'time-night');
+
+            if (hour >= 5 && hour < 11) {
+                body.classList.add('time-morning');
+                greeting.textContent = "おはようございます。";
+            } else if (hour >= 11 && hour < 16) {
+                body.classList.add('time-day');
+                greeting.textContent = "こんにちは。ゆっくりしていってね。";
+            } else if (hour >= 16 && hour < 19) {
+                body.classList.add('time-sunset');
+                greeting.textContent = "こんばんは。今日もお疲れ様。";
+            } else {
+                body.classList.add('time-night');
+                greeting.textContent = "こんばんは。夜のカフェへようこそ。";
+            }
+        }
 
         function openTab(tabName, elem) {
             const display = document.getElementById('content-display');
@@ -566,7 +628,6 @@
             document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show'));
         }
 
-        // --- 全身鑑賞モード ---
         function openFullView(imgSrc) {
             const modal = document.getElementById('full-view-modal');
             const img = document.getElementById('full-view-img');
