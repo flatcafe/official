@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ふらっとcafe - Lobby</title>
 
     <style>
@@ -21,20 +20,16 @@
 
         body, html {
             margin: 0; padding: 0;
-            width: 100%; min-height: 100%;
+            width: 100%; height: 100%;
             background-color: #1a1210;
             font-family: 'Georgia', 'Yu Mincho', serif;
             color: var(--wood-dark);
             overflow-x: hidden;
-            scroll-behavior: smooth; /* スムーズスクロール */
+            /* 背景固定 */
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+            background-attachment: fixed;
         }
 
-        /* 背景 */
-        .background {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://www.transparenttextures.com/patterns/wood-pattern.png');
-            z-index: -2;
-        }
         .texture-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: -1;
@@ -43,257 +38,223 @@
         }
 
         /* =========================================
-           2. コンテナ & ヘッダー
+           2. レイアウト & ヘッダー (極力コンパクトに)
            ========================================= */
         .container {
-            max-width: 1000px; margin: 0 auto; padding: 40px 20px 100px;
+            max-width: 800px; margin: 0 auto; padding: 20px 15px;
             display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; box-sizing: border-box;
         }
 
         header { 
-            text-align: center; margin-bottom: 40px; 
-            animation: fade-in 1.2s ease-out;
+            text-align: center; margin-bottom: 20px; flex-shrink: 0;
+            animation: fade-in 1s ease-out;
         }
         .mini-logo {
-            width: 160px; height: auto; margin-bottom: 15px;
-            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.6));
+            width: 120px; height: auto; margin-bottom: 10px; /* ロゴ小さく */
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
         }
         .header-text {
-            color: #fffbe0; letter-spacing: 0.2em; font-size: 1.1rem;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+            color: #fffbe0; letter-spacing: 0.2em; font-size: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
             border-top: 1px solid rgba(255,255,255,0.4);
             border-bottom: 1px solid rgba(255,255,255,0.4);
-            padding: 5px 20px; display: inline-block;
+            padding: 3px 15px; display: inline-block;
         }
 
         /* =========================================
-           3. メニューカード (タブとして機能)
+           3. メニューボタン (横並びタブ)
            ========================================= */
         .card-grid {
-            display: flex; flex-wrap: wrap; justify-content: center;
-            gap: 30px; width: 100%; perspective: 1200px;
-            margin-bottom: 40px; /* 下にコンテンツが出るための余白 */
+            display: flex; 
+            justify-content: center; 
+            gap: 15px; 
+            width: 100%; 
+            margin-bottom: 20px;
+            flex-shrink: 0;
         }
 
-        .char-card {
+        .menu-tab {
             position: relative;
-            width: 220px; height: 300px; /* 少しコンパクトに */
             background-color: var(--card-bg);
-            border-radius: 4px;
+            border-radius: 8px;
             text-decoration: none; color: var(--wood-dark);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            transition: all 0.3s ease;
-            display: flex; flex-direction: column; align-items: center;
-            opacity: 0; transform: translateY(50px) rotate(var(--rot));
-            animation: deal-card 0.6s forwards; animation-delay: var(--delay);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            transition: all 0.2s ease;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             overflow: hidden; cursor: pointer;
-            border: 4px solid transparent; /* 選択時の枠線用 */
+            
+            /* PCサイズ */
+            width: 160px; height: 140px; 
+            border: 3px solid transparent;
         }
 
-        /* ホバー & アクティブ状態 */
-        .char-card:hover {
-            transform: translateY(-10px) scale(1.02) rotate(0deg) !important;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6); z-index: 10;
-        }
-        /* 選択中のカードのデザイン */
-        .char-card.active-tab {
-            transform: translateY(-5px) scale(1.05) rotate(0deg) !important;
-            box-shadow: 0 0 15px var(--accent-gold);
+        /* アクティブ状態 (選択中) */
+        .menu-tab.active-tab {
+            background-color: #fff;
+            transform: translateY(4px); /* 押された感じ */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4), 0 0 10px var(--accent-gold);
             border-color: var(--accent-gold);
-            z-index: 20;
         }
 
-        /* --- 共通パーツ (テープ・画像・背景円) --- */
-        .tape {
-            position: absolute; top: -12px; left: -15px;
-            transform: rotate(-35deg); width: 90px; height: 28px;
-            background: rgba(255,255,255,0.4); backdrop-filter: blur(3px);
-            box-shadow: 1px 2px 3px rgba(0,0,0,0.2); z-index: 50; pointer-events: none;
+        /* アイコン表示エリア */
+        .tab-icon {
+            font-size: 3rem; margin-bottom: 5px;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+            transition: transform 0.2s;
         }
-        .tape::after {
-            content: ''; position: absolute; right: -5px; top: 0; width: 10px; height: 100%;
-            background: inherit; clip-path: polygon(0 0, 100% 15%, 0 30%, 100% 45%, 0 60%, 100% 75%, 0 90%, 100% 100%);
-        }
+        .menu-tab:hover .tab-icon { transform: scale(1.1); }
 
-        .char-area {
-            position: relative; width: 100%; height: 70%;
-            margin-top: 0; background-color: #f0f0f0;
-        }
-        
-        /* 背景円 */
-        .card-yt .char-area::before, .card-mem .char-area::before, .card-gal .char-area::before {
-            content:''; position: absolute; width: 100%; height: 100%;
-            top: 0; left: 0; opacity: 0.5; z-index: 0;
-        }
-        .card-yt .char-area::before { background: radial-gradient(circle at 50% 120%, #ffcdd2, transparent 70%); }
-        .card-mem .char-area::before { background: radial-gradient(circle at 50% 120%, #b2dfdb, transparent 70%); }
-        .card-gal .char-area::before { background: radial-gradient(circle at 50% 120%, #bbdefb, transparent 70%); }
-
-        /* キャラ画像 */
-        .char-img {
-            width: 100%; height: 100%;
-            object-fit: cover; object-position: top center;
-            position: relative; z-index: 10;
-            transition: transform 0.5s ease; transform-origin: top center;
-        }
-        .card-yt .char-img { transform: scale(1.05) translateY(-15px); }
-        .card-mem .char-img { transform: scale(0.98); }
-        .card-gal .char-img { transform: scale(1.2); }
-
-        /* 情報エリア */
-        .info-area {
-            width: 100%; height: 30%;
-            background-color: var(--card-bg);
-            background-image: repeating-linear-gradient(#eee 0 1px, transparent 1px 100%);
-            background-size: 100% 18px;
-            padding: 8px; box-sizing: border-box; text-align: center;
-            border-top: 3px solid rgba(0,0,0,0.08); position: relative; z-index: 20;
-        }
-        .menu-title {
-            font-size: 1.1rem; font-weight: bold; margin: 3px 0 2px;
+        .tab-title {
+            font-size: 1rem; font-weight: bold; 
             font-family: 'Impact', sans-serif; letter-spacing: 0.05em; color: #5d4037;
+            text-align: center; line-height: 1.2;
         }
-        .menu-desc { font-size: 0.75rem; color: #795548; font-weight: bold; }
+        .tab-desc {
+            font-size: 0.7rem; color: #888; margin-top: 3px;
+        }
 
-        /* カードアニメーション */
-        .card-yt { --rot: -3deg; --delay: 0.1s; } 
-        .card-mem { --rot: 2deg; --delay: 0.25s; } 
-        .card-gal { --rot: -1deg; --delay: 0.4s; }
-        @keyframes deal-card { to { opacity: 1; transform: translateY(0) rotate(var(--rot)); } }
-        @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-
+        /* テープ装飾 (少し小さく) */
+        .tape {
+            position: absolute; top: -8px; left: 50%; transform: translateX(-50%) rotate(-2deg);
+            width: 60px; height: 20px;
+            background: rgba(255,255,255,0.4); backdrop-filter: blur(2px);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2); pointer-events: none;
+        }
 
         /* =========================================
-           4. コンテンツ表示エリア (画面下部)
+           4. コンテンツ表示エリア (下部)
            ========================================= */
         #content-display {
-            width: 100%; min-height: 200px;
-            display: none; /* 最初は非表示 */
-            animation: slide-up 0.5s ease-out;
+            width: 100%; flex-grow: 1; /* 残りの高さを埋める */
+            display: none; /* 初期非表示 */
+            animation: slide-up 0.4s ease-out;
         }
         #content-display.active { display: block; }
 
         .content-panel {
             background-color: var(--cork-bg);
             background-image: url('https://www.transparenttextures.com/patterns/cork-board.png');
-            border: 10px solid transparent;
-            border-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png') 30 round;
             border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5) inset;
-            padding: 30px;
-            position: relative;
+            /* 木枠風ボーダー */
+            border: 8px solid #5d4037;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6) inset;
+            padding: 20px; position: relative;
+            min-height: 300px;
         }
         
-        /* パネルの上のピン */
-        .content-panel::before, .content-panel::after {
-            content: ''; position: absolute; width: 16px; height: 16px; top: 10px;
-            background: radial-gradient(circle at 30% 30%, #ff6b6b, var(--pin-color));
-            border-radius: 50%; box-shadow: 1px 1px 3px rgba(0,0,0,0.5); z-index: 10;
+        /* パネルタイトル */
+        .panel-header {
+            text-align: center; margin-bottom: 20px; padding-bottom: 10px;
+            border-bottom: 2px dashed rgba(93, 64, 55, 0.3);
         }
-        .content-panel::before { left: 10px; } .content-panel::after { right: 10px; }
-
-        .panel-title {
-            font-size: 1.8rem; color: #4a3b32; text-align: center; margin-bottom: 30px;
-            text-shadow: 0 1px 1px rgba(255,255,255,0.5); font-family: 'Impact', sans-serif; letter-spacing: 0.05em;
+        .panel-title-text {
+            font-size: 1.4rem; color: #4a3b32; font-weight: bold;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.4);
         }
 
         /* セクション切り替え */
         .section-view { display: none; }
-        .section-view.show { display: block; animation: fade-in-panel 0.4s; }
+        .section-view.show { display: block; animation: fade-in 0.3s; }
 
-        @keyframes slide-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fade-in-panel { from { opacity: 0; } to { opacity: 1; } }
-
-
-        /* --- SNS用スタイル (旧モーダルの中身) --- */
-        .sns-nav { display: none; text-align: center; margin-bottom: 20px; }
-        .sns-nav.active { display: block; }
-        
-        .icon-grid {
-            display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;
+        /* --- SNSアイコン --- */
+        .sns-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+            margin-bottom: 20px;
         }
-        .platform-icon {
-            width: 90px; height: 90px; border-radius: 18px;
+        .sns-btn {
+            aspect-ratio: 1/1; border-radius: 12px;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-decoration: none; color: white; box-shadow: 0 5px 10px rgba(0,0,0,0.3);
-            transition: transform 0.2s; position: relative; cursor: pointer;
+            text-decoration: none; color: white; box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: transform 0.1s; position: relative;
         }
-        .platform-icon:hover { transform: scale(1.1); z-index: 10; }
-        .platform-icon::after {
-            content: ''; position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
-            width: 10px; height: 10px; border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #ef9a9a, var(--pin-color)); box-shadow: 1px 1px 2px rgba(0,0,0,0.4);
-        }
-        .icon-symbol { font-size: 2rem; margin-bottom: 4px; line-height: 1; }
-        .icon-label { font-size: 0.7rem; font-weight: bold; }
+        .sns-btn:active { transform: scale(0.95); }
+        .sns-icon-char { font-size: 1.8rem; margin-bottom: 2px; }
+        .sns-label { font-size: 0.6rem; font-weight: bold; }
 
-        .bg-yt { background: linear-gradient(135deg, #ff0000, #cc0000); }
-        .bg-twitch { background: linear-gradient(135deg, #9146ff, #6441a5); }
-        .bg-tiktok { background: linear-gradient(135deg, #000000, #333333); }
-        .bg-x { background: linear-gradient(135deg, #000000, #333333); }
+        .bg-yt { background: #ff0000; }
+        .bg-x { background: #000000; }
+        .bg-twitch { background: #9146ff; }
+        .bg-tiktok { background: #000000; background: linear-gradient(45deg, #000000, #333); }
 
-        /* チェキ風グリッド */
-        .sub-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 20px; padding: 10px;
+        /* --- メンバーリスト (横並びスクロールまたはグリッド) --- */
+        .member-list {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 15px;
         }
         .mini-card {
-            background: #fff; padding: 8px 8px 20px 8px;
-            text-decoration: none; color: #333; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            display: flex; flex-direction: column; align-items: center;
-            transition: transform 0.2s; position: relative;
+            background: #fff; padding: 10px; border-radius: 4px;
+            text-decoration: none; color: #333; box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            position: relative;
         }
-        .mini-card:hover { transform: scale(1.05) !important; z-index: 10; }
-        .mini-card::before {
-            content: ''; position: absolute; top: -5px; left: 50%; transform: translateX(-50%);
-            width: 12px; height: 12px; border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #ef9a9a, var(--pin-color)); box-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+        /* ピン画像 */
+        .mini-card::after {
+            content: ''; position: absolute; top: -6px; left: 50%; margin-left: -5px;
+            width: 10px; height: 10px; border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ff5252, #b71c1c);
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
-        .mini-icon {
-            width: 100%; aspect-ratio: 1/1; object-fit: cover; object-position: top center;
-            background: #eee; margin-bottom: 8px; filter: sepia(0.2); border: 1px solid #ccc;
+        .mini-img {
+            width: 60px; height: 60px; border-radius: 50%; object-fit: cover;
+            border: 2px solid var(--accent-gold); margin-bottom: 5px; background: #eee;
         }
-        .mini-name { font-family: 'Bradley Hand', cursive; font-weight: bold; font-size: 1rem; color: #444; }
+        .mini-name { font-weight: bold; font-size: 0.9rem; }
+        .mini-sub { font-size: 0.7rem; color: #666; }
 
-        /* 戻るボタンなど */
-        .btn-close {
-            display: block; width: 100px; margin: 30px auto 0; padding: 10px;
-            background: #8d6e63; color: #fffbe0; text-align: center; border-radius: 20px;
-            cursor: pointer; box-shadow: 0 3px 6px rgba(0,0,0,0.3); font-weight: bold;
+        /* 戻るボタンエリア */
+        .panel-footer {
+            margin-top: 20px; text-align: center;
         }
-        .btn-back-sm {
-            display: inline-block; padding: 5px 20px; background: #6d4c41; color: #fff;
-            border-radius: 15px; cursor: pointer; margin-top: 15px; font-size: 0.9rem;
+        .close-btn {
+            display: inline-block; padding: 8px 30px; background: #8d6e63; color: #fff;
+            border-radius: 20px; cursor: pointer; font-size: 0.9rem;
+            box-shadow: 0 3px 0 #5d4037;
         }
+        .close-btn:active { transform: translateY(3px); box-shadow: none; }
 
-        /* メンバー・ギャラリー用プレースホルダー */
-        .placeholder-box {
-            background: rgba(255,255,255,0.6); padding: 40px; border-radius: 4px;
-            text-align: center; font-size: 1.2rem; color: #5d4037; font-weight: bold;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
-        }
+        /* --- アニメーション --- */
+        @keyframes deal-card { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slide-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* =========================================
-           5. フッター & スマホ
+           5. スマホ・レスポンシブ最適化 (ここが重要)
            ========================================= */
-        .footer-nav { margin-top: 50px; }
-        .back-btn {
-            display: inline-block; color: #fffbe0; text-decoration: none;
-            border: 1px solid rgba(255,255,255,0.4); padding: 12px 50px; border-radius: 30px;
-            font-size: 1rem; letter-spacing: 0.15em; transition: all 0.3s; background: rgba(0,0,0,0.3);
-        }
-        .back-btn:hover { background: var(--paper-bg); color: var(--wood-dark); transform: scale(1.05); }
-
         @media (max-width: 768px) {
-            .card-grid { gap: 20px; }
-            .char-card { width: 45%; max-width: 160px; height: 220px; transform: rotate(0deg) !important; --rot: 0deg; margin-top: 0; }
-            .tape { width: 60px; height: 20px; }
-            .sub-grid { grid-template-columns: repeat(2, 1fr); }
+            .container { padding: 10px; }
+            header { margin-bottom: 10px; }
+            .mini-logo { width: 90px; margin-bottom: 5px; }
+            .header-text { font-size: 0.8rem; padding: 2px 10px; }
+
+            /* カードを横3列に強制配置 */
+            .card-grid {
+                gap: 8px; margin-bottom: 15px;
+            }
+            .menu-tab {
+                width: 32%; /* 3等分 */
+                height: 100px; /* 高さを抑える */
+                padding: 5px;
+            }
+            .tab-icon { font-size: 2rem; margin-bottom: 2px; }
+            .tab-title { font-size: 0.85rem; }
+            .tab-desc { display: none; } /* スマホでは説明文を消してスッキリさせる */
+            
+            /* コンテンツエリア */
+            .content-panel { padding: 15px; min-height: 250px; }
+            .panel-title-text { font-size: 1.2rem; }
+            
+            /* SNSボタンを2列にするか4列にするか */
+            .sns-grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+            .sns-icon-char { font-size: 1.5rem; }
+            .sns-label { font-size: 0.55rem; }
+            
+            /* メンバーリスト */
+            .member-list { grid-template-columns: repeat(2, 1fr); gap: 10px; }
         }
     </style>
 </head>
 <body>
-    <div class="background"></div>
     <div class="texture-overlay"></div>
 
     <div class="container">
@@ -304,154 +265,144 @@
         </header>
 
         <div class="card-grid">
-            <div class="char-card card-yt" onclick="showSection('section-sns', this)">
+            <div class="menu-tab" onclick="openTab('sns', this)">
                 <div class="tape"></div>
-                <div class="char-area"><img src="menu_youtube.png" class="char-img"></div>
-                <div class="info-area">
-                    <div class="menu-title">SNS & Media</div>
-                    <div class="menu-desc">YouTube / X / Twitch / TikTok</div>
-                </div>
+                <div class="tab-icon">📱</div>
+                <div class="tab-title">SNS &<br>Media</div>
+                <div class="tab-desc">YouTube/X...</div>
             </div>
 
-            <div class="char-card card-mem" onclick="showSection('section-members', this)">
+            <div class="menu-tab" onclick="openTab('members', this)">
                 <div class="tape"></div>
-                <div class="char-area"><img src="menu_member.png" class="char-img"></div>
-                <div class="info-area">
-                    <div class="menu-title">Members</div>
-                    <div class="menu-desc">スタッフ紹介(準備中)</div>
-                </div>
+                <div class="tab-icon">☕</div>
+                <div class="tab-title">Members</div>
+                <div class="tab-desc">Staff Profile</div>
             </div>
 
-            <div class="char-card card-gal" onclick="showSection('section-gallery', this)">
+            <div class="menu-tab" onclick="openTab('gallery', this)">
                 <div class="tape"></div>
-                <div class="char-area"><img src="menu_gallery.png" class="char-img"></div>
-                <div class="info-area">
-                    <div class="menu-title">Gallery</div>
-                    <div class="menu-desc">思い出のアルバム</div>
-                </div>
+                <div class="tab-icon">📷</div>
+                <div class="tab-title">Gallery</div>
+                <div class="tab-desc">Photo Album</div>
             </div>
         </div>
 
         <div id="content-display">
             <div class="content-panel">
                 
-                <div id="section-sns" class="section-view">
-                    <div class="panel-title">SNS & Media Link</div>
+                <div id="view-sns" class="section-view">
+                    <div class="panel-header">
+                        <div class="panel-title-text">Official Media</div>
+                    </div>
                     
-                    <div id="sns-main" class="sns-nav active">
-                        <div class="icon-grid">
-                            <a href="" target="_blank" class="platform-icon bg-yt" id="link-yt">
-                                <span class="icon-symbol">▶</span><span class="icon-label">YouTube</span>
-                            </a>
-                            <a href="" target="_blank" class="platform-icon bg-x" id="link-x">
-                                <span class="icon-symbol">𝕏</span><span class="icon-label">X (Twitter)</span>
-                            </a>
-                            <div class="platform-icon bg-twitch" onclick="switchSnsView('sns-twitch')">
-                                <span class="icon-symbol">👾</span><span class="icon-label">Twitch</span>
-                            </div>
-                            <div class="platform-icon bg-tiktok" onclick="switchSnsView('sns-tiktok')">
-                                <span class="icon-symbol">🎵</span><span class="icon-label">TikTok</span>
-                            </div>
-                        </div>
+                    <div class="sns-grid">
+                        <a href="https://www.youtube.com/@flatcafe-official" target="_blank" class="sns-btn bg-yt">
+                            <span class="sns-icon-char">▶</span><span class="sns-label">YouTube</span>
+                        </a>
+                        <a href="https://twitter.com/" target="_blank" class="sns-btn bg-x">
+                            <span class="sns-icon-char">𝕏</span><span class="sns-label">X</span>
+                        </a>
+                        <a href="https://twitch.tv/" target="_blank" class="sns-btn bg-twitch">
+                            <span class="sns-icon-char">👾</span><span class="sns-label">Twitch</span>
+                        </a>
+                        <a href="https://tiktok.com/" target="_blank" class="sns-btn bg-tiktok">
+                            <span class="sns-icon-char">🎵</span><span class="sns-label">TikTok</span>
+                        </a>
                     </div>
 
-                    <div id="sns-twitch" class="sns-nav">
-                        <div style="margin-bottom:15px; font-weight:bold; color:#9146ff;">Twitch Channels</div>
-                        <div class="sub-grid">
-                            <a href="" target="_blank" class="mini-card" id="tw-1"><img src="menu_youtube.png" class="mini-icon"><span class="mini-name">Toruma</span></a>
-                            <a href="" target="_blank" class="mini-card" id="tw-2"><img src="menu_twitter.png" class="mini-icon"><span class="mini-name">Yuzucha</span></a>
-                            <a href="" target="_blank" class="mini-card" id="tw-3"><img src="menu_member.png" class="mini-icon"><span class="mini-name">Wakanagi</span></a>
-                            <a href="" target="_blank" class="mini-card" id="tw-4"><img src="menu_gallery.png" class="mini-icon"><span class="mini-name">Lily</span></a>
-                        </div>
-                        <div class="btn-back-sm" onclick="switchSnsView('sns-main')">Back</div>
-                    </div>
-
-                    <div id="sns-tiktok" class="sns-nav">
-                        <div style="margin-bottom:15px; font-weight:bold; color:#333;">TikTok Channels</div>
-                        <div class="sub-grid">
-                            <a href="" target="_blank" class="mini-card" id="tt-official"><img src="flat-cafe-logo.png" class="mini-icon" style="object-fit:contain"><span class="mini-name">Official</span></a>
-                            <a href="" target="_blank" class="mini-card" id="tt-1"><img src="menu_youtube.png" class="mini-icon"><span class="mini-name">Toruma</span></a>
-                            <a href="" target="_blank" class="mini-card" id="tt-2"><img src="menu_twitter.png" class="mini-icon"><span class="mini-name">Yuzucha</span></a>
-                            <a href="" target="_blank" class="mini-card" id="tt-3"><img src="menu_member.png" class="mini-icon"><span class="mini-name">Wakanagi</span></a>
-                        </div>
-                        <div class="btn-back-sm" onclick="switchSnsView('sns-main')">Back</div>
+                    <div style="text-align:left; margin-bottom:5px; font-weight:bold; color:#6d4c41; border-bottom:1px solid #ccc;">Pick Up Channels</div>
+                    <div class="member-list">
+                        <a href="#" class="mini-card">
+                            <img src="menu_youtube.png" class="mini-img">
+                            <span class="mini-name">Toruma</span>
+                            <span class="mini-sub">Twitch / YouTube</span>
+                        </a>
+                        <a href="#" class="mini-card">
+                            <img src="menu_twitter.png" class="mini-img">
+                            <span class="mini-name">Yuzucha</span>
+                            <span class="mini-sub">X / TikTok</span>
+                        </a>
                     </div>
                 </div>
 
-                <div id="section-members" class="section-view">
-                    <div class="panel-title">Member Profiles</div>
-                    <div class="placeholder-box">
-                        <p>メンバー紹介ページ<br>Coming Soon...</p>
+                <div id="view-members" class="section-view">
+                    <div class="panel-header">
+                        <div class="panel-title-text">Cafe Staff</div>
+                    </div>
+                    <div class="member-list">
+                        <div class="mini-card">
+                            <img src="menu_youtube.png" class="mini-img">
+                            <span class="mini-name">Toruma</span>
+                            <span class="mini-sub">Manager?</span>
+                        </div>
+                        <div class="mini-card">
+                            <img src="menu_twitter.png" class="mini-img">
+                            <span class="mini-name">Yuzucha</span>
+                            <span class="mini-sub">Staff</span>
+                        </div>
+                        <div class="mini-card">
+                            <img src="menu_member.png" class="mini-img">
+                            <span class="mini-name">Wakanagi</span>
+                            <span class="mini-sub">Staff</span>
+                        </div>
+                        <div class="mini-card">
+                            <img src="menu_gallery.png" class="mini-img">
+                            <span class="mini-name">Lily</span>
+                            <span class="mini-sub">Staff</span>
+                        </div>
                     </div>
                 </div>
 
-                <div id="section-gallery" class="section-view">
-                    <div class="panel-title">Photo Gallery</div>
-                    <div class="placeholder-box">
-                        <p>ギャラリーページ<br>Coming Soon...</p>
+                <div id="view-gallery" class="section-view">
+                    <div class="panel-header">
+                        <div class="panel-title-text">Photo Gallery</div>
+                    </div>
+                    <div style="text-align:center; padding:30px; color:#666;">
+                        <span style="font-size:2rem; opacity:0.5;">🖼️</span><br>
+                        Coming Soon...
                     </div>
                 </div>
-                
-                <div class="btn-close" onclick="closeSection()">Close</div>
 
+                <div class="panel-footer">
+                    <div class="close-btn" onclick="closeContent()">Close ×</div>
+                </div>
             </div>
         </div>
 
-        <nav class="footer-nav">
-            <a href="index.html" class="back-btn">Exit</a>
-        </nav>
+        <div style="margin-top:20px;">
+            <a href="index.html" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:0.8rem;">← Entrance</a>
+        </div>
     </div>
 
     <script>
-        // ==========================================
-        //  ▼▼▼ URL設定エリア ▼▼▼
-        // ==========================================
-        document.getElementById('link-yt').href = "https://www.youtube.com/@flatcafe-official";
-        document.getElementById('link-x').href = "https://twitter.com/";
-
-        // Twitch Links
-        document.getElementById('tw-1').href = "https://twitch.tv/";
-        document.getElementById('tw-2').href = "https://twitch.tv/";
-        document.getElementById('tw-3').href = "https://twitch.tv/";
-        document.getElementById('tw-4').href = "https://twitch.tv/";
-
-        // TikTok Links
-        document.getElementById('tt-official').href = "https://tiktok.com/";
-        document.getElementById('tt-1').href = "https://tiktok.com/";
-        document.getElementById('tt-2').href = "https://tiktok.com/";
-        document.getElementById('tt-3').href = "https://tiktok.com/";
-        // ==========================================
-
-        function showSection(sectionId, cardElem) {
-            // エリアを表示
+        // タブ切り替え処理
+        function openTab(tabName, elem) {
+            // 1. エリアを表示
             const display = document.getElementById('content-display');
             display.classList.add('active');
 
-            // すべてのセクションを隠す
+            // 2. 中身を切り替え
             document.querySelectorAll('.section-view').forEach(el => el.classList.remove('show'));
-            // ターゲットを表示
-            document.getElementById(sectionId).classList.add('show');
+            document.getElementById('view-' + tabName).classList.add('show');
 
-            // カードの選択状態更新
-            document.querySelectorAll('.char-card').forEach(el => el.classList.remove('active-tab'));
-            cardElem.classList.add('active-tab');
+            // 3. タブの見た目更新
+            document.querySelectorAll('.menu-tab').forEach(el => el.classList.remove('active-tab'));
+            elem.classList.add('active-tab');
 
-            // SNSメニューは常にメインに戻しておく
-            switchSnsView('sns-main');
-
-            // スクロール移動
-            display.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // 4. 少しスクロール (ヘッダーが見切れない程度に)
+            // スマホならコンテンツエリアへ、PCならそのままでもOK
+            if(window.innerWidth <= 768) {
+                // コンテンツの少し上へスムーズスクロール
+                const offset = display.getBoundingClientRect().top + window.pageYOffset - 20;
+                window.scrollTo({top: offset, behavior: 'smooth'});
+            }
         }
 
-        function closeSection() {
+        // 閉じる処理
+        function closeContent() {
             document.getElementById('content-display').classList.remove('active');
-            document.querySelectorAll('.char-card').forEach(el => el.classList.remove('active-tab'));
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function switchSnsView(viewId) {
-            document.querySelectorAll('.sns-nav').forEach(el => el.classList.remove('active'));
-            document.getElementById(viewId).classList.add('active');
+            document.querySelectorAll('.menu-tab').forEach(el => el.classList.remove('active-tab'));
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
     </script>
 </body>
