@@ -158,7 +158,7 @@
         .section-view.show { display: block; animation: fade-in 0.3s; }
 
         /* =========================================
-           Hybrid Menu System (PC: Split / Mobile: Accordion)
+           Hybrid Menu System
            ========================================= */
         .menu-wrapper {
             background: #fff; border: 1px solid #ccc;
@@ -279,20 +279,16 @@
             display: inline-block; vertical-align: top;
             background: #fff; padding: 10px 10px 35px 10px;
             box-shadow: 3px 3px 10px rgba(0,0,0,0.4);
-            /* デフォルト（バラつき）設定 */
             transform: rotate(-2deg); 
             transition: transform 0.3s, z-index 0s;
             position: relative; cursor: pointer; text-decoration: none; color: #333;
             width: 140px; 
         }
-        
-        /* バリエーション（偶数・3の倍数） */
         .polaroid:nth-child(even) { transform: rotate(3deg); }
         .polaroid:nth-child(3n) { transform: rotate(-4deg); }
 
-        /* ★重要: Hover設定を最後に書くことで上書きさせる */
         .polaroid:hover {
-            transform: scale(1.1) rotate(0deg) !important; /* 強制的に真っ直ぐ */
+            transform: scale(1.1) rotate(0deg) !important; /* Force Straight */
             z-index: 10;
             box-shadow: 5px 10px 20px rgba(0,0,0,0.5);
         }
@@ -305,25 +301,65 @@
             font-family: 'Bradley Hand', cursive; font-weight: bold;
             text-align: center; margin-top: 10px; font-size: 0.9rem;
         }
-        
-        /* 画鋲 */
         .pin {
             position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
             width: 12px; height: 12px; border-radius: 50%;
             background: var(--pin-color); box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
         }
-        /* テープ */
         .tape-corner {
             position: absolute; top: -10px; right: -5px;
             width: 40px; height: 15px; background: rgba(255,255,255,0.6);
             transform: rotate(45deg); box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
-        /* Webスタンプ */
         .stamp {
             position: absolute; bottom: 8px; right: 8px;
             border: 2px solid #1976d2; color: #1976d2;
             font-weight: bold; font-size: 0.7rem; padding: 1px 4px;
             transform: rotate(-15deg); opacity: 0.7; border-radius: 4px;
+        }
+
+        /* ★ NEW: Guest Note Modal */
+        #note-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 6000;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        }
+        #note-modal.active { opacity: 1; pointer-events: auto; }
+        
+        .note-paper {
+            width: 90%; max-width: 500px; height: 70vh;
+            background: #fff; border-radius: 5px;
+            box-shadow: 5px 5px 20px rgba(0,0,0,0.5);
+            /* Lined Paper Style */
+            background-image: repeating-linear-gradient(transparent, transparent 31px, #99ccff 32px);
+            background-size: 100% 32px;
+            padding: 40px 20px 20px 20px;
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+        .note-paper::before {
+            content: ''; position: absolute; top: 0; left: 30px; width: 2px; height: 100%;
+            background: #ffcccc; /* Red Margin Line */
+        }
+        .note-header {
+            font-family: 'Bradley Hand', cursive; font-size: 1.5rem; text-align: center;
+            margin-bottom: 20px; background: #fff; padding: 5px; border: 1px dashed #ccc;
+            transform: rotate(-2deg); align-self: center; z-index: 5;
+        }
+        .note-close {
+            position: absolute; top: 10px; right: 15px; font-size: 1.5rem; cursor: pointer; color: #555;
+            background: #fff; border-radius: 50%; width: 30px; height: 30px; line-height: 30px; text-align: center;
+        }
+        .note-content {
+            flex-grow: 1; width: 100%; border: none; background: transparent;
+            font-family: 'Yu Mincho', serif; font-size: 1rem; line-height: 32px;
+            padding-left: 20px; outline: none; resize: none;
+        }
+        .note-btn {
+            align-self: flex-end; margin-top: 10px; padding: 8px 20px;
+            background: #5d4037; color: #fff; border-radius: 20px; cursor: pointer;
+            font-family: sans-serif; font-size: 0.9rem;
         }
 
         /* Full View & Footer */
@@ -343,6 +379,10 @@
             .container { padding: 10px; max-width: 100%; }
             .card-grid { gap: 8px; margin-bottom: 15px; }
             .menu-tab { width: 32%; height: 90px; padding: 5px; }
+            /* ★修正: スマホでの見切れ対策 */
+            .tab-title { font-size: 0.85rem; }
+            .tab-desc { font-size: 0.6rem; }
+            
             .members-stage { height: 260px; }
             #tachi-yuzu img, #tachi-wakanagi img { max-width: 320%; max-height: 80%; }
             #tachi-toruma img { max-width: 200%; }
@@ -435,11 +475,11 @@
                                 <a href="" target="_blank" class="mini-card" id="tt-lily"><img src="menu_gallery.png" class="mini-img"><span class="mini-name">lily00</span></a>
                             </div>
                         </div>
-                        <a href="#" target="_blank" class="menu-link">
+                        <div class="menu-link" onclick="openGuestNote()">
                             <div class="menu-icon">✎</div>
                             <div class="menu-text-group"><div class="menu-name">Guest Note</div><div class="menu-desc">ご意見・リクエスト。</div></div>
                             <div class="menu-price">Write</div>
-                        </a>
+                        </div>
                     </div>
                 </div>
 
@@ -536,6 +576,17 @@
             <div class="receipt-close" onclick="closeReceipt()">Close Receipt</div>
         </div>
     </div>
+
+    <div id="note-modal">
+        <div class="note-paper">
+            <div class="note-close" onclick="closeGuestNote()">×</div>
+            <div class="note-header">Guest Note</div>
+            
+            <textarea class="note-content" placeholder="メッセージをどうぞ..."></textarea>
+            
+            <div class="note-btn" onclick="closeGuestNote()">Leave Message</div>
+        </div>
+    </div>
     
     <audio id="audio-se"></audio>
 
@@ -620,7 +671,7 @@
             });
         }
 
-        /* --- Receipt & Bio --- */
+        /* --- Receipt & Bio & Note --- */
         function openReceipt() { 
             const modal = document.getElementById('receipt-modal'); modal.classList.add('active'); 
             const lines = document.querySelectorAll('.receipt-line, .receipt-total, .receipt-close');
@@ -629,6 +680,9 @@
             lines.forEach((line) => { setTimeout(() => { line.classList.add('receipt-element-show'); }, delay); delay += 150; });
         }
         function closeReceipt() { document.getElementById('receipt-modal').classList.remove('active'); }
+
+        function openGuestNote() { document.getElementById('note-modal').classList.add('active'); }
+        function closeGuestNote() { document.getElementById('note-modal').classList.remove('active'); }
 
         function selectMember(name, elem, imgSrc) { document.querySelectorAll('.char-tachi').forEach(c => { c.classList.remove('idle'); c.classList.remove('active'); c.classList.add('dimmed'); }); elem.classList.remove('dimmed'); elem.classList.add('active'); document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show')); const bio = document.getElementById('bio-' + name); if(bio) bio.classList.add('show'); }
         function closeBio() { document.querySelectorAll('.char-tachi').forEach(c => { c.classList.remove('active'); c.classList.remove('dimmed'); c.classList.add('idle'); }); document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show')); }
