@@ -65,7 +65,7 @@
         }
 
         /* =========================================
-           3. キャラクターカード (修正版)
+           3. キャラクターカード (完全版)
            ========================================= */
         .card-grid {
             display: flex; flex-wrap: wrap; justify-content: center;
@@ -86,7 +86,7 @@
             opacity: 0; transform: translateY(50px) rotate(var(--rot));
             animation: deal-card 0.6s forwards; animation-delay: var(--delay);
             
-            /* ▼▼▼ 修正点1: はみ出しを禁止 ▼▼▼ */
+            /* はみ出しをカットして整える */
             overflow: hidden;
         }
 
@@ -96,7 +96,7 @@
             z-index: 100;
         }
 
-        /* テープ */
+        /* テープ (左上に配置) */
         .tape {
             position: absolute; top: -12px; left: -15px;
             transform: rotate(-35deg); width: 90px; height: 28px;
@@ -109,59 +109,49 @@
             clip-path: polygon(0 0, 100% 15%, 0 30%, 100% 45%, 0 60%, 100% 75%, 0 90%, 100% 100%);
         }
 
-        /* 画像エリア */
+        /* --- 画像エリア (ここを修正) --- */
         .char-area {
             position: relative;
             width: 100%; 
-            height: 75%; /* 画像エリアを少し広めに */
+            height: 70%; /* カードの上7割を画像エリアにする */
             margin-top: 0;
-            /* overflow: hidden; は親のchar-cardで効いているのでここでは不要 */
+            background-color: #f0f0f0; /* 画像読み込み前の背景色 */
         }
 
-        /* 背景の円 */
+        /* 背景の円（画像が透過PNGの場合に見えるアクセント） */
         .card-yt .char-area::before, .card-tw .char-area::before,
         .card-mem .char-area::before, .card-gal .char-area::before {
             content:''; position: absolute; 
-            width: 200px; height: 200px; /* 円も大きく */
-            border-radius: 50%; 
-            top: 50%; left: 50%; 
-            transform: translate(-50%, -45%);
-            z-index: 0; opacity: 0.9;
+            width: 100%; height: 100%;
+            top: 0; left: 0; opacity: 0.5; z-index: 0;
         }
-        .card-yt .char-area::before { background: #ffebee; }
-        .card-tw .char-area::before { background: #e3f2fd; }
-        .card-mem .char-area::before { background: #fffde7; }
-        .card-gal .char-area::before { background: #e0f2f1; }
+        .card-yt .char-area::before { background: radial-gradient(circle at 50% 120%, #ffcdd2, transparent 70%); }
+        .card-tw .char-area::before { background: radial-gradient(circle at 50% 120%, #bbdefb, transparent 70%); }
+        .card-mem .char-area::before { background: radial-gradient(circle at 50% 120%, #fff9c4, transparent 70%); }
+        .card-gal .char-area::before { background: radial-gradient(circle at 50% 120%, #b2dfdb, transparent 70%); }
 
-        /* ▼▼▼ 修正点2 & 3: 画像の巨大化と位置調整 ▼▼▼ */
+
+        /* --- キャラクター画像 (魔法の修正) --- */
         .char-img {
-            position: absolute;
-            z-index: 10;
+            width: 100%;
+            height: 100%;
             
-            /* 幅を基準に巨大化させる（約2.4倍） */
-            width: 240%; 
-            height: auto; 
-
-            /* 左右中央揃え */
-            left: 50%;
-            transform: translateX(-50%);
+            /* ▼▼▼ ここが重要！ ▼▼▼ */
+            object-fit: cover; /* 枠いっぱいに画像を広げる（余分な端はカット） */
+            object-position: top center; /* 顔（上部）を中心に表示する */
             
-            /* 上下位置の調整（巨大な画像の上の方を表示させる） */
-            top: -30px; /* 値を調整して顔が良い位置に来るようにする */
-            
-            filter: drop-shadow(0 5px 8px rgba(0,0,0,0.2));
-            transition: transform 0.4s ease, top 0.4s ease;
-            pointer-events: none;
+            position: relative; z-index: 10;
+            transition: transform 0.5s ease;
         }
 
-        /* ホバー時は枠内で少しだけズーム */
+        /* ホバー時は少しズーム */
         .char-card:hover .char-img {
-            transform: translateX(-50%) scale(1.05); 
+            transform: scale(1.1); 
         }
 
         /* 情報エリア */
         .info-area {
-            width: 100%; height: 25%;
+            width: 100%; height: 30%;
             background-color: var(--card-bg);
             background-image: repeating-linear-gradient(#eee 0 1px, transparent 1px 100%);
             background-size: 100% 18px;
@@ -202,8 +192,6 @@
                 width: 45%; max-width: 180px; height: 240px;
                 transform: rotate(0deg) !important; --rot: 0deg; margin-top: 15px;
             }
-            /* スマホでの画像調整 */
-            .char-img { width: 260%; top: -25px; }
             .menu-title { font-size: 1.05rem; } .menu-desc { font-size: 0.7rem; }
             .tape { width: 70px; height: 22px; top: -10px; left: -10px; }
         }
