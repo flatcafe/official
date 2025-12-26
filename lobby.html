@@ -16,8 +16,6 @@
             --accent-gold: #ffd54f;
             --pin-color: #e53935; 
             --cork-bg: #e6d6ac;
-            --sidebar-width-pc: 250px; /* PC時のサイドバー幅 */
-            --sidebar-compact-pc: 70px; /* PC時の閉じた幅 */
         }
 
         * { -webkit-tap-highlight-color: transparent; outline: none; box-sizing: border-box; }
@@ -54,7 +52,7 @@
            2. レイアウト & ヘッダー
            ========================================= */
         .container {
-            max-width: 900px; /* 少し広げた */ margin: 0 auto; padding: 20px 15px;
+            max-width: 900px; margin: 0 auto; padding: 20px 15px;
             display: flex; flex-direction: column; align-items: center;
             min-height: 100vh;
         }
@@ -160,89 +158,105 @@
         .section-view.show { display: block; animation: fade-in 0.3s; }
 
         /* =========================================
-           ★ NEW ★ Cafe Menu (2ペインUI)
+           ★ NEW ★ Hybrid Menu System
+           (PC: Split View / Mobile: Accordion)
            ========================================= */
-        /* PC用レイアウト (769px以上) */
+        
+        .menu-wrapper {
+            /* 共通ベース */
+            background: #fff; border: 1px solid #ccc;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* --- PC用レイアウト (769px以上) --- */
         @media (min-width: 769px) {
-            .menu-2pane-layout {
-                display: flex; height: 450px; /* 固定高さ */ gap: 20px; align-items: stretch;
+            .menu-wrapper {
+                display: grid;
+                /* 左(260px) 右(残り) */
+                grid-template-columns: 260px 1fr; 
+                grid-template-rows: repeat(10, min-content); /* 行を詰める */
+                align-items: start;
+                min-height: 400px; /* ある程度の高さ */
+                padding: 10px;
+                position: relative;
             }
-            /* 左サイドバー (メニューリスト) */
-            .menu-sidebar {
-                width: var(--sidebar-width-pc); flex-shrink: 0;
-                background: #fff; border: 1px solid #ccc; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-                position: relative; transition: width 0.3s ease; overflow: hidden;
-                display: flex; flex-direction: column;
+            /* 左側のクリップボード装飾 */
+            .menu-wrapper::before {
+                content: ''; position: absolute; top: -10px; left: 130px; transform: translateX(-50%);
+                width: 100px; height: 20px; background: #5d4037; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 10;
             }
-            .menu-sidebar::before { /* クリップボード金具 */
-                content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
-                width: 60%; height: 15px; background: #5d4037; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            }
-            /* コンテンツ選択時のサイドバー短縮 */
-            .menu-sidebar.compact { width: var(--sidebar-compact-pc); }
-            .menu-sidebar.compact .menu-text-group,
-            .menu-sidebar.compact .menu-price { opacity: 0; pointer-events: none; transition: opacity 0.2s; }
-            .menu-sidebar.compact .menu-icon { margin-right: 0; width: 100%; }
-            
-            /* メニュー項目デザイン */
-            .menu-item-link {
+
+            /* 左側: トリガーボタン & リンク */
+            .menu-trigger, .menu-link {
+                grid-column: 1; /* 左列に配置 */
+                width: 100%;
                 display: flex; align-items: center; padding: 15px 10px;
-                border-bottom: 1px dotted #bbb; text-decoration: none; color: inherit;
-                transition: background 0.2s; cursor: pointer; white-space: nowrap;
+                border-bottom: 1px dotted #bbb; cursor: pointer;
+                transition: background 0.2s; text-decoration: none; color: inherit;
             }
-            .menu-item-link:hover { background: rgba(0,0,0,0.05); }
-            .menu-item-link.active-menu { background: var(--accent-gold); color: var(--wood-dark); font-weight: bold;}
+            .menu-trigger:hover, .menu-link:hover { background: rgba(0,0,0,0.05); }
+            /* 選択中の色 */
+            .menu-trigger.active { background: var(--accent-gold); font-weight: bold; color: #3e2723; border-right: 3px solid #d84315; }
 
-            .menu-icon { font-size: 1.8rem; margin-right: 15px; width: 40px; text-align: center; flex-shrink: 0; transition: all 0.3s;}
-            .menu-text-group { flex-grow: 1; overflow: hidden; transition: opacity 0.3s;}
-            .menu-name { font-weight: bold; font-family: 'Georgia', serif; color: #3e2723; font-size: 1.1rem; }
-            .menu-desc { font-size: 0.8rem; color: #666; margin-top: 2px; }
-            .menu-price { font-weight: bold; color: #8d6e63; font-size: 0.9rem; margin-left: 10px; flex-shrink: 0; transition: opacity 0.3s;}
-
-            /* 右コンテンツエリア */
-            .menu-content-area {
-                flex-grow: 1; background: rgba(255,255,255,0.5); border-radius: 8px;
-                padding: 20px; overflow-y: auto; position: relative; border: 2px dashed #d7ccc8;
+            /* 右側: コンテンツエリア */
+            .menu-content {
+                grid-column: 2; /* 右列に配置 */
+                grid-row: 1 / 99; /* 全行をまたぐ(重なる) */
+                display: none; /* デフォルト非表示 */
+                padding: 20px; margin-left: 20px;
+                background: rgba(255,255,255,0.5); border: 2px dashed #d7ccc8; border-radius: 8px;
+                min-height: 380px;
             }
-            .sns-detail-pane { display: none; animation: fade-in 0.3s; }
-            .sns-detail-pane.active { display: block; }
+            .menu-content.active { display: block; animation: fade-in 0.3s; }
             
-            /* PCではBackボタンを隠す */
-            .back-btn-internal { display: none; }
-            /* PCでの初期メッセージ */
+            /* PCではコンテンツ内の「閉じる」ボタン不要 */
+            .accordion-close { display: none; }
+            /* PCの初期表示用メッセージ */
             .menu-placeholder {
-                position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-                text-align: center; color: #5d4037; opacity: 0.7; font-family: 'Yu Mincho', serif;
+                grid-column: 2; grid-row: 1 / 99;
+                display: flex; justify-content: center; align-items: center; height: 100%;
+                color: #888; font-family: 'Yu Mincho', serif;
             }
         }
 
-        /* スマホ用レイアウト (768px以下) - 既存の切り替え式を維持 */
+        /* --- スマホ用レイアウト (768px以下) --- */
         @media (max-width: 768px) {
-            .menu-2pane-layout { display: block; }
-            .menu-sidebar { 
-                background: #fff; border: 1px solid #ccc; padding: 10px;
-                box-shadow: 2px 2px 5px rgba(0,0,0,0.1); position: relative; margin-bottom: 20px;
+            .menu-wrapper { display: block; padding: 0; }
+            
+            /* トリガーボタン */
+            .menu-trigger, .menu-link {
+                display: flex; align-items: center; padding: 15px;
+                border-bottom: 1px solid #eee; cursor: pointer;
+                background: #fff; text-decoration: none; color: inherit;
             }
-            .menu-sidebar::before { display: none; } /* スマホでは金具なし */
-            .menu-content-area { background: transparent; padding: 0; border: none; }
+            .menu-trigger:active, .menu-link:active { background: #f5f5f5; }
+            
+            /* 開いている時のトリガー */
+            .menu-trigger.active { background: #fffde7; border-bottom: none; }
+            .menu-trigger.active .menu-price { transform: rotate(90deg); }
 
-            .menu-item-link { display: flex; align-items: center; padding: 12px 5px; border-bottom: 1px dotted #bbb; text-decoration: none; color: inherit; cursor: pointer; }
-            .menu-icon { font-size: 1.8rem; margin-right: 15px; width: 40px; text-align: center; }
-            .menu-text-group { flex-grow: 1; }
-            .menu-name { font-weight: bold; font-size: 1.1rem; }
-            .menu-desc { font-size: 0.8rem; color: #666; }
-            .menu-price { font-weight: bold; color: #8d6e63; margin-left: 10px;}
-
-            /* スマホはスライド切り替え */
-            .menu-sidebar, .sns-detail-pane { display: none; }
-            .menu-sidebar.active-slide, .sns-detail-pane.active-slide { display: block; animation: fade-in 0.3s; }
-            .back-btn-internal { display: inline-block; }
+            /* コンテンツ (アコーディオンの中身) */
+            .menu-content {
+                display: none; /* 閉じてる */
+                background: #fdfbf7;
+                padding: 15px;
+                border-bottom: 1px solid #ccc;
+                box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+            }
+            .menu-content.active { display: block; animation: fade-in 0.2s; }
+            
             .menu-placeholder { display: none; }
         }
 
+        /* 共通パーツデザイン */
+        .menu-icon { font-size: 1.8rem; margin-right: 15px; width: 40px; text-align: center; }
+        .menu-text-group { flex-grow: 1; }
+        .menu-name { font-weight: bold; font-family: 'Georgia', serif; color: #3e2723; font-size: 1.1rem; }
+        .menu-desc { font-size: 0.8rem; color: #666; margin-top: 2px; }
+        .menu-price { font-weight: bold; color: #8d6e63; font-size: 0.9rem; margin-left: 10px; transition: transform 0.2s; }
 
         /* Member Grid (共通) */
-        .member-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 15px; margin-top: 15px;}
+        .member-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 15px; margin-top: 5px;}
         .mini-card { background: #fff; padding: 10px; border-radius: 4px; text-decoration: none; color: #333; box-shadow: 0 3px 6px rgba(0,0,0,0.2); display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; transition: transform 0.2s; }
         .mini-card:active { transform: scale(0.98); }
         .mini-card::after { content: ''; position: absolute; top: -6px; left: 50%; margin-left: -5px; width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #ff5252, #b71c1c); box-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
@@ -292,8 +306,7 @@
         .panel-footer { margin-top: 20px; text-align: center; position: relative; z-index: 30;}
         .close-btn { display: inline-block; padding: 8px 30px; background: #8d6e63; color: #fff; border-radius: 20px; cursor: pointer; font-size: 0.9rem; box-shadow: 0 3px 0 #5d4037; }
         .close-btn:active { transform: translateY(3px); box-shadow: none; }
-        .back-btn-internal { display: inline-block; margin-bottom: 15px; padding: 5px 15px; background: rgba(0,0,0,0.1); color: #4a3b32; border-radius: 15px; font-size: 0.8rem; cursor: pointer; text-decoration: none; border: 1px solid #4a3b32; }
-
+        
         @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slide-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -341,72 +354,69 @@
                 <div id="view-menu" class="section-view">
                     <div class="panel-header"><div class="panel-title-text">Today's Menu</div></div>
                     
-                    <div class="menu-2pane-layout">
-                        <div class="menu-sidebar active-slide" id="menu-sidebar-container">
-                            <a href="" target="_blank" id="link-yt" class="menu-item-link">
-                                <div class="menu-icon">📺</div>
-                                <div class="menu-text-group"><div class="menu-name">YouTube (Official)</div><div class="menu-desc">公式配信はこちら。</div></div>
-                                <div class="menu-price">Free</div>
-                            </a>
-                            <div class="menu-item-link js-menu-trigger" data-target="sns-twitch">
-                                <div class="menu-icon" style="color:#9146ff">👾</div>
-                                <div class="menu-text-group"><div class="menu-name">Twitch Live</div><div class="menu-desc">メンバー個人配信。</div></div>
-                                <div class="menu-price">▶</div>
+                    <div class="menu-wrapper">
+                        <div class="menu-placeholder">← 左のメニューからお選びください</div>
+
+                        <a href="" target="_blank" id="link-yt" class="menu-link">
+                            <div class="menu-icon">📺</div>
+                            <div class="menu-text-group"><div class="menu-name">YouTube (Official)</div><div class="menu-desc">公式配信はこちら。</div></div>
+                            <div class="menu-price">Free</div>
+                        </a>
+
+                        <div class="menu-trigger js-accordion" data-target="content-twitch">
+                            <div class="menu-icon" style="color:#9146ff">👾</div>
+                            <div class="menu-text-group"><div class="menu-name">Twitch Live</div><div class="menu-desc">メンバー個人配信。</div></div>
+                            <div class="menu-price">▶</div>
+                        </div>
+                        <div class="menu-content" id="content-twitch">
+                            <div class="panel-header" style="border-bottom:none; margin-bottom:10px;"><div class="panel-title-text" style="color:#9146ff; font-size:1.2rem;">Twitch Channels</div></div>
+                            <div class="member-list">
+                                <a href="" target="_blank" class="mini-card" id="tw-toruma"><img src="menu_youtube.png" class="mini-img"><span class="mini-name">とるま</span></a>
+                                <a href="" target="_blank" class="mini-card" id="tw-yuzu"><img src="menu_twitter.png" class="mini-img"><span class="mini-name">柚茶</span></a>
+                                <a href="" target="_blank" class="mini-card" id="tw-wakanagi"><img src="menu_member.png" class="mini-img"><span class="mini-name">若凪</span></a>
+                                <a href="" target="_blank" class="mini-card" id="tw-lily"><img src="menu_gallery.png" class="mini-img"><span class="mini-name">lily00</span></a>
                             </div>
-                            <div class="menu-item-link js-menu-trigger" data-target="sns-x">
-                                <div class="menu-icon" style="color:#333">𝕏</div>
-                                <div class="menu-text-group"><div class="menu-name">X (Twitter)</div><div class="menu-desc">最新情報や日常。</div></div>
-                                <div class="menu-price">▶</div>
-                            </div>
-                            <div class="menu-item-link js-menu-trigger" data-target="sns-tiktok">
-                                <div class="menu-icon" style="color:#333">🎵</div>
-                                <div class="menu-text-group"><div class="menu-name">TikTok</div><div class="menu-desc">ショート動画。</div></div>
-                                <div class="menu-price">▶</div>
-                            </div>
-                            <a href="#" target="_blank" class="menu-item-link">
-                                <div class="menu-icon">✎</div>
-                                <div class="menu-text-group"><div class="menu-name">Guest Note</div><div class="menu-desc">ご意見・リクエスト。</div></div>
-                                <div class="menu-price">Write</div>
-                            </a>
                         </div>
 
-                        <div class="menu-content-area">
-                             <div class="menu-placeholder">← 左のメニューからお選びください</div>
-
-                            <div id="sns-x" class="sns-detail-pane">
-                                <div onclick="backToMenuMobile()" class="back-btn-internal">← Back to Menu</div>
-                                <div class="panel-header" style="border-bottom:none; margin-bottom:10px;"><div class="panel-title-text" style="color:#333; font-size:1.2rem;">X (Twitter)</div></div>
-                                <div class="member-list">
-                                    <a href="" target="_blank" class="mini-card" id="x-official"><img src="flat-cafe-logo.png" class="mini-img" style="object-fit:contain"><span class="mini-name">Official</span></a>
-                                    <a href="" target="_blank" class="mini-card" id="x-toruma"><img src="menu_youtube.png" class="mini-img"><span class="mini-name">とるま</span></a>
-                                    <a href="" target="_blank" class="mini-card" id="x-yuzu"><img src="menu_twitter.png" class="mini-img"><span class="mini-name">柚茶</span></a>
-                                    <a href="" target="_blank" class="mini-card" id="x-wakanagi"><img src="menu_member.png" class="mini-img"><span class="mini-name">若凪</span></a>
-                                    <a href="" target="_blank" class="mini-card" id="x-lily"><img src="menu_gallery.png" class="mini-img"><span class="mini-name">lily00</span></a>
-                                </div>
-                            </div>
-                            <div id="sns-twitch" class="sns-detail-pane">
-                                <div onclick="backToMenuMobile()" class="back-btn-internal">← Back to Menu</div>
-                                <div class="panel-header" style="border-bottom:none; margin-bottom:10px;"><div class="panel-title-text" style="color:#9146ff; font-size:1.2rem;">Twitch Channels</div></div>
-                                <div class="member-list">
-                                    <a href="" target="_blank" class="mini-card" id="tw-toruma"><img src="menu_youtube.png" class="mini-img"><span class="mini-name">とるま</span></a>
-                                    <a href="" target="_blank" class="mini-card" id="tw-yuzu"><img src="menu_twitter.png" class="mini-img"><span class="mini-name">柚茶</span></a>
-                                    <a href="" target="_blank" class="mini-card" id="tw-wakanagi"><img src="menu_member.png" class="mini-img"><span class="mini-name">若凪</span></a>
-                                    <a href="" target="_blank" class="mini-card" id="tw-lily"><img src="menu_gallery.png" class="mini-img"><span class="mini-name">lily00</span></a>
-                                </div>
-                            </div>
-                            <div id="sns-tiktok" class="sns-detail-pane">
-                                <div onclick="backToMenuMobile()" class="back-btn-internal">← Back to Menu</div>
-                                <div class="panel-header" style="border-bottom:none; margin-bottom:10px;"><div class="panel-title-text" style="color:#333; font-size:1.2rem;">TikTok Channels</div></div>
-                                <div class="member-list">
-                                    <a href="" target="_blank" class="mini-card" id="tt-official"><img src="flat-cafe-logo.png" class="mini-img" style="object-fit:contain"><span class="mini-name">Official</span></a>
-                                    <a href="" target="_blank" class="mini-card" id="tt-toruma"><img src="menu_youtube.png" class="mini-img"><span class="mini-name">とるま</span></a>
-                                    <a href="" target="_blank" class="mini-card" id="tt-yuzu"><img src="menu_twitter.png" class="mini-img"><span class="mini-name">柚茶</span></a>
-                                    <a href="" target="_blank" class="mini-card" id="tt-wakanagi"><img src="menu_member.png" class="mini-img"><span class="mini-name">若凪</span></a>
-                                    <a href="" target="_blank" class="mini-card" id="tt-lily"><img src="menu_gallery.png" class="mini-img"><span class="mini-name">lily00</span></a>
-                                </div>
+                        <div class="menu-trigger js-accordion" data-target="content-x">
+                            <div class="menu-icon" style="color:#333">𝕏</div>
+                            <div class="menu-text-group"><div class="menu-name">X (Twitter)</div><div class="menu-desc">最新情報や日常。</div></div>
+                            <div class="menu-price">▶</div>
+                        </div>
+                        <div class="menu-content" id="content-x">
+                            <div class="panel-header" style="border-bottom:none; margin-bottom:10px;"><div class="panel-title-text" style="color:#333; font-size:1.2rem;">X (Twitter)</div></div>
+                            <div class="member-list">
+                                <a href="" target="_blank" class="mini-card" id="x-official"><img src="flat-cafe-logo.png" class="mini-img" style="object-fit:contain"><span class="mini-name">Official</span></a>
+                                <a href="" target="_blank" class="mini-card" id="x-toruma"><img src="menu_youtube.png" class="mini-img"><span class="mini-name">とるま</span></a>
+                                <a href="" target="_blank" class="mini-card" id="x-yuzu"><img src="menu_twitter.png" class="mini-img"><span class="mini-name">柚茶</span></a>
+                                <a href="" target="_blank" class="mini-card" id="x-wakanagi"><img src="menu_member.png" class="mini-img"><span class="mini-name">若凪</span></a>
+                                <a href="" target="_blank" class="mini-card" id="x-lily"><img src="menu_gallery.png" class="mini-img"><span class="mini-name">lily00</span></a>
                             </div>
                         </div>
+
+                        <div class="menu-trigger js-accordion" data-target="content-tiktok">
+                            <div class="menu-icon" style="color:#333">🎵</div>
+                            <div class="menu-text-group"><div class="menu-name">TikTok</div><div class="menu-desc">ショート動画。</div></div>
+                            <div class="menu-price">▶</div>
+                        </div>
+                        <div class="menu-content" id="content-tiktok">
+                            <div class="panel-header" style="border-bottom:none; margin-bottom:10px;"><div class="panel-title-text" style="color:#333; font-size:1.2rem;">TikTok Channels</div></div>
+                            <div class="member-list">
+                                <a href="" target="_blank" class="mini-card" id="tt-official"><img src="flat-cafe-logo.png" class="mini-img" style="object-fit:contain"><span class="mini-name">Official</span></a>
+                                <a href="" target="_blank" class="mini-card" id="tt-toruma"><img src="menu_youtube.png" class="mini-img"><span class="mini-name">とるま</span></a>
+                                <a href="" target="_blank" class="mini-card" id="tt-yuzu"><img src="menu_twitter.png" class="mini-img"><span class="mini-name">柚茶</span></a>
+                                <a href="" target="_blank" class="mini-card" id="tt-wakanagi"><img src="menu_member.png" class="mini-img"><span class="mini-name">若凪</span></a>
+                                <a href="" target="_blank" class="mini-card" id="tt-lily"><img src="menu_gallery.png" class="mini-img"><span class="mini-name">lily00</span></a>
+                            </div>
+                        </div>
+
+                        <a href="#" target="_blank" class="menu-link">
+                            <div class="menu-icon">✎</div>
+                            <div class="menu-text-group"><div class="menu-name">Guest Note</div><div class="menu-desc">ご意見・リクエスト。</div></div>
+                            <div class="menu-price">Write</div>
+                        </a>
                     </div>
+
                 </div>
 
                 <div id="view-members" class="section-view">
@@ -501,7 +511,7 @@
         document.getElementById('tt-wakanagi').href = "https://tiktok.com/";
         document.getElementById('tt-lily').href = "https://tiktok.com/";
 
-        window.addEventListener('load', function() { updateTimeOfDay(); setupMenuTriggers(); });
+        window.addEventListener('load', function() { updateTimeOfDay(); setupAccordion(); });
 
         function updateTimeOfDay() {
             const hour = new Date().getHours();
@@ -518,7 +528,7 @@
         function toggleSound(btn) { isSoundOn = !isSoundOn; if(isSoundOn) btn.classList.add('on'); else btn.classList.remove('on'); }
         function playDoorbell() { if(isSoundOn) { const rnd = Math.floor(Math.random() * bellSounds.length); se.src = bellSounds[rnd]; se.currentTime = 0; se.volume = 0.5; se.play().catch(e => {}); }}
 
-        /* --- Tabs & Menu System --- */
+        /* --- Tabs --- */
         function openTab(tabName, elem) {
             playDoorbell();
             document.getElementById('content-display').classList.add('active');
@@ -530,8 +540,6 @@
             if(window.innerWidth <= 768 && document.readyState === 'complete') {
                 window.scrollTo({top: document.getElementById('content-display').offsetTop - 20, behavior: 'smooth'});
             }
-            // PC版メニューの初期化
-            if(tabName === 'menu' && window.innerWidth > 768) { resetPcMenu(); }
         }
         function closeContent() {
             document.getElementById('content-display').classList.remove('active');
@@ -539,39 +547,33 @@
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        /* ★ NEW: Menu Trigger Setup (PC/Mobile Hybrid) ★ */
-        function setupMenuTriggers() {
-            document.querySelectorAll('.js-menu-trigger').forEach(trigger => {
+        /* --- Accordion (Hybrid) Setup --- */
+        function setupAccordion() {
+            document.querySelectorAll('.js-accordion').forEach(trigger => {
                 trigger.addEventListener('click', function() {
                     const targetId = this.getAttribute('data-target');
-                    if(window.innerWidth > 768) {
-                        // PC action: 左をコンパクト化、右にコンテンツ表示
-                        document.getElementById('menu-sidebar-container').classList.add('compact');
-                        document.querySelectorAll('.menu-item-link').forEach(el => el.classList.remove('active-menu'));
-                        this.classList.add('active-menu');
-                        document.querySelector('.menu-placeholder').style.display = 'none';
-                        document.querySelectorAll('.sns-detail-pane').forEach(el => el.classList.remove('active'));
-                        document.getElementById(targetId).classList.add('active');
+                    const targetContent = document.getElementById(targetId);
+                    const isActive = this.classList.contains('active');
+
+                    // リセット: すべて閉じる (PC/Mobile共通動作)
+                    document.querySelectorAll('.js-accordion').forEach(el => el.classList.remove('active'));
+                    document.querySelectorAll('.menu-content').forEach(el => el.classList.remove('active'));
+                    
+                    // PCのプレースホルダー非表示
+                    const placeholder = document.querySelector('.menu-placeholder');
+                    if(placeholder) placeholder.style.display = 'none';
+
+                    // すでに開いていたものをクリックした場合 -> 閉じたまま終了 (Mobileでのトグル動作)
+                    // PCの場合は「常に何か表示」でも良いが、今回はMobileに合わせてトグル可とする
+                    if (!isActive) {
+                        this.classList.add('active');
+                        targetContent.classList.add('active');
                     } else {
-                        // Mobile action: 画面切り替え (スライド)
-                        document.getElementById('menu-sidebar-container').classList.remove('active-slide');
-                        document.querySelectorAll('.sns-detail-pane').forEach(el => el.classList.remove('active-slide'));
-                        document.getElementById(targetId).classList.add('active-slide');
+                        // PCで閉じた場合、プレースホルダー再表示
+                        if(window.innerWidth > 768 && placeholder) placeholder.style.display = 'flex';
                     }
                 });
             });
-        }
-        // PC版メニューリセット (タブ切り替え時)
-        function resetPcMenu() {
-            document.getElementById('menu-sidebar-container').classList.remove('compact');
-            document.querySelectorAll('.menu-item-link').forEach(el => el.classList.remove('active-menu'));
-            document.querySelector('.menu-placeholder').style.display = 'block';
-            document.querySelectorAll('.sns-detail-pane').forEach(el => el.classList.remove('active'));
-        }
-        // スマホ版「戻る」ボタン
-        function backToMenuMobile() {
-            document.querySelectorAll('.sns-detail-pane').forEach(el => el.classList.remove('active-slide'));
-            document.getElementById('menu-sidebar-container').classList.add('active-slide');
         }
 
         /* --- Other Functions --- */
