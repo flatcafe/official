@@ -270,12 +270,14 @@
         .receipt-element-show { opacity: 1 !important; transform: translateY(0) !important; }
 
         /* =========================================
-           ★ Gallery - Cheki Style (Fixed Quotes)
+           ★ Gallery - Cheki Style
            ========================================= */
         .gallery-grid {
             display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; padding: 20px;
         }
         .polaroid {
+            /* ★修正: <a>タグでも箱として振る舞うように設定 */
+            display: inline-block; vertical-align: top;
             background: #fff; padding: 10px 10px 35px 10px;
             box-shadow: 3px 3px 10px rgba(0,0,0,0.4);
             transform: rotate(-2deg); transition: transform 0.3s, z-index 0s;
@@ -484,12 +486,12 @@
                 <div id="view-gallery" class="section-view">
                     <div class="panel-header"><div class="panel-title-text">Photo Gallery</div></div>
                     <div class="gallery-grid">
-                        <div class="polaroid" onclick="openFullView('menu_gallery.png')">
+                        <div class="polaroid" onclick="openFullView('halloween2025.png')">
                             <div class="pin"></div>
                             <img src="halloween2025.png" alt="Halloween 2025">
                             <div class="caption">Halloween 2025</div>
                         </div>
-                        <a href="#" target="_blank" class="polaroid">
+                        <a href="https://flatcafe.github.io/flatcafe-live/merry.html" target="_blank" class="polaroid">
                             <div class="tape-corner"></div>
                             <img src="toruma_Xmas2025.png" alt="Xmas Site">
                             <div class="caption">Xmas Site 2025 <span style="color:#e53935;">♥</span></div>
