@@ -27,6 +27,15 @@
             overflow: hidden; 
             overscroll-behavior: none;
             perspective: 1000px;
+            
+            /* ▼▼▼ 追加：フェードアウト用のトランジション ▼▼▼ */
+            transition: opacity 0.8s ease-in-out;
+            opacity: 1; /* 通常時は不透明 */
+        }
+        
+        /* フェードアウト時に付与するクラス */
+        body.fade-out {
+            opacity: 0;
         }
 
         /* =========================================
@@ -247,7 +256,7 @@
             filter: drop-shadow(0 20px 40px rgba(0,0,0,0.9));
         }
 
-        /* 入店ボタン (修正：リンク先をlobby.htmlへ) */
+        /* 入店ボタン */
         .enter-btn {
             position: relative; display: inline-block;
             padding: 18px 70px;
@@ -340,7 +349,7 @@
             <img src="wakanagi-main.png" alt="若凪">
         </div>
         
-        <a href="lobby.html" class="enter-btn">
+        <a href="lobby.html" class="enter-btn" id="enterBtn">
             カフェに入店する
         </a>
     </main>
@@ -350,6 +359,7 @@
             setTimeout(() => { document.getElementById('loading-screen').classList.add('hidden'); }, 800);
         });
 
+        // --- パーティクル ---
         const particleContainer = document.body;
         for (let i = 0; i < 25; i++) {
             const p = document.createElement('div');
@@ -362,6 +372,7 @@
             particleContainer.appendChild(p);
         }
 
+        // --- ズーム ---
         let isAnimating = false;
         function openZoom(src) {
             if(isAnimating) return;
@@ -380,6 +391,7 @@
             }, 1400);
         }
 
+        // --- 会話 ---
         function showSpeech(element, messages) {
             const bubble = element.nextElementSibling;
             if (bubble.classList.contains('show')) return;
@@ -387,6 +399,19 @@
             bubble.classList.add('show');
             setTimeout(() => { bubble.classList.remove('show'); }, 3000);
         }
+
+        // --- ▼▼▼ 追加: ページ遷移時のフェードアウト処理 ▼▼▼ ---
+        document.getElementById('enterBtn').addEventListener('click', function(e) {
+            e.preventDefault(); // 即座のリンク移動をキャンセル
+            
+            // 画面全体をフェードアウト
+            document.body.classList.add('fade-out');
+            
+            // CSSのtransition時間(0.8s)待ってから移動
+            setTimeout(() => {
+                window.location.href = this.href;
+            }, 800);
+        });
     </script>
 </body>
 </html>
