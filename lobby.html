@@ -27,7 +27,7 @@
             overflow-x: hidden;
         }
 
-        /* 背景：落ち着いた木目 */
+        /* 背景 */
         .background {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://www.transparenttextures.com/patterns/wood-pattern.png');
@@ -44,9 +44,7 @@
            2. レイアウト & ヘッダー
            ========================================= */
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px 100px;
+            max-width: 1200px; margin: 0 auto; padding: 40px 20px 100px;
             display: flex; flex-direction: column; align-items: center;
         }
 
@@ -55,9 +53,8 @@
             animation: fade-in 1.2s ease-out;
         }
         .mini-logo {
-            width: 160px; height: auto;
+            width: 160px; height: auto; margin-bottom: 15px;
             filter: drop-shadow(0 5px 10px rgba(0,0,0,0.6));
-            margin-bottom: 15px;
         }
         .header-text {
             color: #fffbe0; letter-spacing: 0.2em; font-size: 1.1rem;
@@ -68,129 +65,116 @@
         }
 
         /* =========================================
-           3. キャラクターカード (改良版)
+           3. キャラクターカード (修正版)
            ========================================= */
         .card-grid {
             display: flex; flex-wrap: wrap; justify-content: center;
-            gap: 50px 40px; /* 縦の隙間を広めに */
-            width: 100%;
-            perspective: 1200px;
-            padding-top: 20px;
+            gap: 40px; width: 100%; perspective: 1200px;
         }
 
         .char-card {
             position: relative;
-            width: 240px; height: 320px; /* 少しコンパクトにして密度アップ */
+            width: 240px; height: 320px;
             background-color: var(--card-bg);
             border-radius: 4px;
             text-decoration: none;
             color: var(--wood-dark);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.5); /* 影を強調 */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s;
             display: flex; flex-direction: column; align-items: center;
             
             opacity: 0; transform: translateY(50px) rotate(var(--rot));
-            animation: deal-card 0.6s forwards;
-            animation-delay: var(--delay);
+            animation: deal-card 0.6s forwards; animation-delay: var(--delay);
             
-            overflow: visible; /* ★重要：キャラのはみ出しを許可 */
+            /* ▼▼▼ 修正点1: はみ出しを禁止 ▼▼▼ */
+            overflow: hidden;
         }
 
         .char-card:hover {
-            transform: translateY(-15px) scale(1.05) rotate(0deg) !important;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.7);
+            transform: translateY(-10px) scale(1.02) rotate(0deg) !important;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
             z-index: 100;
         }
 
-        /* --- テープ (左上に移動して顔被り回避) --- */
+        /* テープ */
         .tape {
-            position: absolute; 
-            top: -12px; left: -15px; /* 左端からはみ出させる */
-            transform: rotate(-35deg); /* 斜め角度を強く */
-            width: 90px; height: 28px;
-            background: rgba(255,255,255,0.4);
-            backdrop-filter: blur(3px);
-            box-shadow: 1px 2px 3px rgba(0,0,0,0.2);
-            z-index: 50; /* 最前面 */
-            pointer-events: none;
+            position: absolute; top: -12px; left: -15px;
+            transform: rotate(-35deg); width: 90px; height: 28px;
+            background: rgba(255,255,255,0.4); backdrop-filter: blur(3px);
+            box-shadow: 1px 2px 3px rgba(0,0,0,0.2); z-index: 50; pointer-events: none;
         }
-        /* テープの端っこをギザギザにする装飾 */
         .tape::after {
             content: ''; position: absolute; right: -5px; top: 0; width: 10px; height: 100%;
             background: inherit; 
             clip-path: polygon(0 0, 100% 15%, 0 30%, 100% 45%, 0 60%, 100% 75%, 0 90%, 100% 100%);
         }
 
-        /* --- 画像エリア --- */
+        /* 画像エリア */
         .char-area {
             position: relative;
-            width: 100%; height: 74%; /* 画像エリアを確保 */
+            width: 100%; 
+            height: 75%; /* 画像エリアを少し広めに */
             margin-top: 0;
-            display: flex; justify-content: center; align-items: flex-end; /* 下揃えで配置 */
+            /* overflow: hidden; は親のchar-cardで効いているのでここでは不要 */
         }
 
-        /* --- 背景の円 (大きくして中央へ) --- */
-        /* 共通設定 */
-        .card-yt .char-area::before,
-        .card-tw .char-area::before,
-        .card-mem .char-area::before,
-        .card-gal .char-area::before {
+        /* 背景の円 */
+        .card-yt .char-area::before, .card-tw .char-area::before,
+        .card-mem .char-area::before, .card-gal .char-area::before {
             content:''; position: absolute; 
-            width: 180px; height: 180px; /* 円を大きく */
+            width: 200px; height: 200px; /* 円も大きく */
             border-radius: 50%; 
             top: 50%; left: 50%; 
-            transform: translate(-50%, -45%); /* 中央より少し上に */
-            z-index: 0; /* キャラより後ろ */
-            opacity: 0.9;
+            transform: translate(-50%, -45%);
+            z-index: 0; opacity: 0.9;
         }
-        /* 色設定 */
         .card-yt .char-area::before { background: #ffebee; }
         .card-tw .char-area::before { background: #e3f2fd; }
         .card-mem .char-area::before { background: #fffde7; }
         .card-gal .char-area::before { background: #e0f2f1; }
 
-        /* --- キャラクター画像 (巨大化＆飛び出し) --- */
+        /* ▼▼▼ 修正点2 & 3: 画像の巨大化と位置調整 ▼▼▼ */
         .char-img {
-            position: relative;
+            position: absolute;
             z-index: 10;
-            width: auto;
-            /* ★ここがポイント：高さを親より大きくして飛び出させる */
-            height: 140%; 
             
-            /* 下の情報欄に少しめり込ませる */
-            margin-bottom: -18px; 
+            /* 幅を基準に巨大化させる（約2.4倍） */
+            width: 240%; 
+            height: auto; 
+
+            /* 左右中央揃え */
+            left: 50%;
+            transform: translateX(-50%);
             
-            filter: drop-shadow(0 5px 8px rgba(0,0,0,0.3));
-            transition: transform 0.3s ease;
+            /* 上下位置の調整（巨大な画像の上の方を表示させる） */
+            top: -30px; /* 値を調整して顔が良い位置に来るようにする */
+            
+            filter: drop-shadow(0 5px 8px rgba(0,0,0,0.2));
+            transition: transform 0.4s ease, top 0.4s ease;
             pointer-events: none;
         }
 
+        /* ホバー時は枠内で少しだけズーム */
         .char-card:hover .char-img {
-            transform: scale(1.08) translateY(-10px); /* ホバーでさらに浮き上がる */
+            transform: translateX(-50%) scale(1.05); 
         }
 
-        /* --- 情報エリア (前面に配置してキャラの下半身を隠す) --- */
+        /* 情報エリア */
         .info-area {
-            width: 100%; height: 26%;
+            width: 100%; height: 25%;
             background-color: var(--card-bg);
             background-image: repeating-linear-gradient(#eee 0 1px, transparent 1px 100%);
             background-size: 100% 18px;
             padding: 8px; box-sizing: border-box;
             text-align: center;
-            border-top: 3px solid rgba(0,0,0,0.05); /* 紙の段差 */
-            position: relative; 
-            z-index: 20; /* ★キャラ(z:10)より手前に来るように */
-            border-radius: 0 0 4px 4px;
+            border-top: 3px solid rgba(0,0,0,0.08);
+            position: relative; z-index: 20;
         }
-
         .menu-title {
             font-size: 1.3rem; font-weight: bold; margin: 3px 0 2px;
-            font-family: 'Impact', sans-serif; letter-spacing: 0.05em;
-            color: #5d4037;
+            font-family: 'Impact', sans-serif; letter-spacing: 0.05em; color: #5d4037;
         }
-        .menu-desc {
-            font-size: 0.8rem; color: #795548; font-weight: bold;
-        }
+        .menu-desc { font-size: 0.8rem; color: #795548; font-weight: bold; }
 
         /* 個別カード設定 */
         .card-yt { --rot: -3deg; --delay: 0.1s; }
@@ -198,50 +182,29 @@
         .card-mem { --rot: -2deg; --delay: 0.4s; }
         .card-gal { --rot: 3deg; --delay: 0.55s; }
 
-        @keyframes deal-card {
-            to { opacity: 1; transform: translateY(0) rotate(var(--rot)); }
-        }
+        @keyframes deal-card { to { opacity: 1; transform: translateY(0) rotate(var(--rot)); } }
         @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 
         /* =========================================
-           4. フッター
+           4. フッター & スマホ対応
            ========================================= */
         .footer-nav { margin-top: 50px; }
         .back-btn {
-            display: inline-block;
-            color: #fffbe0; text-decoration: none;
-            border: 1px solid rgba(255,255,255,0.4);
-            padding: 12px 50px; border-radius: 30px;
-            font-size: 1rem; letter-spacing: 0.15em;
-            transition: all 0.3s;
-            background: rgba(0,0,0,0.3);
+            display: inline-block; color: #fffbe0; text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.4); padding: 12px 50px; border-radius: 30px;
+            font-size: 1rem; letter-spacing: 0.15em; transition: all 0.3s; background: rgba(0,0,0,0.3);
         }
         .back-btn:hover { background: var(--paper-bg); color: var(--wood-dark); transform: scale(1.05); }
 
-        /* =========================================
-           5. スマホ対応 (2列表示の最適化)
-           ========================================= */
         @media (max-width: 768px) {
-            .container { padding-bottom: 80px; }
-            .card-grid { gap: 40px 15px; } /* 横の隙間を狭く */
-            
+            .card-grid { gap: 35px 20px; }
             .char-card { 
-                width: 45%; max-width: 180px; height: 260px; /* カードサイズ調整 */
-                transform: rotate(0deg) !important;
-                --rot: 0deg; 
-                margin-top: 20px;
+                width: 45%; max-width: 180px; height: 240px;
+                transform: rotate(0deg) !important; --rot: 0deg; margin-top: 15px;
             }
-            
-            /* スマホでは画像をさらに大きく */
-            .char-img { 
-                height: 145%; 
-                margin-bottom: -12px;
-            }
-            
-            .menu-title { font-size: 1.05rem; }
-            .menu-desc { font-size: 0.7rem; }
-            
-            /* テープサイズ微調整 */
+            /* スマホでの画像調整 */
+            .char-img { width: 260%; top: -25px; }
+            .menu-title { font-size: 1.05rem; } .menu-desc { font-size: 0.7rem; }
             .tape { width: 70px; height: 22px; top: -10px; left: -10px; }
         }
     </style>
