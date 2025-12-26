@@ -51,6 +51,7 @@
         header { 
             text-align: center; margin-bottom: 20px; flex-shrink: 0;
             animation: fade-in 1s ease-out;
+            position: relative; width: 100%;
         }
         .mini-logo {
             width: 120px; height: auto; margin-bottom: 10px;
@@ -63,6 +64,22 @@
             border-bottom: 1px solid rgba(255,255,255,0.4);
             padding: 3px 15px; display: inline-block;
         }
+
+        /* BGMスイッチ */
+        .sound-switch {
+            position: absolute; top: 0; right: 10px;
+            width: 36px; height: 36px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; color: #fffbe0; font-size: 1.2rem;
+            transition: all 0.3s;
+            z-index: 50;
+        }
+        .sound-switch:hover { background: rgba(255,255,255,0.4); }
+        .sound-switch.on { background: var(--accent-gold); color: var(--wood-dark); border-color: var(--wood-dark); box-shadow: 0 0 10px var(--accent-gold); }
+
 
         /* =========================================
            3. メニューボタン
@@ -91,6 +108,7 @@
         .tab-icon {
             font-size: 3rem; margin-bottom: 5px;
             filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2)); transition: transform 0.2s;
+            position: relative;
         }
         .menu-tab:hover .tab-icon { transform: scale(1.1); }
         .tab-title {
@@ -105,6 +123,28 @@
             background: rgba(255,255,255,0.4); backdrop-filter: blur(2px);
             box-shadow: 0 1px 2px rgba(0,0,0,0.2); pointer-events: none;
         }
+
+        /* 湯気アニメーション */
+        .steam-container {
+            position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+            width: 40px; height: 40px; pointer-events: none; z-index: 5;
+        }
+        .steam {
+            position: absolute; bottom: 0; left: 50%; width: 8px; height: 20px;
+            background: rgba(255,255,255,0.6); border-radius: 10px;
+            filter: blur(4px); opacity: 0;
+            animation: rise 2.5s infinite ease-out;
+        }
+        .steam:nth-child(1) { animation-delay: 0s; left: 30%; height: 15px; }
+        .steam:nth-child(2) { animation-delay: 1.2s; left: 70%; height: 25px; }
+        .steam:nth-child(3) { animation-delay: 0.6s; left: 50%; height: 20px; }
+
+        @keyframes rise {
+            0% { opacity: 0; transform: translateY(0) scale(0.5); }
+            30% { opacity: 0.7; }
+            100% { opacity: 0; transform: translateY(-30px) scale(1.5); }
+        }
+
 
         /* =========================================
            4. コンテンツ表示エリア
@@ -181,7 +221,7 @@
         .mini-sub { font-size: 0.75rem; color: #666; margin-top: 2px; }
 
         /* =========================================
-           ▼▼▼ Membersステージ (演出強化版) ▼▼▼
+           ▼▼▼ Membersステージ (立ち絵演出) ▼▼▼
            ========================================= */
         .members-stage {
             display: flex; 
@@ -231,32 +271,21 @@
         #tachi-wakanagi.idle { animation-delay: 0.2s; }
         #tachi-lily.idle { animation-delay: 0.7s; }
 
-        /* ★★★ フォーカス演出 ★★★ */
-        /* 選んでいない人はボカして暗くする */
+        /* フォーカス演出 */
         .char-tachi.dimmed {
-            opacity: 0.5; /* 少し濃く残す */
-            transform: scale(0.9) translateY(10px);
-            filter: blur(3px) grayscale(0.5) brightness(0.8); /* ボカし + 暗く */
-            z-index: 1;
+            opacity: 0.5; transform: scale(0.9) translateY(10px);
+            filter: blur(3px) grayscale(0.5) brightness(0.8); z-index: 1;
         }
-
-        /* 選んだ人は大きく前に出し、影を濃くする */
         .char-tachi.active {
-            opacity: 1;
-            transform: scale(1.3) translateY(10px); /* さらに拡大！ */
-            z-index: 100;
-            animation: none;
+            opacity: 1; transform: scale(1.3) translateY(10px); z-index: 100; animation: none;
         }
-        .char-tachi.active img {
-            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.7));
-        }
+        .char-tachi.active img { filter: drop-shadow(0 15px 30px rgba(0,0,0,0.7)); }
 
         /* プロフィールカード */
         .char-bio-box {
             position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px);
             width: 90%; 
-            background: rgba(255, 252, 240, 0.9); /* 少し透けさせる */
-            backdrop-filter: blur(5px); /* 背景をすりガラス状に */
+            background: rgba(255, 252, 240, 0.9); backdrop-filter: blur(5px);
             border: 2px solid var(--wood-dark); border-radius: 8px; padding: 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3); text-align: center;
             opacity: 0; pointer-events: none; transition: all 0.4s ease; z-index: 200;
@@ -267,7 +296,6 @@
         .bio-comment { font-size: 0.85rem; color: #d84315; margin-top: 8px; font-weight: bold; font-family:'Bradley Hand', cursive; }
         .bio-close { position: absolute; top: 5px; right: 10px; font-size: 1.2rem; cursor: pointer; color: #888; }
         
-        /* 全身を見るボタン */
         .zoom-btn {
             position: absolute; top: 8px; left: 10px;
             background: #fff; border: 1px solid #ccc; border-radius: 12px;
@@ -289,25 +317,21 @@
             font-size: 0.8rem; cursor: pointer; text-decoration: none; border: 1px solid #4a3b32;
         }
 
-        /* ★★★ 全身鑑賞モーダル ★★★ */
+        /* 全身鑑賞モーダル */
         #full-view-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); /* 暗い背景 */
-            z-index: 9999; display: flex; justify-content: center; align-items: center;
-            opacity: 0; visibility: hidden; transition: all 0.3s;
-            cursor: pointer;
+            background: rgba(0,0,0,0.9); z-index: 9999; display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: all 0.3s; cursor: pointer;
         }
         #full-view-modal.active { opacity: 1; visibility: visible; }
         #full-view-img {
-            max-width: 95%; max-height: 90vh;
-            object-fit: contain;
+            max-width: 95%; max-height: 90vh; object-fit: contain;
             filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));
             transform: scale(0.9); transition: transform 0.3s;
         }
         #full-view-modal.active #full-view-img { transform: scale(1); }
         .full-view-close {
-            position: absolute; top: 20px; right: 20px;
-            color: #fff; font-size: 2rem; opacity: 0.7;
+            position: absolute; top: 20px; right: 20px; color: #fff; font-size: 2rem; opacity: 0.7;
         }
 
         @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
@@ -348,6 +372,7 @@
 
     <div class="container">
         <header>
+            <div class="sound-switch" onclick="toggleSound(this)" title="BGM ON/OFF">♪</div>
             <img src="flat-cafe-logo.png" alt="Flat Cafe" class="mini-logo">
             <br>
             <span class="header-text">Select Menu</span>
@@ -358,7 +383,14 @@
                 <div class="tape"></div><div class="tab-icon">📱</div><div class="tab-title">SNS &<br>Media</div><div class="tab-desc">YouTube/X...</div>
             </div>
             <div class="menu-tab" id="tab-members" onclick="openTab('members', this)">
-                <div class="tape"></div><div class="tab-icon">☕</div><div class="tab-title">Members</div><div class="tab-desc">Staff Profile</div>
+                <div class="tape"></div>
+                <div class="tab-icon">
+                    ☕
+                    <div class="steam-container">
+                        <div class="steam"></div><div class="steam"></div><div class="steam"></div>
+                    </div>
+                </div>
+                <div class="tab-title">Members</div><div class="tab-desc">Staff Profile</div>
             </div>
             <div class="menu-tab" onclick="openTab('gallery', this)">
                 <div class="tape"></div><div class="tab-icon">📷</div><div class="tab-title">Gallery</div><div class="tab-desc">Photo Album</div>
@@ -480,7 +512,8 @@
         <div class="full-view-close">×</div>
     </div>
 
-    <script>
+    <audio id="audio-bgm" src="bgm.mp3" loop></audio>
+    <audio id="audio-se"></audio> <script>
         // URL設定
         document.getElementById('link-yt').href = "https://www.youtube.com/@flatcafe_games/live";
         document.getElementById('x-official').href = "https://x.com/flca_official";
@@ -492,12 +525,52 @@
         document.getElementById('tw-yuzu').href = "https://www.twitch.tv/yuzucha08";
         document.getElementById('tw-wakanagi').href = "https://www.twitch.tv/wakanagi";
         document.getElementById('tw-lily').href = "https://www.twitch.tv/lily00_flca";
+        document.getElementById('tt-official').href = "https://tiktok.com/";
+        document.getElementById('tt-toruma').href = "https://tiktok.com/";
+        document.getElementById('tt-yuzu').href = "https://tiktok.com/";
+        document.getElementById('tt-wakanagi').href = "https://tiktok.com/";
+        document.getElementById('tt-lily').href = "https://tiktok.com/";
 
         window.addEventListener('load', function() {
             // 初期動作
         });
 
+        /* --- Audio制御 --- */
+        let isSoundOn = false;
+        const bgm = document.getElementById('audio-bgm');
+        const se = document.getElementById('audio-se');
+        // ランダムベル用ファイルリスト
+        const bellSounds = ['bell01.mp3', 'bell02.mp3', 'bell03.mp3'];
+        
+        // BGM切り替え
+        function toggleSound(btn) {
+            isSoundOn = !isSoundOn;
+            if(isSoundOn) {
+                btn.classList.add('on');
+                bgm.volume = 0.3;
+                bgm.play().catch(e => console.log('Audio Play Error:', e));
+            } else {
+                btn.classList.remove('on');
+                bgm.pause();
+            }
+        }
+        
+        // ランダムSE再生
+        function playDoorbell() {
+            if(isSoundOn) {
+                // ランダム選択
+                const rnd = Math.floor(Math.random() * bellSounds.length);
+                se.src = bellSounds[rnd];
+                se.currentTime = 0;
+                se.volume = 0.5;
+                se.play().catch(e => {});
+            }
+        }
+
+        /* --- タブ切り替え --- */
         function openTab(tabName, elem) {
+            playDoorbell(); // 音を鳴らす
+
             const display = document.getElementById('content-display');
             display.classList.add('active');
             document.querySelectorAll('.section-view').forEach(el => el.classList.remove('show'));
@@ -525,7 +598,7 @@
             document.getElementById(slideId).classList.add('active');
         }
 
-        function selectMember(name, elem) {
+        function selectMember(name, elem, imgSrc) {
             document.querySelectorAll('.char-tachi').forEach(c => c.classList.remove('idle'));
             document.querySelectorAll('.char-tachi').forEach(c => {
                 c.classList.remove('active');
@@ -548,7 +621,6 @@
             document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show'));
         }
 
-        // --- 全身鑑賞モード制御 ---
         function openFullView(imgSrc) {
             const modal = document.getElementById('full-view-modal');
             const img = document.getElementById('full-view-img');
