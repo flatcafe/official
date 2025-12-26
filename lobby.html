@@ -18,7 +18,6 @@
             --cork-bg: #e6d6ac;
         }
 
-        /* ハイライト削除 */
         * { -webkit-tap-highlight-color: transparent; outline: none; }
 
         body, html {
@@ -64,22 +63,6 @@
             border-bottom: 1px solid rgba(255,255,255,0.4);
             padding: 3px 15px; display: inline-block;
         }
-
-        /* BGMスイッチ */
-        .sound-switch {
-            position: absolute; top: 0; right: 10px;
-            width: 36px; height: 36px;
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.4);
-            border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
-            cursor: pointer; color: #fffbe0; font-size: 1.2rem;
-            transition: all 0.3s;
-            z-index: 50;
-        }
-        .sound-switch:hover { background: rgba(255,255,255,0.4); }
-        .sound-switch.on { background: var(--accent-gold); color: var(--wood-dark); border-color: var(--wood-dark); box-shadow: 0 0 10px var(--accent-gold); }
-
 
         /* =========================================
            3. メニューボタン
@@ -144,7 +127,6 @@
             30% { opacity: 0.7; }
             100% { opacity: 0; transform: translateY(-30px) scale(1.5); }
         }
-
 
         /* =========================================
            4. コンテンツ表示エリア
@@ -221,7 +203,7 @@
         .mini-sub { font-size: 0.75rem; color: #666; margin-top: 2px; }
 
         /* =========================================
-           ▼▼▼ Membersステージ (立ち絵演出) ▼▼▼
+           ▼▼▼ Membersステージ ▼▼▼
            ========================================= */
         .members-stage {
             display: flex; 
@@ -372,7 +354,6 @@
 
     <div class="container">
         <header>
-            <div class="sound-switch" onclick="toggleSound(this)" title="BGM ON/OFF">♪</div>
             <img src="flat-cafe-logo.png" alt="Flat Cafe" class="mini-logo">
             <br>
             <span class="header-text">Select Menu</span>
@@ -512,8 +493,7 @@
         <div class="full-view-close">×</div>
     </div>
 
-    <audio id="audio-bgm" src="bgm.mp3" loop></audio>
-    <audio id="audio-se"></audio> <script>
+    <script>
         // URL設定
         document.getElementById('link-yt').href = "https://www.youtube.com/@flatcafe_games/live";
         document.getElementById('x-official').href = "https://x.com/flca_official";
@@ -535,42 +515,7 @@
             // 初期動作
         });
 
-        /* --- Audio制御 --- */
-        let isSoundOn = false;
-        const bgm = document.getElementById('audio-bgm');
-        const se = document.getElementById('audio-se');
-        // ランダムベル用ファイルリスト
-        const bellSounds = ['bell01.mp3', 'bell02.mp3', 'bell03.mp3'];
-        
-        // BGM切り替え
-        function toggleSound(btn) {
-            isSoundOn = !isSoundOn;
-            if(isSoundOn) {
-                btn.classList.add('on');
-                bgm.volume = 0.3;
-                bgm.play().catch(e => console.log('Audio Play Error:', e));
-            } else {
-                btn.classList.remove('on');
-                bgm.pause();
-            }
-        }
-        
-        // ランダムSE再生
-        function playDoorbell() {
-            if(isSoundOn) {
-                // ランダム選択
-                const rnd = Math.floor(Math.random() * bellSounds.length);
-                se.src = bellSounds[rnd];
-                se.currentTime = 0;
-                se.volume = 0.5;
-                se.play().catch(e => {});
-            }
-        }
-
-        /* --- タブ切り替え --- */
         function openTab(tabName, elem) {
-            playDoorbell(); // 音を鳴らす
-
             const display = document.getElementById('content-display');
             display.classList.add('active');
             document.querySelectorAll('.section-view').forEach(el => el.classList.remove('show'));
@@ -621,6 +566,7 @@
             document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show'));
         }
 
+        // --- 全身鑑賞モード ---
         function openFullView(imgSrc) {
             const modal = document.getElementById('full-view-modal');
             const img = document.getElementById('full-view-img');
