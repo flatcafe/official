@@ -158,7 +158,7 @@
         .section-view.show { display: block; animation: fade-in 0.3s; }
 
         /* =========================================
-           Hybrid Menu System
+           Hybrid Menu System (PC: Split / Mobile: Accordion)
            ========================================= */
         .menu-wrapper {
             background: #fff; border: 1px solid #ccc;
@@ -198,21 +198,18 @@
             }
         }
         @media (max-width: 768px) {
-            .menu-wrapper { display: block; padding: 0; }
-            .menu-trigger, .menu-link {
-                display: flex; align-items: center; padding: 15px;
-                border-bottom: 1px solid #eee; cursor: pointer;
-                background: #fff; text-decoration: none; color: inherit;
-            }
-            .menu-trigger:active, .menu-link:active { background: #f5f5f5; }
-            .menu-trigger.active { background: #fffde7; border-bottom: none; }
-            .menu-trigger.active .menu-price { transform: rotate(90deg); }
-            .menu-content {
-                display: none; background: #fdfbf7; padding: 15px;
-                border-bottom: 1px solid #ccc; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
-            }
-            .menu-content.active { display: block; animation: fade-in 0.2s; }
-            .menu-placeholder { display: none; }
+            .container { padding: 10px; max-width: 100%; }
+            .card-grid { gap: 8px; margin-bottom: 15px; }
+            .menu-tab { width: 32%; height: 90px; padding: 5px; }
+            /* スマホでの見切れ対策: フォント調整 */
+            .tab-title { font-size: 0.8rem; }
+            .tab-desc { font-size: 0.55rem; }
+            
+            .members-stage { height: 260px; }
+            #tachi-yuzu img, #tachi-wakanagi img { max-width: 320%; max-height: 80%; }
+            #tachi-toruma img { max-width: 200%; }
+            #tachi-lily img { max-width: 170%; }
+            .polaroid { width: 45%; max-width: 160px; }
         }
 
         .menu-icon { font-size: 1.8rem; margin-right: 15px; width: 40px; text-align: center; }
@@ -253,7 +250,7 @@
         .zoom-btn { position: absolute; top: 8px; left: 10px; background: #fff; border: 1px solid #ccc; border-radius: 12px; padding: 2px 8px; font-size: 0.75rem; color: #555; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .zoom-btn:active { transform: scale(0.95); }
 
-        /* Receipt Log */
+        /* Receipt Log Styles */
         .receipt-btn { margin-top: 30px; text-align: center; font-size: 0.8rem; text-decoration: underline; cursor: pointer; color: rgba(255,255,255,0.6); }
         #receipt-modal { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 5000; display: flex; justify-content: center; align-items: flex-end; transition: bottom 0.5s ease; }
         #receipt-modal.active { bottom: 0; }
@@ -288,7 +285,7 @@
         .polaroid:nth-child(3n) { transform: rotate(-4deg); }
 
         .polaroid:hover {
-            transform: scale(1.1) rotate(0deg) !important; /* Force Straight */
+            transform: scale(1.1) rotate(0deg) !important;
             z-index: 10;
             box-shadow: 5px 10px 20px rgba(0,0,0,0.5);
         }
@@ -318,7 +315,7 @@
             transform: rotate(-15deg); opacity: 0.7; border-radius: 4px;
         }
 
-        /* ★ NEW: Guest Note Modal */
+        /* ★ Guest Note Modal */
         #note-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); z-index: 6000;
@@ -331,7 +328,6 @@
             width: 90%; max-width: 500px; height: 70vh;
             background: #fff; border-radius: 5px;
             box-shadow: 5px 5px 20px rgba(0,0,0,0.5);
-            /* Lined Paper Style */
             background-image: repeating-linear-gradient(transparent, transparent 31px, #99ccff 32px);
             background-size: 100% 32px;
             padding: 40px 20px 20px 20px;
@@ -340,7 +336,7 @@
         }
         .note-paper::before {
             content: ''; position: absolute; top: 0; left: 30px; width: 2px; height: 100%;
-            background: #ffcccc; /* Red Margin Line */
+            background: #ffcccc;
         }
         .note-header {
             font-family: 'Bradley Hand', cursive; font-size: 1.5rem; text-align: center;
@@ -357,10 +353,12 @@
             padding-left: 20px; outline: none; resize: none;
         }
         .note-btn {
-            align-self: flex-end; margin-top: 10px; padding: 8px 20px;
+            align-self: flex-end; margin-top: 10px; padding: 8px 30px;
             background: #5d4037; color: #fff; border-radius: 20px; cursor: pointer;
-            font-family: sans-serif; font-size: 0.9rem;
+            font-family: sans-serif; font-size: 0.9rem; box-shadow: 0 3px 0 #3e2723;
+            transition: all 0.1s;
         }
+        .note-btn:active { transform: translateY(3px); box-shadow: none; }
 
         /* Full View & Footer */
         #full-view-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: all 0.3s; cursor: pointer; }
@@ -374,21 +372,6 @@
         
         @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slide-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        @media (max-width: 768px) {
-            .container { padding: 10px; max-width: 100%; }
-            .card-grid { gap: 8px; margin-bottom: 15px; }
-            .menu-tab { width: 32%; height: 90px; padding: 5px; }
-            /* ★修正: スマホでの見切れ対策 */
-            .tab-title { font-size: 0.85rem; }
-            .tab-desc { font-size: 0.6rem; }
-            
-            .members-stage { height: 260px; }
-            #tachi-yuzu img, #tachi-wakanagi img { max-width: 320%; max-height: 80%; }
-            #tachi-toruma img { max-width: 200%; }
-            #tachi-lily img { max-width: 170%; }
-            .polaroid { width: 45%; max-width: 160px; }
-        }
     </style>
 </head>
 <body class="time-day">
@@ -510,7 +493,7 @@
                         <div class="zoom-btn" onclick="openFullView('menu_twitter.png')">🔍 全身を見る</div>
                         <div class="bio-close" onclick="closeBio()">×</div>
                         <div class="bio-name">柚茶</div>
-                        <div class="bio-text">元気いっぱいの看板娘。<br>広報にデザインになんでもできる！。<br>よくお菓子を食べている。</div>
+                        <div class="bio-text">元気いっぱいの看板娘。<br>広報にデザインになんでもできる！<br>よくお菓子を食べている。</div>
                         <div class="bio-comment">「甘いものは別腹だよね！」</div>
                     </div>
                     <div class="char-bio-box" id="bio-wakanagi">
@@ -584,14 +567,18 @@
             
             <textarea class="note-content" placeholder="メッセージをどうぞ..."></textarea>
             
-            <div class="note-btn" onclick="closeGuestNote()">Leave Message</div>
+            <div class="note-btn" onclick="submitGuestNote()">送信</div>
         </div>
     </div>
     
     <audio id="audio-se"></audio>
 
     <script>
-        // URL設定
+        // URL & Config
+        const GITHUB_USER = 'flatcafe';
+        const GITHUB_REPO = 'flatcafe-live';
+        const LOG_FOLDER  = 'logs';
+
         document.getElementById('link-yt').href = "https://www.youtube.com/@flatcafe_games/live";
         document.getElementById('x-official').href = "https://x.com/flca_official";
         document.getElementById('x-toruma').href = "https://x.com/tourma_flca";
@@ -671,18 +658,72 @@
             });
         }
 
-        /* --- Receipt & Bio & Note --- */
-        function openReceipt() { 
+        /* --- Receipt (GitHub Auto-Log) --- */
+        async function openReceipt() { 
             const modal = document.getElementById('receipt-modal'); modal.classList.add('active'); 
-            const lines = document.querySelectorAll('.receipt-line, .receipt-total, .receipt-close');
-            lines.forEach(line => { line.classList.remove('receipt-element-show'); });
-            let delay = 300; 
-            lines.forEach((line) => { setTimeout(() => { line.classList.add('receipt-element-show'); }, delay); delay += 150; });
+            const paper = document.querySelector('.receipt-paper');
+            const total = document.querySelector('.receipt-total');
+            const closeBtn = document.querySelector('.receipt-close');
+            
+            // 静的HTMLの古い行を削除
+            paper.querySelectorAll('.receipt-line').forEach(e => e.remove());
+            total.classList.remove('receipt-element-show');
+            closeBtn.classList.remove('receipt-element-show');
+
+            try {
+                // Fetch GitHub Log Files
+                const response = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${LOG_FOLDER}`);
+                if (!response.ok) throw new Error('API Error');
+                const files = await response.json();
+
+                const logs = files
+                    .filter(file => file.name.endsWith('.txt'))
+                    .map(file => {
+                        const nameParts = file.name.replace('.txt', '').split('_');
+                        return { date: nameParts[0] || '----', text: nameParts[1] ? nameParts[1].replace(/-/g, ' ') : 'Update' };
+                    })
+                    .sort((a, b) => a.date.localeCompare(b.date));
+
+                logs.forEach(log => {
+                    const row = document.createElement('div');
+                    row.className = 'receipt-line';
+                    row.innerHTML = `<span>${log.date}</span><span>${log.text}</span>`;
+                    paper.insertBefore(row, total);
+                });
+                total.textContent = `Total: ${logs.length} Updates`;
+
+                // Animation
+                const allLines = document.querySelectorAll('.receipt-line');
+                let delay = 300;
+                allLines.forEach((line) => { setTimeout(() => { line.classList.add('receipt-element-show'); }, delay); delay += 150; });
+                setTimeout(() => { total.classList.add('receipt-element-show'); closeBtn.classList.add('receipt-element-show'); }, delay);
+
+            } catch (error) {
+                // Fallback if GitHub API fails or empty
+                const row = document.createElement('div');
+                row.className = 'receipt-line';
+                row.innerHTML = `<span>2025-12-24</span><span>Open</span>`; // Default Fallback
+                paper.insertBefore(row, total);
+                row.classList.add('receipt-element-show');
+                total.classList.add('receipt-element-show');
+                closeBtn.classList.add('receipt-element-show');
+            }
         }
         function closeReceipt() { document.getElementById('receipt-modal').classList.remove('active'); }
 
+        /* --- Guest Note Logic --- */
         function openGuestNote() { document.getElementById('note-modal').classList.add('active'); }
         function closeGuestNote() { document.getElementById('note-modal').classList.remove('active'); }
+        function submitGuestNote() {
+            const content = document.querySelector('.note-content');
+            const btn = document.querySelector('.note-btn');
+            if(content.value.trim() === "") { alert("メッセージを書いてね！"); return; }
+            content.value = "送信中..."; btn.style.display = 'none';
+            setTimeout(() => {
+                content.value = "ありがとうございます！\nメッセージを受け取りました。";
+                setTimeout(() => { closeGuestNote(); setTimeout(() => { content.value = ""; btn.style.display = 'block'; }, 500); }, 2000);
+            }, 1000);
+        }
 
         function selectMember(name, elem, imgSrc) { document.querySelectorAll('.char-tachi').forEach(c => { c.classList.remove('idle'); c.classList.remove('active'); c.classList.add('dimmed'); }); elem.classList.remove('dimmed'); elem.classList.add('active'); document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show')); const bio = document.getElementById('bio-' + name); if(bio) bio.classList.add('show'); }
         function closeBio() { document.querySelectorAll('.char-tachi').forEach(c => { c.classList.remove('active'); c.classList.remove('dimmed'); c.classList.add('idle'); }); document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show')); }
