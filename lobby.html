@@ -78,21 +78,17 @@
             width: 240px; height: 320px;
             background-color: var(--card-bg);
             border-radius: 4px;
-            text-decoration: none; /* リンクの下線消し */
-            color: var(--wood-dark);
+            text-decoration: none; color: var(--wood-dark);
             box-shadow: 0 10px 25px rgba(0,0,0,0.4);
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s;
             display: flex; flex-direction: column; align-items: center;
             opacity: 0; transform: translateY(50px) rotate(var(--rot));
             animation: deal-card 0.6s forwards; animation-delay: var(--delay);
-            overflow: hidden;
-            cursor: pointer; /* クリックできる感 */
+            overflow: hidden; cursor: pointer;
         }
-
         .char-card:hover {
             transform: translateY(-10px) scale(1.02) rotate(0deg) !important;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            z-index: 100;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6); z-index: 100;
         }
 
         /* テープ */
@@ -110,17 +106,13 @@
 
         /* 画像エリア */
         .char-area {
-            position: relative;
-            width: 100%; height: 70%;
-            margin-top: 0;
-            background-color: #f0f0f0;
+            position: relative; width: 100%; height: 70%;
+            margin-top: 0; background-color: #f0f0f0;
         }
-
         /* 背景の円 */
         .card-yt .char-area::before, .card-tw .char-area::before,
         .card-mem .char-area::before, .card-gal .char-area::before {
-            content:''; position: absolute; 
-            width: 100%; height: 100%;
+            content:''; position: absolute; width: 100%; height: 100%;
             top: 0; left: 0; opacity: 0.5; z-index: 0;
         }
         .card-yt .char-area::before { background: radial-gradient(circle at 50% 120%, #ffcdd2, transparent 70%); }
@@ -135,19 +127,11 @@
             position: relative; z-index: 10;
             transition: transform 0.5s ease; transform-origin: top center;
         }
-
         /* 個別画像調整 */
-        .card-tw .char-img { transform: scale(1.2); }
-        .card-tw:hover .char-img { transform: scale(1.3); }
-
-        .card-mem .char-img { transform: scale(1.25); }
-        .card-mem:hover .char-img { transform: scale(1.35); }
-
-        .card-yt .char-img { transform: scale(1.05) translateY(-15px); }
-        .card-yt:hover .char-img { transform: scale(1.15) translateY(-15px); }
-
-        .card-gal .char-img { transform: scale(0.98); }
-        .card-gal:hover .char-img { transform: scale(1.08); }
+        .card-tw .char-img { transform: scale(1.2); } .card-tw:hover .char-img { transform: scale(1.3); }
+        .card-mem .char-img { transform: scale(1.25); } .card-mem:hover .char-img { transform: scale(1.35); }
+        .card-yt .char-img { transform: scale(1.05) translateY(-15px); } .card-yt:hover .char-img { transform: scale(1.15) translateY(-15px); }
+        .card-gal .char-img { transform: scale(0.98); } .card-gal:hover .char-img { transform: scale(1.08); }
 
         /* 情報エリア */
         .info-area {
@@ -155,10 +139,8 @@
             background-color: var(--card-bg);
             background-image: repeating-linear-gradient(#eee 0 1px, transparent 1px 100%);
             background-size: 100% 18px;
-            padding: 8px; box-sizing: border-box;
-            text-align: center;
-            border-top: 3px solid rgba(0,0,0,0.08);
-            position: relative; z-index: 20;
+            padding: 8px; box-sizing: border-box; text-align: center;
+            border-top: 3px solid rgba(0,0,0,0.08); position: relative; z-index: 20;
         }
         .menu-title {
             font-size: 1.15rem; font-weight: bold; margin: 3px 0 2px;
@@ -166,21 +148,18 @@
         }
         .menu-desc { font-size: 0.8rem; color: #795548; font-weight: bold; }
 
-        /* カード出現アニメ */
-        .card-yt { --rot: -3deg; --delay: 0.1s; }
-        .card-tw { --rot: 2deg; --delay: 0.25s; }
-        .card-mem { --rot: -2deg; --delay: 0.4s; }
-        .card-gal { --rot: 3deg; --delay: 0.55s; }
-
+        /* アニメーション */
+        .card-yt { --rot: -3deg; --delay: 0.1s; } .card-tw { --rot: 2deg; --delay: 0.25s; }
+        .card-mem { --rot: -2deg; --delay: 0.4s; } .card-gal { --rot: 3deg; --delay: 0.55s; }
         @keyframes deal-card { to { opacity: 1; transform: translateY(0) rotate(var(--rot)); } }
         @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 
         /* =========================================
-           4. Video選択モーダル (ポップアップメニュー)
+           4. 多機能モーダル (サブメニュー)
            ========================================= */
         #video-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.8); z-index: 2000;
+            background-color: rgba(0,0,0,0.85); z-index: 2000;
             display: flex; justify-content: center; align-items: center;
             opacity: 0; visibility: hidden; transition: all 0.3s ease;
         }
@@ -189,37 +168,74 @@
         .modal-content {
             background: var(--paper-bg);
             padding: 30px; border-radius: 8px;
-            text-align: center; width: 90%; max-width: 320px;
+            text-align: center; width: 90%; max-width: 500px; /* 幅を広げた */
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border: 4px solid var(--wood-dark);
             position: relative;
+            max-height: 85vh; overflow-y: auto; /* 縦長になってもスクロール可能に */
         }
         #video-modal.active .modal-content { transform: scale(1); }
 
         .modal-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 20px; color: var(--wood-dark); border-bottom: 2px dotted #ccc; padding-bottom: 10px;}
         
+        /* ボタン基本 */
         .platform-btn {
-            display: block; width: 100%; padding: 12px; margin-bottom: 12px;
+            display: block; width: 100%; padding: 14px; margin-bottom: 12px;
             text-decoration: none; font-weight: bold; border-radius: 30px;
             transition: transform 0.2s, box-shadow 0.2s;
-            color: white; box-sizing: border-box;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            position: relative; overflow: hidden;
+            color: white; box-sizing: border-box; cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2); text-align: center;
         }
         .platform-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.3); }
 
-        /* 各プラットフォームの色 */
         .btn-yt { background: #ff0000; }
         .btn-twitch { background: #9146ff; }
         .btn-tiktok { background: #000000; }
-        
-        .close-modal {
-            margin-top: 15px; font-size: 0.9rem; color: #666; cursor: pointer; text-decoration: underline;
+        .btn-back { background: #757575; font-size: 0.9rem; margin-top: 10px; width: auto; display: inline-block; padding: 8px 30px;}
+
+        /* --- トランプ風グリッド (サブメニュー用) --- */
+        .sub-grid {
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); /* 2列 */
+            gap: 15px; margin-bottom: 20px;
         }
 
+        .mini-card {
+            background: white; border-radius: 6px;
+            padding: 10px; text-decoration: none; color: #333;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            display: flex; flex-direction: column; align-items: center;
+            transition: transform 0.2s;
+            opacity: 0; animation: mini-deal 0.4s forwards;
+        }
+        .mini-card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
+
+        /* メンバーアイコン（丸） */
+        .mini-icon {
+            width: 80px; height: 80px; border-radius: 50%;
+            object-fit: cover; border: 3px solid var(--accent-gold);
+            margin-bottom: 8px; background: #eee;
+        }
+        /* 公式アイコン（四角） */
+        .mini-icon.official {
+            border-radius: 8px; border: 3px solid #333;
+        }
+
+        .mini-name { font-weight: bold; font-size: 0.9rem; }
+        .mini-role { font-size: 0.75rem; color: #666; }
+
+        @keyframes mini-deal {
+            from { opacity: 0; transform: translateY(20px) scale(0.8); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* 画面切り替え用 */
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+
         /* =========================================
-           5. フッター & スマホ対応
+           5. フッター
            ========================================= */
         .footer-nav { margin-top: 50px; }
         .back-btn {
@@ -231,12 +247,12 @@
 
         @media (max-width: 768px) {
             .card-grid { gap: 35px 20px; }
-            .char-card { 
-                width: 45%; max-width: 180px; height: 240px;
-                transform: rotate(0deg) !important; --rot: 0deg; margin-top: 15px;
-            }
+            .char-card { width: 45%; max-width: 180px; height: 240px; transform: rotate(0deg) !important; --rot: 0deg; margin-top: 15px; }
             .menu-title { font-size: 1.0rem; } .menu-desc { font-size: 0.7rem; }
             .tape { width: 70px; height: 22px; top: -10px; left: -10px; }
+            /* モーダル内調整 */
+            .sub-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .mini-icon { width: 60px; height: 60px; }
         }
     </style>
 </head>
@@ -254,9 +270,7 @@
         <div class="card-grid">
             <a href="javascript:void(0)" class="char-card card-yt" onclick="openVideoModal()">
                 <div class="tape"></div>
-                <div class="char-area">
-                    <img src="menu_youtube.png" alt="Video Character" class="char-img">
-                </div>
+                <div class="char-area"><img src="menu_youtube.png" class="char-img"></div>
                 <div class="info-area">
                     <div class="menu-title">Video Contents</div>
                     <div class="menu-desc">YouTube / Twitch / TikTok</div>
@@ -265,9 +279,7 @@
 
             <a href="" target="_blank" class="char-card card-tw" id="link-twitter">
                 <div class="tape"></div>
-                <div class="char-area">
-                    <img src="menu_twitter.png" alt="Twitter Character" class="char-img">
-                </div>
+                <div class="char-area"><img src="menu_twitter.png" class="char-img"></div>
                 <div class="info-area">
                     <div class="menu-title">X (Twitter)</div>
                     <div class="menu-desc">最新情報をお届け</div>
@@ -276,9 +288,7 @@
 
             <a href="" target="_blank" class="char-card card-mem" id="link-members">
                 <div class="tape"></div>
-                <div class="char-area">
-                    <img src="menu_member.png" alt="Member Character" class="char-img">
-                </div>
+                <div class="char-area"><img src="menu_member.png" class="char-img"></div>
                 <div class="info-area">
                     <div class="menu-title">Members</div>
                     <div class="menu-desc">スタッフ紹介(準備中)</div>
@@ -287,9 +297,7 @@
 
             <a href="" target="_blank" class="char-card card-gal" id="link-gallery">
                 <div class="tape"></div>
-                <div class="char-area">
-                    <img src="menu_gallery.png" alt="Gallery Character" class="char-img">
-                </div>
+                <div class="char-area"><img src="menu_gallery.png" class="char-img"></div>
                 <div class="info-area">
                     <div class="menu-title">Gallery</div>
                     <div class="menu-desc">思い出のアルバム</div>
@@ -304,55 +312,114 @@
 
     <div id="video-modal" onclick="closeVideoModal(event)">
         <div class="modal-content">
-            <div class="modal-title">Select Platform</div>
             
-            <a href="" target="_blank" class="platform-btn btn-yt" id="link-youtube">YouTube Channel</a>
-            
-            <a href="" target="_blank" class="platform-btn btn-twitch" id="link-twitch">Twitch</a>
-            
-            <a href="" target="_blank" class="platform-btn btn-tiktok" id="link-tiktok">TikTok</a>
-            
-            <div class="close-modal" onclick="closeVideoModal(event)">Close</div>
+            <div id="view-main" class="view-section active">
+                <div class="modal-title">Select Platform</div>
+                <a href="" target="_blank" class="platform-btn btn-yt" id="link-youtube-main">YouTube Channel</a>
+                
+                <div class="platform-btn btn-twitch" onclick="switchView('view-twitch')">Twitch Channels</div>
+                
+                <div class="platform-btn btn-tiktok" onclick="switchView('view-tiktok')">TikTok Channels</div>
+                
+                <div class="close-modal" onclick="closeVideoModalForce()" style="margin-top:20px; text-decoration:underline; cursor:pointer;">Close</div>
+            </div>
+
+            <div id="view-twitch" class="view-section">
+                <div class="modal-title" style="color:#9146ff;">Twitch Members</div>
+                <div class="sub-grid">
+                    <a href="" target="_blank" class="mini-card" id="twitch-mem1" style="animation-delay:0.1s">
+                        <img src="menu_youtube.png" class="mini-icon"> <span class="mini-name">Toruma</span>
+                    </a>
+                    <a href="" target="_blank" class="mini-card" id="twitch-mem2" style="animation-delay:0.2s">
+                        <img src="menu_twitter.png" class="mini-icon"> <span class="mini-name">Lily</span>
+                    </a>
+                    <a href="" target="_blank" class="mini-card" id="twitch-mem3" style="animation-delay:0.3s">
+                        <img src="menu_member.png" class="mini-icon"> <span class="mini-name">Yuzucha</span>
+                    </a>
+                    <a href="" target="_blank" class="mini-card" id="twitch-mem4" style="animation-delay:0.4s">
+                        <img src="menu_gallery.png" class="mini-icon"> <span class="mini-name">Wakanagi</span>
+                    </a>
+                </div>
+                <div class="platform-btn btn-back" onclick="switchView('view-main')">Back</div>
+            </div>
+
+            <div id="view-tiktok" class="view-section">
+                <div class="modal-title" style="color:#333;">TikTok Channels</div>
+                <div class="sub-grid">
+                    <a href="" target="_blank" class="mini-card" id="tiktok-official" style="animation-delay:0.1s">
+                        <img src="flat-cafe-logo.png" class="mini-icon official"> <span class="mini-name">Official</span>
+                    </a>
+                    <a href="" target="_blank" class="mini-card" id="tiktok-mem1" style="animation-delay:0.2s">
+                        <img src="menu_youtube.png" class="mini-icon">
+                        <span class="mini-name">Toruma</span>
+                    </a>
+                    <a href="" target="_blank" class="mini-card" id="tiktok-mem2" style="animation-delay:0.3s">
+                        <img src="menu_twitter.png" class="mini-icon">
+                        <span class="mini-name">Lily</span>
+                    </a>
+                    <a href="" target="_blank" class="mini-card" id="tiktok-mem3" style="animation-delay:0.4s">
+                        <img src="menu_member.png" class="mini-icon">
+                        <span class="mini-name">Yuzucha</span>
+                    </a>
+                </div>
+                <div class="platform-btn btn-back" onclick="switchView('view-main')">Back</div>
+            </div>
+
         </div>
     </div>
 
     <script>
         // ==========================================
-        //  ▼▼▼ リンク先の設定エリア (ここでURLを変更！) ▼▼▼
+        //  ▼▼▼ URL設定エリア (ここにリンクを貼ってください) ▼▼▼
         // ==========================================
         
-        // 1. YouTubeのURL
-        document.getElementById('link-youtube').href = "https://www.youtube.com/@flatcafe-official";
+        // 1. YouTubeチャンネル
+        document.getElementById('link-youtube-main').href = "https://www.youtube.com/@flatcafe-official";
         
-        // 2. TwitchのURL
-        document.getElementById('link-twitch').href = "https://www.twitch.tv/"; 
-        
-        // 3. TikTokのURL
-        document.getElementById('link-tiktok').href = "https://www.tiktok.com/";
-        
-        // 4. X (Twitter) のURL
+        // 2. X (Twitter)
         document.getElementById('link-twitter').href = "https://twitter.com/";
         
-        // 5. MembersページのURL (まだなければ # のまま)
+        // 3. Members & Gallery (まだなら #)
         document.getElementById('link-members').href = "#";
-        
-        // 6. GalleryページのURL (まだなければ # のまま)
         document.getElementById('link-gallery').href = "#";
+
+        /* --- TwitchのメンバーURL --- */
+        document.getElementById('twitch-mem1').href = "https://twitch.tv/"; // Toruma
+        document.getElementById('twitch-mem2').href = "https://twitch.tv/"; // Lily
+        document.getElementById('twitch-mem3').href = "https://twitch.tv/"; // Yuzucha
+        document.getElementById('twitch-mem4').href = "https://twitch.tv/"; // Wakanagi
+
+        /* --- TikTokのURL --- */
+        document.getElementById('tiktok-official').href = "https://tiktok.com/"; // 公式
+        document.getElementById('tiktok-mem1').href = "https://tiktok.com/"; // メンバー1
+        document.getElementById('tiktok-mem2').href = "https://tiktok.com/"; // メンバー2
+        document.getElementById('tiktok-mem3').href = "https://tiktok.com/"; // メンバー3
 
         // ==========================================
         //  ▲▲▲ 設定ここまで ▲▲▲
         // ==========================================
 
 
-        // モーダル開閉処理
+        // モーダル制御
         function openVideoModal() {
             document.getElementById('video-modal').classList.add('active');
+            switchView('view-main'); // 毎回メインメニューから開始
         }
         function closeVideoModal(e) {
-            // 背景クリックかCloseボタンで閉じる
-            if (e.target.id === 'video-modal' || e.target.classList.contains('close-modal')) {
+            if (e.target.id === 'video-modal') {
                 document.getElementById('video-modal').classList.remove('active');
             }
+        }
+        function closeVideoModalForce() {
+            document.getElementById('video-modal').classList.remove('active');
+        }
+
+        // 画面切り替え (Main <-> Twitch <-> TikTok)
+        function switchView(viewId) {
+            // すべて隠す
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            // 指定したものだけ表示
+            document.getElementById(viewId).classList.add('active');
         }
     </script>
 </body>
