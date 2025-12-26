@@ -16,7 +16,6 @@
             --wood-dark: #4a3b32;
             --accent-gold: #ffd54f;
             --shadow-color: rgba(0,0,0,0.4);
-            /* ▼ 追加: ピンの色とコルクの色 ▼ */
             --pin-color: #e53935; 
             --cork-bg: #e6d6ac;
         }
@@ -75,7 +74,6 @@
             gap: 40px; width: 100%; perspective: 1200px;
         }
 
-        /* カードの共通スタイル */
         .char-card {
             position: relative;
             width: 240px; height: 320px;
@@ -158,7 +156,7 @@
         @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 
         /* =========================================
-           ▼▼▼ 4. 多機能モーダル (コルクボード風に大幅変更) ▼▼▼
+           ▼▼▼ 4. 多機能モーダル (アイコン選択式) ▼▼▼
            ========================================= */
         #video-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -170,12 +168,10 @@
         #video-modal.active { opacity: 1; visibility: visible; }
 
         .modal-content {
-            /* コルクボード風の背景 */
             background-color: var(--cork-bg);
             background-image: url('https://www.transparenttextures.com/patterns/cork-board.png');
             padding: 40px 30px; border-radius: 8px;
             text-align: center; width: 90%; max-width: 520px;
-            /* 木枠をつける */
             border: 12px solid transparent;
             border-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png') 30 round;
             box-shadow: 0 15px 40px rgba(0,0,0,0.6), inset 0 0 20px rgba(0,0,0,0.2);
@@ -185,84 +181,80 @@
         }
         #video-modal.active .modal-content { transform: scale(1) rotateX(0deg); }
 
-        /* モーダル四隅の大きなピン */
+        /* 四隅のピン */
         .modal-content::before, .modal-content::after {
             content: ''; position: absolute; width: 20px; height: 20px;
             background: radial-gradient(circle at 30% 30%, #ff6b6b, var(--pin-color));
-            border-radius: 50%; box-shadow: 2px 2px 5px rgba(0,0,0,0.5); z-index: 10;
+            border-radius: 50%; z-index: 10; box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
         }
         .modal-content::before { top: 10px; left: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.5), 480px 0 0 var(--pin-shadow); }
         .modal-content::after { bottom: 10px; left: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.5), 480px 0 0 var(--pin-shadow); }
-        /* ※簡易的に2つで擬似的に4つ見せていますが、厳密には4つ配置するのが理想です */
 
         .modal-title {
-            font-size: 1.3rem; font-weight: bold; margin-bottom: 25px; color: #4a3b32;
+            font-size: 1.4rem; font-weight: bold; margin-bottom: 30px; color: #4a3b32;
             text-shadow: 0 1px 1px rgba(255,255,255,0.5);
             border-bottom: 2px dashed #8d6e63; padding-bottom: 10px;
             display: inline-block; background: rgba(255,255,255,0.3); padding: 5px 20px;
             transform: rotate(-1deg); box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        
-        /* --- ボタン (メモ用紙風) --- */
-        .platform-btn {
-            display: block; width: 100%; padding: 15px; margin-bottom: 15px;
-            text-decoration: none; font-weight: bold; border-radius: 2px; /* 角を少し丸く */
-            transition: transform 0.2s, box-shadow 0.2s;
-            color: var(--wood-dark); box-sizing: border-box; cursor: pointer;
-            /* 紙っぽい質感 */
-            background: var(--paper-bg);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            position: relative;
-            text-align: left; padding-left: 50px; /* アイコン用スペース */
-            border-left: 6px solid #ccc; /* アクセントカラー用 */
-            transform: rotate(var(--rnd-rot, 0deg)); /* ランダムな傾き用変数 */
-        }
-        .platform-btn:hover { transform: scale(1.02) rotate(0deg) !important; box-shadow: 0 8px 16px rgba(0,0,0,0.3); z-index: 5; }
 
-        /* ボタン上の小さなピン */
-        .platform-btn::after {
-            content: ''; position: absolute; top: 10px; left: 15px;
-            width: 12px; height: 12px; border-radius: 50%;
+        /* --- アイコングリッド (App Icon風) --- */
+        .icon-grid {
+            display: flex; justify-content: center; gap: 20px;
+            margin-bottom: 20px; flex-wrap: wrap;
+        }
+
+        .platform-icon {
+            width: 100px; height: 100px;
+            border-radius: 20px; /* アプリアイコン風の角丸 */
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-decoration: none; color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: transform 0.2s; position: relative;
+            cursor: pointer;
+        }
+        .platform-icon:hover { transform: scale(1.1); box-shadow: 0 8px 20px rgba(0,0,0,0.4); z-index: 10; }
+        
+        /* アイコン上のピン */
+        .platform-icon::after {
+            content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+            width: 14px; height: 14px; border-radius: 50%;
             background: radial-gradient(circle at 30% 30%, #ef9a9a, var(--pin-color));
-            box-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+            box-shadow: 1px 2px 4px rgba(0,0,0,0.4);
         }
 
-        /* 各ボタンの色設定 */
-        .btn-yt { border-left-color: #ff0000; --rnd-rot: -1deg; }
-        .btn-twitch { border-left-color: #9146ff; --rnd-rot: 1deg; }
-        .btn-tiktok { border-left-color: #000000; --rnd-rot: -0.5deg; }
-        
-        /* 戻るボタン */
+        .icon-symbol { font-size: 2.5rem; margin-bottom: 5px; line-height: 1; }
+        .icon-label { font-size: 0.8rem; font-weight: bold; }
+
+        .bg-yt { background: linear-gradient(135deg, #ff0000, #cc0000); }
+        .bg-twitch { background: linear-gradient(135deg, #9146ff, #6441a5); }
+        .bg-tiktok { background: linear-gradient(135deg, #000000, #333333); }
+
+        /* --- 戻るボタン --- */
         .btn-back {
             background: #8d6e63; color: #fffbe0; border: none;
             text-align: center; padding: 10px 30px; width: auto; display: inline-block;
             margin-top: 20px; border-radius: 30px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.3), inset 0 2px 2px rgba(255,255,255,0.2);
+            cursor: pointer;
         }
-        .btn-back::after { display: none; } /* ピンを消す */
 
-        /* --- トランプ風グリッド (チェキ風) --- */
+        /* --- チェキ風グリッド --- */
         .sub-grid {
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px; margin-bottom: 25px;
-            padding: 10px;
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 20px; margin-bottom: 25px; padding: 10px;
         }
 
         .mini-card {
-            background: #fff; /* チェキの白枠 */
-            padding: 10px 10px 25px 10px; /* 下を広く */
+            background: #fff; padding: 10px 10px 25px 10px;
             text-decoration: none; color: #333;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             display: flex; flex-direction: column; align-items: center;
-            transition: transform 0.3s;
-            opacity: 0; animation: mini-deal 0.5s forwards;
-            position: relative;
+            transition: transform 0.3s; opacity: 0; 
+            animation: mini-deal 0.5s forwards; position: relative;
             transform: rotate(var(--mini-rot));
         }
-        .mini-card:hover { transform: scale(1.05) rotate(0deg) !important; box-shadow: 0 10px 25px rgba(0,0,0,0.4); z-index: 10; }
-
-        /* チェキ上のピン */
+        .mini-card:hover { transform: scale(1.05) rotate(0deg) !important; z-index: 10; }
         .mini-card::before {
             content: ''; position: absolute; top: -5px; left: 50%; transform: translateX(-50%);
             width: 14px; height: 14px; border-radius: 50%;
@@ -270,14 +262,17 @@
             box-shadow: 1px 2px 4px rgba(0,0,0,0.4); z-index: 5;
         }
 
-        /* アイコン（四角い写真部分） */
+        /* ▼▼▼ 修正点: チェキ内の画像位置調整 ▼▼▼ */
         .mini-icon {
-            width: 90%; aspect-ratio: 1 / 1; /* 正方形 */
+            width: 90%; aspect-ratio: 1 / 1;
+            /* 下半身問題を解決: 上揃えにする */
             object-fit: cover; 
+            object-position: top center; 
+            
             background: #eee; border: 1px solid #ccc;
             margin-bottom: 10px; filter: sepia(0.2);
         }
-        .official .mini-icon { object-fit: contain; padding: 5px; }
+        .official .mini-icon { object-fit: contain; padding: 5px; } /* 公式ロゴは全体表示 */
 
         .mini-name { font-family: 'Bradley Hand', cursive; font-weight: bold; font-size: 1.1rem; color: #444; }
 
@@ -286,13 +281,8 @@
             to { opacity: 1; transform: translateY(0) scale(1) rotate(var(--mini-rot)); }
         }
 
-        /* 画面切り替え用 */
         .view-section { display: none; }
         .view-section.active { display: block; animation: fade-in 0.3s ease-out; }
-
-        /* =========================================
-           ▲▲▲ モーダル修正ここまで ▲▲▲
-           ========================================= */
 
         /* =========================================
            5. フッター & スマホ対応
@@ -311,8 +301,11 @@
             .menu-title { font-size: 1.0rem; } .menu-desc { font-size: 0.7rem; }
             .tape { width: 70px; height: 22px; top: -10px; left: -10px; }
             /* モーダル内調整 */
+            .icon-grid { gap: 10px; }
+            .platform-icon { width: 80px; height: 80px; }
+            .icon-symbol { font-size: 2rem; }
             .sub-grid { gap: 15px; }
-            .mini-card { transform: rotate(0deg) !important; --mini-rot: 0deg; } /* スマホは回転なし */
+            .mini-card { transform: rotate(0deg) !important; --mini-rot: 0deg; }
         }
     </style>
 </head>
@@ -376,16 +369,21 @@
             <div id="view-main" class="view-section active">
                 <div class="modal-title">Select Platform</div>
                 
-                <a href="" target="_blank" class="platform-btn btn-yt" id="link-youtube-main">
-                    YouTube Channel
-                </a>
-                
-                <div class="platform-btn btn-twitch" onclick="switchView('view-twitch')">
-                    Twitch Channels (Members)
-                </div>
-                
-                <div class="platform-btn btn-tiktok" onclick="switchView('view-tiktok')">
-                    TikTok Channels (Official/Members)
+                <div class="icon-grid">
+                    <a href="" target="_blank" class="platform-icon bg-yt" id="link-youtube-main">
+                        <span class="icon-symbol">▶</span>
+                        <span class="icon-label">YouTube</span>
+                    </a>
+                    
+                    <div class="platform-icon bg-twitch" onclick="switchView('view-twitch')">
+                        <span class="icon-symbol">👾</span>
+                        <span class="icon-label">Twitch</span>
+                    </div>
+                    
+                    <div class="platform-icon bg-tiktok" onclick="switchView('view-tiktok')">
+                        <span class="icon-symbol">🎵</span>
+                        <span class="icon-label">TikTok</span>
+                    </div>
                 </div>
                 
                 <div class="close-modal" onclick="closeVideoModalForce()" style="margin-top:25px; text-decoration:underline; cursor:pointer; color:#4a3b32;">Close Menu</div>
@@ -411,7 +409,7 @@
                         <span class="mini-name">Wakanagi</span>
                     </a>
                 </div>
-                <div class="platform-btn btn-back" onclick="switchView('view-main')">Back to Select</div>
+                <div class="btn-back" onclick="switchView('view-main')">Back</div>
             </div>
 
             <div id="view-tiktok" class="view-section">
@@ -434,7 +432,7 @@
                         <span class="mini-name">Yuzucha</span>
                     </a>
                 </div>
-                <div class="platform-btn btn-back" onclick="switchView('view-main')">Back to Select</div>
+                <div class="btn-back" onclick="switchView('view-main')">Back</div>
             </div>
 
         </div>
@@ -471,7 +469,6 @@
         //  ▲▲▲ 設定ここまで ▲▲▲
         // ==========================================
 
-        // モーダル制御
         function openVideoModal() {
             document.getElementById('video-modal').classList.add('active');
             switchView('view-main');
