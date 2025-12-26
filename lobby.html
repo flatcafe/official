@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -17,6 +16,12 @@
             --accent-gold: #ffd54f;
             --pin-color: #e53935; 
             --cork-bg: #e6d6ac;
+        }
+
+        /* ▼▼▼ 青いハイライトを削除 ▼▼▼ */
+        * {
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
         }
 
         body, html {
@@ -146,7 +151,7 @@
         .sns-slide { display: none; }
         .sns-slide.active { display: block; animation: fade-in 0.3s; }
 
-        /* --- SNSアイコン (4つボタン) --- */
+        /* --- SNSアイコン --- */
         .sns-grid {
             display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
             margin-bottom: 20px;
@@ -189,11 +194,9 @@
             object-fit: cover; object-position: top center;
             border: 3px solid var(--accent-gold); margin-bottom: 8px; background: #eee;
         }
-        
-        /* ▼▼▼ フォント調整（日本語名が綺麗に出るように） ▼▼▼ */
         .mini-name { 
             font-weight: bold; font-size: 0.95rem; line-height: 1.2; 
-            font-family: 'Yu Mincho', serif; /* 日本語フォント優先 */
+            font-family: 'Yu Mincho', serif;
         }
         .mini-sub { font-size: 0.75rem; color: #666; margin-top: 2px; }
 
@@ -220,15 +223,22 @@
             display: flex; justify-content: center; align-items: flex-end;
         }
 
+        /* 通常の立ち絵（立っているキャラ） */
         .char-tachi img {
-            max-width: 180%; /* 枠からはみ出して表示させる */
-            max-height: 95%; 
+            max-width: 180%; 
+            max-height: 95%; /* 立ってるキャラは高さ95% */
             object-fit: contain;
             object-position: bottom center;
             filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
             transition: all 0.5s;
         }
 
+        /* ▼▼▼ 座りポーズのキャラ用調整 (若凪・柚茶) ▼▼▼ */
+        .char-tachi.tachi-sit img {
+            max-height: 75%; /* 高さを低くする */
+            max-width: 220%; /* 横幅を広く許容する */
+        }
+        
         /* 選択されていないキャラ（薄くなる） */
         .char-tachi.dimmed {
             opacity: 0.4;
@@ -241,7 +251,7 @@
         .char-tachi.active {
             opacity: 1;
             transform: scale(1.15) translateY(0);
-            z-index: 10;
+            z-index: 100; /* 最前面へ */
         }
         .char-tachi.active img {
             filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
@@ -260,7 +270,7 @@
             text-align: center;
             opacity: 0; pointer-events: none;
             transition: all 0.4s ease;
-            z-index: 20;
+            z-index: 200;
         }
         .char-bio-box.show {
             opacity: 1; pointer-events: auto;
@@ -268,9 +278,10 @@
         }
         .bio-name { 
             font-size: 1.2rem; font-weight: bold; color: var(--pin-color); margin-bottom: 5px; 
-            font-family: 'Yu Mincho', serif; /* 名前も日本語フォント */
+            font-family: 'Yu Mincho', serif;
         }
         .bio-text { font-size: 0.9rem; color: #444; line-height: 1.5; }
+        .bio-comment { font-size: 0.85rem; color: #d84315; margin-top: 8px; font-weight: bold; font-family:'Bradley Hand', cursive; }
         .bio-close { 
             position: absolute; top: 5px; right: 10px; font-size: 1.2rem; cursor: pointer; color: #888;
         }
@@ -322,7 +333,9 @@
             
             /* スマホでの立ち絵調整 */
             .members-stage { height: 260px; }
+            /* スマホは立ち絵をもっと大きく重ねる */
             .char-tachi img { max-width: 250%; } 
+            .char-tachi.tachi-sit img { max-width: 300%; max-height: 70%; } /* 座ってる子はさらに広く */
         }
     </style>
 </head>
@@ -344,7 +357,7 @@
                 <div class="tab-desc">YouTube/X...</div>
             </div>
 
-            <div class="menu-tab" onclick="openTab('members', this)">
+            <div class="menu-tab" id="tab-members" onclick="openTab('members', this)">
                 <div class="tape"></div>
                 <div class="tab-icon">☕</div>
                 <div class="tab-title">Members</div>
@@ -426,13 +439,13 @@
                     </div>
                     
                     <div class="members-stage">
-                        <div class="char-tachi" onclick="selectMember('toruma', this)">
+                        <div class="char-tachi" id="tachi-toruma" onclick="selectMember('toruma', this)">
                             <img src="menu_youtube.png" alt="Toruma">
                         </div>
-                        <div class="char-tachi" onclick="selectMember('yuzu', this)">
+                        <div class="char-tachi tachi-sit" onclick="selectMember('yuzu', this)">
                             <img src="menu_twitter.png" alt="Yuzucha">
                         </div>
-                        <div class="char-tachi" onclick="selectMember('wakanagi', this)">
+                        <div class="char-tachi tachi-sit" onclick="selectMember('wakanagi', this)">
                             <img src="menu_member.png" alt="Wakanagi">
                         </div>
                         <div class="char-tachi" onclick="selectMember('lily', this)">
@@ -443,22 +456,26 @@
                     <div class="char-bio-box" id="bio-toruma">
                         <div class="bio-close" onclick="closeBio()">×</div>
                         <div class="bio-name">とるま</div>
-                        <div class="bio-text">ふらっとcafeの店長。<br>ゲームとお酒が大好き。<br>今日もまったり配信中！</div>
+                        <div class="bio-text">最年少のイラスト担当。<br>すぐ眠くなっちゃうけど、<br>描く時は本気出すから見ててね。</div>
+                        <div class="bio-comment">「Zzz...はっ！起きてるよ！」</div>
                     </div>
                     <div class="char-bio-box" id="bio-yuzu">
                         <div class="bio-close" onclick="closeBio()">×</div>
                         <div class="bio-name">柚茶</div>
                         <div class="bio-text">元気いっぱいの看板娘。<br>SNS担当で流行に敏感。<br>よくお菓子を食べている。</div>
+                        <div class="bio-comment">「甘いものは別腹だよね！」</div>
                     </div>
                     <div class="char-bio-box" id="bio-wakanagi">
                         <div class="bio-close" onclick="closeBio()">×</div>
                         <div class="bio-name">若凪</div>
-                        <div class="bio-text">クールに見えて意外と熱い。<br>メンバーのまとめ役。<br>深夜の作業が得意。</div>
+                        <div class="bio-text">ダメダメでも熱いリーダー。<br>MIXや動画編集が得意な<br>頼れる（？）存在。</div>
+                        <div class="bio-comment">「最高の作品を作るぞ！」</div>
                     </div>
                     <div class="char-bio-box" id="bio-lily">
                         <div class="bio-close" onclick="closeBio()">×</div>
                         <div class="bio-name">lily00</div>
-                        <div class="bio-text">癒し系のマイペース担当。<br>歌うことが好き。<br>美味しい紅茶を淹れてくれる。</div>
+                        <div class="bio-text">ゲームの腕前は神レベル。<br>冷静沈着な参謀役。<br>美味しいコーヒーを淹れてくれる。</div>
+                        <div class="bio-comment">「一息ついていきなよ。」</div>
                     </div>
                 </div>
 
@@ -511,6 +528,21 @@
 
         // ==========================================
 
+        // ★ ページ読み込み完了時に自動実行 ★
+        window.addEventListener('load', function() {
+            // Membersタブを自動クリック
+            const membersTab = document.getElementById('tab-members');
+            if(membersTab) {
+                openTab('members', membersTab);
+            }
+            // とるまさんを自動選択
+            const torumaTachi = document.getElementById('tachi-toruma');
+            if(torumaTachi) {
+                selectMember('toruma', torumaTachi);
+            }
+        });
+
+        // タブ切り替え
         function openTab(tabName, elem) {
             const display = document.getElementById('content-display');
             display.classList.add('active');
@@ -522,9 +554,12 @@
             elem.classList.add('active-tab');
 
             if(tabName === 'sns') switchSns('sns-home');
-            if(tabName === 'members') closeBio();
+            
+            // Membersタブを開いた時は、キャラの選択状態をリセット(しない方が自然なら削除可)
+            // if(tabName === 'members') closeBio(); 
 
-            if(window.innerWidth <= 768) {
+            // スマホならスクロール (自動オープンの時はスクロールしないように判定しても良いが今回はシンプルに)
+            if(window.innerWidth <= 768 && document.readyState === 'complete') {
                 const offset = display.getBoundingClientRect().top + window.pageYOffset - 20;
                 window.scrollTo({top: offset, behavior: 'smooth'});
             }
