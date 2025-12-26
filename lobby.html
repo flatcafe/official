@@ -158,12 +158,10 @@
         .section-view.show { display: block; animation: fade-in 0.3s; }
 
         /* =========================================
-           ★ NEW ★ Hybrid Menu System
-           (PC: Split View / Mobile: Accordion)
+           Hybrid Menu System (PC: Split / Mobile: Accordion)
            ========================================= */
         
         .menu-wrapper {
-            /* 共通ベース */
             background: #fff; border: 1px solid #ccc;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
         }
@@ -172,46 +170,35 @@
         @media (min-width: 769px) {
             .menu-wrapper {
                 display: grid;
-                /* 左(260px) 右(残り) */
                 grid-template-columns: 260px 1fr; 
-                grid-template-rows: repeat(10, min-content); /* 行を詰める */
+                grid-template-rows: repeat(10, min-content);
                 align-items: start;
-                min-height: 400px; /* ある程度の高さ */
-                padding: 10px;
-                position: relative;
+                min-height: 400px;
+                padding: 10px; position: relative;
             }
-            /* 左側のクリップボード装飾 */
             .menu-wrapper::before {
                 content: ''; position: absolute; top: -10px; left: 130px; transform: translateX(-50%);
                 width: 100px; height: 20px; background: #5d4037; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 10;
             }
 
-            /* 左側: トリガーボタン & リンク */
             .menu-trigger, .menu-link {
-                grid-column: 1; /* 左列に配置 */
-                width: 100%;
+                grid-column: 1; width: 100%;
                 display: flex; align-items: center; padding: 15px 10px;
                 border-bottom: 1px dotted #bbb; cursor: pointer;
                 transition: background 0.2s; text-decoration: none; color: inherit;
             }
             .menu-trigger:hover, .menu-link:hover { background: rgba(0,0,0,0.05); }
-            /* 選択中の色 */
             .menu-trigger.active { background: var(--accent-gold); font-weight: bold; color: #3e2723; border-right: 3px solid #d84315; }
 
-            /* 右側: コンテンツエリア */
             .menu-content {
-                grid-column: 2; /* 右列に配置 */
-                grid-row: 1 / 99; /* 全行をまたぐ(重なる) */
-                display: none; /* デフォルト非表示 */
-                padding: 20px; margin-left: 20px;
+                grid-column: 2; grid-row: 1 / 99;
+                display: none; padding: 20px; margin-left: 20px;
                 background: rgba(255,255,255,0.5); border: 2px dashed #d7ccc8; border-radius: 8px;
                 min-height: 380px;
             }
             .menu-content.active { display: block; animation: fade-in 0.3s; }
-            
-            /* PCではコンテンツ内の「閉じる」ボタン不要 */
             .accordion-close { display: none; }
-            /* PCの初期表示用メッセージ */
+            
             .menu-placeholder {
                 grid-column: 2; grid-row: 1 / 99;
                 display: flex; justify-content: center; align-items: center; height: 100%;
@@ -222,33 +209,23 @@
         /* --- スマホ用レイアウト (768px以下) --- */
         @media (max-width: 768px) {
             .menu-wrapper { display: block; padding: 0; }
-            
-            /* トリガーボタン */
             .menu-trigger, .menu-link {
                 display: flex; align-items: center; padding: 15px;
                 border-bottom: 1px solid #eee; cursor: pointer;
                 background: #fff; text-decoration: none; color: inherit;
             }
             .menu-trigger:active, .menu-link:active { background: #f5f5f5; }
-            
-            /* 開いている時のトリガー */
             .menu-trigger.active { background: #fffde7; border-bottom: none; }
             .menu-trigger.active .menu-price { transform: rotate(90deg); }
 
-            /* コンテンツ (アコーディオンの中身) */
             .menu-content {
-                display: none; /* 閉じてる */
-                background: #fdfbf7;
-                padding: 15px;
-                border-bottom: 1px solid #ccc;
-                box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+                display: none; background: #fdfbf7; padding: 15px;
+                border-bottom: 1px solid #ccc; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
             }
             .menu-content.active { display: block; animation: fade-in 0.2s; }
-            
             .menu-placeholder { display: none; }
         }
 
-        /* 共通パーツデザイン */
         .menu-icon { font-size: 1.8rem; margin-right: 15px; width: 40px; text-align: center; }
         .menu-text-group { flex-grow: 1; }
         .menu-name { font-weight: bold; font-family: 'Georgia', serif; color: #3e2723; font-size: 1.1rem; }
@@ -263,7 +240,7 @@
         .mini-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; object-position: top center; border: 3px solid var(--accent-gold); margin-bottom: 8px; background: #eee; }
         .mini-name { font-weight: bold; font-size: 0.9rem; line-height: 1.2; font-family: 'Yu Mincho', serif; }
         
-        /* Members Stage (共通) */
+        /* Members Stage */
         .members-stage { display: flex; justify-content: space-around; align-items: flex-end; height: 300px; position: relative; margin-top: 20px; }
         .char-tachi { position: relative; width: 23%; height: 100%; cursor: pointer; transform-origin: bottom center; z-index: 5; display: flex; justify-content: center; align-items: flex-end; transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); }
         .char-tachi img { object-fit: contain; object-position: bottom center; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3)); transition: all 0.5s; }
@@ -287,15 +264,24 @@
         .zoom-btn { position: absolute; top: 8px; left: 10px; background: #fff; border: 1px solid #ccc; border-radius: 12px; padding: 2px 8px; font-size: 0.75rem; color: #555; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .zoom-btn:active { transform: scale(0.95); }
 
-        /* Receipt Log */
+        /* Receipt Log Styles (Animation Ready) */
         .receipt-btn { margin-top: 30px; text-align: center; font-size: 0.8rem; text-decoration: underline; cursor: pointer; color: rgba(255,255,255,0.6); }
         #receipt-modal { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 5000; display: flex; justify-content: center; align-items: flex-end; transition: bottom 0.5s ease; }
         #receipt-modal.active { bottom: 0; }
+        
         .receipt-paper { width: 300px; max-height: 80vh; background: #fff; padding: 20px; font-family: 'Courier New', monospace; font-size: 0.8rem; color: #333; position: relative; margin-bottom: 20px; box-shadow: 0 0 20px rgba(0,0,0,0.5); overflow-y: auto; transform: translateY(20px); }
         .receipt-paper::before { content: ""; position: absolute; top: -10px; left: 0; width: 100%; height: 10px; background: linear-gradient(45deg, transparent 33.333%, #fff 33.333%, #fff 66.667%, transparent 66.667%), linear-gradient(-45deg, transparent 33.333%, #fff 33.333%, #fff 66.667%, transparent 66.667%); background-size: 10px 20px; }
-        .receipt-line { display: flex; justify-content: space-between; margin-bottom: 5px; border-bottom: 1px dashed #eee;}
-        .receipt-total { border-top: 2px solid #333; margin-top: 10px; padding-top: 5px; font-weight: bold; text-align: right;}
-        .receipt-close { text-align: center; margin-top: 15px; cursor: pointer; color: #888; border: 1px solid #ccc; padding: 5px; }
+        
+        /* ★★★ 印字演出用の隠しスタイル ★★★ */
+        .receipt-line, .receipt-total, .receipt-close {
+            opacity: 0; transform: translateY(-5px); transition: all 0.2s;
+            display: flex; justify-content: space-between; margin-bottom: 5px; border-bottom: 1px dashed #eee;
+        }
+        .receipt-total { border-top: 2px solid #333; margin-top: 10px; padding-top: 5px; font-weight: bold; text-align: right; display: block; }
+        .receipt-close { text-align: center; margin-top: 15px; cursor: pointer; color: #888; border: 1px solid #ccc; padding: 5px; display: block; }
+        
+        /* 印字クラス */
+        .receipt-element-show { opacity: 1 !important; transform: translateY(0) !important; }
 
         /* Full View & Footer */
         #full-view-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: all 0.3s; cursor: pointer; }
@@ -482,10 +468,10 @@
     </div>
 
     <div id="full-view-modal" onclick="closeFullView()"><img id="full-view-img" src="" alt="Full View"><div class="full-view-close">×</div></div>
+    
     <div id="receipt-modal">
         <div class="receipt-paper">
             <div style="text-align:center; margin-bottom:10px;">*** FLAT CAFE LOG ***</div>
-            
             <div class="receipt-line"><span>2025-12-24</span><span>Grand Open</span></div>
             <div class="receipt-line"><span>2025-12-25</span><span>Xmas Party</span></div>
             <div class="receipt-line"><span>2025-12-26</span><span>Menu Renewal</span></div>
@@ -496,6 +482,7 @@
             <div class="receipt-close" onclick="closeReceipt()">Close Receipt</div>
         </div>
     </div>
+    
     <audio id="audio-se"></audio>
 
     <script>
@@ -545,6 +532,13 @@
             if(window.innerWidth <= 768 && document.readyState === 'complete') {
                 window.scrollTo({top: document.getElementById('content-display').offsetTop - 20, behavior: 'smooth'});
             }
+            // PC版メニューの初期化（リセット）
+            if(tabName === 'menu' && window.innerWidth > 768) { 
+                const placeholder = document.querySelector('.menu-placeholder');
+                if(placeholder) placeholder.style.display = 'flex';
+                document.querySelectorAll('.menu-trigger').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.menu-content').forEach(el => el.classList.remove('active'));
+            }
         }
         function closeContent() {
             document.getElementById('content-display').classList.remove('active');
@@ -560,25 +554,47 @@
                     const targetContent = document.getElementById(targetId);
                     const isActive = this.classList.contains('active');
 
-                    // リセット: すべて閉じる (PC/Mobile共通動作)
+                    // リセット: すべて閉じる
                     document.querySelectorAll('.js-accordion').forEach(el => el.classList.remove('active'));
                     document.querySelectorAll('.menu-content').forEach(el => el.classList.remove('active'));
                     
-                    // PCのプレースホルダー非表示
                     const placeholder = document.querySelector('.menu-placeholder');
                     if(placeholder) placeholder.style.display = 'none';
 
-                    // すでに開いていたものをクリックした場合 -> 閉じたまま終了 (Mobileでのトグル動作)
-                    // PCの場合は「常に何か表示」でも良いが、今回はMobileに合わせてトグル可とする
+                    // Mobile: Toggle logic / PC: Always Open if selected
                     if (!isActive) {
                         this.classList.add('active');
                         targetContent.classList.add('active');
                     } else {
-                        // PCで閉じた場合、プレースホルダー再表示
+                        // PCで閉じた場合はプレースホルダー戻す
                         if(window.innerWidth > 768 && placeholder) placeholder.style.display = 'flex';
                     }
                 });
             });
+        }
+
+        /* --- Receipt Animation Logic --- */
+        function openReceipt() { 
+            const modal = document.getElementById('receipt-modal');
+            modal.classList.add('active'); 
+            
+            // 1. Reset all elements to hidden
+            const lines = document.querySelectorAll('.receipt-line, .receipt-total, .receipt-close');
+            lines.forEach(line => {
+                line.classList.remove('receipt-element-show');
+            });
+
+            // 2. Animate one by one
+            let delay = 300; 
+            lines.forEach((line, index) => {
+                setTimeout(() => {
+                    line.classList.add('receipt-element-show');
+                }, delay);
+                delay += 150; // Speed of printing
+            });
+        }
+        function closeReceipt() { 
+            document.getElementById('receipt-modal').classList.remove('active'); 
         }
 
         /* --- Other Functions --- */
@@ -586,8 +602,6 @@
         function closeBio() { document.querySelectorAll('.char-tachi').forEach(c => { c.classList.remove('active'); c.classList.remove('dimmed'); c.classList.add('idle'); }); document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show')); }
         function openFullView(imgSrc) { const modal = document.getElementById('full-view-modal'); const img = document.getElementById('full-view-img'); img.src = imgSrc; modal.classList.add('active'); }
         function closeFullView() { document.getElementById('full-view-modal').classList.remove('active'); }
-        function openReceipt() { document.getElementById('receipt-modal').classList.add('active'); }
-        function closeReceipt() { document.getElementById('receipt-modal').classList.remove('active'); }
     </script>
 </body>
 </html>
