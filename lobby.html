@@ -270,24 +270,33 @@
         .receipt-element-show { opacity: 1 !important; transform: translateY(0) !important; }
 
         /* =========================================
-           ★ Gallery - Cheki Style
+           ★ Gallery - Cheki Style (CSS Fix)
            ========================================= */
         .gallery-grid {
             display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; padding: 20px;
         }
         .polaroid {
-            /* ★修正: <a>タグでも箱として振る舞うように設定 */
             display: inline-block; vertical-align: top;
             background: #fff; padding: 10px 10px 35px 10px;
             box-shadow: 3px 3px 10px rgba(0,0,0,0.4);
-            transform: rotate(-2deg); transition: transform 0.3s, z-index 0s;
+            /* デフォルト（バラつき）設定 */
+            transform: rotate(-2deg); 
+            transition: transform 0.3s, z-index 0s;
             position: relative; cursor: pointer; text-decoration: none; color: #333;
             width: 140px; 
         }
+        
+        /* バリエーション（偶数・3の倍数） */
+        .polaroid:nth-child(even) { transform: rotate(3deg); }
+        .polaroid:nth-child(3n) { transform: rotate(-4deg); }
+
+        /* ★重要: Hover設定を最後に書くことで上書きさせる */
         .polaroid:hover {
-            transform: scale(1.1) rotate(0deg); z-index: 10;
+            transform: scale(1.1) rotate(0deg) !important; /* 強制的に真っ直ぐ */
+            z-index: 10;
             box-shadow: 5px 10px 20px rgba(0,0,0,0.5);
         }
+
         .polaroid img {
             width: 100%; height: 120px; object-fit: cover; background: #eee;
             border: 1px solid #ccc;
@@ -296,9 +305,6 @@
             font-family: 'Bradley Hand', cursive; font-weight: bold;
             text-align: center; margin-top: 10px; font-size: 0.9rem;
         }
-        /* バリエーション */
-        .polaroid:nth-child(even) { transform: rotate(3deg); }
-        .polaroid:nth-child(3n) { transform: rotate(-4deg); }
         
         /* 画鋲 */
         .pin {
