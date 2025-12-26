@@ -181,7 +181,7 @@
         .mini-sub { font-size: 0.75rem; color: #666; margin-top: 2px; }
 
         /* =========================================
-           ▼▼▼ Membersステージ (立ち絵演出) ▼▼▼
+           ▼▼▼ Membersステージ (演出強化版) ▼▼▼
            ========================================= */
         .members-stage {
             display: flex; 
@@ -220,7 +220,7 @@
         #tachi-yuzu { left: -5px; }
         #tachi-wakanagi { left: 5px; }
 
-        /* アニメーション */
+        /* アニメーション (アイドル時) */
         @keyframes pyoko {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-8px); }
@@ -231,14 +231,32 @@
         #tachi-wakanagi.idle { animation-delay: 0.2s; }
         #tachi-lily.idle { animation-delay: 0.7s; }
 
-        .char-tachi.dimmed { opacity: 0.4; transform: scale(0.9) translateY(10px); filter: grayscale(0.5); z-index: 1; }
-        .char-tachi.active { opacity: 1; transform: scale(1.15) translateY(0); z-index: 100; animation: none; }
-        .char-tachi.active img { filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); }
+        /* ★★★ フォーカス演出 ★★★ */
+        /* 選んでいない人はボカして暗くする */
+        .char-tachi.dimmed {
+            opacity: 0.5; /* 少し濃く残す */
+            transform: scale(0.9) translateY(10px);
+            filter: blur(3px) grayscale(0.5) brightness(0.8); /* ボカし + 暗く */
+            z-index: 1;
+        }
+
+        /* 選んだ人は大きく前に出し、影を濃くする */
+        .char-tachi.active {
+            opacity: 1;
+            transform: scale(1.3) translateY(10px); /* さらに拡大！ */
+            z-index: 100;
+            animation: none;
+        }
+        .char-tachi.active img {
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.7));
+        }
 
         /* プロフィールカード */
         .char-bio-box {
             position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px);
-            width: 90%; background: rgba(255, 252, 240, 0.95);
+            width: 90%; 
+            background: rgba(255, 252, 240, 0.9); /* 少し透けさせる */
+            backdrop-filter: blur(5px); /* 背景をすりガラス状に */
             border: 2px solid var(--wood-dark); border-radius: 8px; padding: 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3); text-align: center;
             opacity: 0; pointer-events: none; transition: all 0.4s ease; z-index: 200;
@@ -248,6 +266,15 @@
         .bio-text { font-size: 0.9rem; color: #444; line-height: 1.5; }
         .bio-comment { font-size: 0.85rem; color: #d84315; margin-top: 8px; font-weight: bold; font-family:'Bradley Hand', cursive; }
         .bio-close { position: absolute; top: 5px; right: 10px; font-size: 1.2rem; cursor: pointer; color: #888; }
+        
+        /* 全身を見るボタン */
+        .zoom-btn {
+            position: absolute; top: 8px; left: 10px;
+            background: #fff; border: 1px solid #ccc; border-radius: 12px;
+            padding: 2px 8px; font-size: 0.75rem; color: #555; cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .zoom-btn:active { transform: scale(0.95); }
 
         /* フッター */
         .panel-footer { margin-top: 20px; text-align: center; position: relative; z-index: 30;}
@@ -260,6 +287,27 @@
             display: inline-block; margin-bottom: 15px; padding: 5px 15px;
             background: rgba(0,0,0,0.1); color: #4a3b32; border-radius: 15px;
             font-size: 0.8rem; cursor: pointer; text-decoration: none; border: 1px solid #4a3b32;
+        }
+
+        /* ★★★ 全身鑑賞モーダル ★★★ */
+        #full-view-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); /* 暗い背景 */
+            z-index: 9999; display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: all 0.3s;
+            cursor: pointer;
+        }
+        #full-view-modal.active { opacity: 1; visibility: visible; }
+        #full-view-img {
+            max-width: 95%; max-height: 90vh;
+            object-fit: contain;
+            filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));
+            transform: scale(0.9); transition: transform 0.3s;
+        }
+        #full-view-modal.active #full-view-img { transform: scale(1); }
+        .full-view-close {
+            position: absolute; top: 20px; right: 20px;
+            color: #fff; font-size: 2rem; opacity: 0.7;
         }
 
         @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
@@ -369,39 +417,43 @@
                     <div class="panel-header"><div class="panel-title-text">Cafe Staff</div></div>
                     
                     <div class="members-stage">
-                        <div class="char-tachi idle" id="tachi-toruma" onclick="selectMember('toruma', this)">
+                        <div class="char-tachi idle" id="tachi-toruma" onclick="selectMember('toruma', this, 'menu_youtube.png')">
                             <img src="menu_youtube.png" alt="Toruma">
                         </div>
-                        <div class="char-tachi tachi-sit idle" id="tachi-yuzu" onclick="selectMember('yuzu', this)">
+                        <div class="char-tachi tachi-sit idle" id="tachi-yuzu" onclick="selectMember('yuzu', this, 'menu_twitter.png')">
                             <img src="menu_twitter.png" alt="Yuzucha">
                         </div>
-                        <div class="char-tachi tachi-sit idle" id="tachi-wakanagi" onclick="selectMember('wakanagi', this)">
+                        <div class="char-tachi tachi-sit idle" id="tachi-wakanagi" onclick="selectMember('wakanagi', this, 'menu_member.png')">
                             <img src="menu_member.png" alt="Wakanagi">
                         </div>
-                        <div class="char-tachi idle" id="tachi-lily" onclick="selectMember('lily', this)">
+                        <div class="char-tachi idle" id="tachi-lily" onclick="selectMember('lily', this, 'menu_gallery.png')">
                             <img src="menu_gallery.png" alt="Lily">
                         </div>
                     </div>
 
                     <div class="char-bio-box" id="bio-toruma">
+                        <div class="zoom-btn" onclick="openFullView('menu_youtube.png')">🔍 全身を見る</div>
                         <div class="bio-close" onclick="closeBio()">×</div>
                         <div class="bio-name">とるま</div>
                         <div class="bio-text">最年少のイラスト担当。<br>すぐ眠くなっちゃうけど、<br>描く時は本気出すから見ててね。</div>
                         <div class="bio-comment">「Zzz...はっ！起きてるよ！」</div>
                     </div>
                     <div class="char-bio-box" id="bio-yuzu">
+                        <div class="zoom-btn" onclick="openFullView('menu_twitter.png')">🔍 全身を見る</div>
                         <div class="bio-close" onclick="closeBio()">×</div>
                         <div class="bio-name">柚茶</div>
                         <div class="bio-text">元気いっぱいの看板娘。<br>SNS担当で流行に敏感。<br>よくお菓子を食べている。</div>
                         <div class="bio-comment">「甘いものは別腹だよね！」</div>
                     </div>
                     <div class="char-bio-box" id="bio-wakanagi">
+                        <div class="zoom-btn" onclick="openFullView('menu_member.png')">🔍 全身を見る</div>
                         <div class="bio-close" onclick="closeBio()">×</div>
                         <div class="bio-name">若凪</div>
                         <div class="bio-text">ダメダメでも熱いリーダー。<br>MIXや動画編集が得意な<br>頼れる（？）存在。</div>
                         <div class="bio-comment">「最高の作品を作るぞ！」</div>
                     </div>
                     <div class="char-bio-box" id="bio-lily">
+                        <div class="zoom-btn" onclick="openFullView('menu_gallery.png')">🔍 全身を見る</div>
                         <div class="bio-close" onclick="closeBio()">×</div>
                         <div class="bio-name">lily00</div>
                         <div class="bio-text">ゲームの腕前は神レベル。<br>冷静沈着な参謀役。<br>美味しいコーヒーを淹れてくれる。</div>
@@ -423,38 +475,26 @@
         </div>
     </div>
 
-    <script>
-        // ==========================================
-        //  ▼▼▼ URL・設定エリア ▼▼▼
-        // ==========================================
-        
-        // --- YouTube (Official) ---
-        document.getElementById('link-yt').href = "https://www.youtube.com/@flatcafe_games/live";
+    <div id="full-view-modal" onclick="closeFullView()">
+        <img id="full-view-img" src="" alt="Full View">
+        <div class="full-view-close">×</div>
+    </div>
 
-        // --- X (Twitter) ---
+    <script>
+        // URL設定
+        document.getElementById('link-yt').href = "https://www.youtube.com/@flatcafe_games/live";
         document.getElementById('x-official').href = "https://x.com/flca_official";
         document.getElementById('x-toruma').href = "https://x.com/tourma_flca";
         document.getElementById('x-yuzu').href = "https://x.com/yuzucha_flca";
         document.getElementById('x-wakanagi').href = "https://x.com/wakanagi_flca";
         document.getElementById('x-lily').href = "https://x.com/Lily00_flca";
-
-        // --- Twitch (Members) ---
         document.getElementById('tw-toruma').href = "https://www.twitch.tv/tourma_flca";
         document.getElementById('tw-yuzu').href = "https://www.twitch.tv/yuzucha08";
         document.getElementById('tw-wakanagi').href = "https://www.twitch.tv/wakanagi";
         document.getElementById('tw-lily').href = "https://www.twitch.tv/lily00_flca";
 
-        // --- TikTok (Placeholders) ---
-        document.getElementById('tt-official').href = "https://tiktok.com/";
-        document.getElementById('tt-toruma').href = "https://tiktok.com/";
-        document.getElementById('tt-yuzu').href = "https://tiktok.com/";
-        document.getElementById('tt-wakanagi').href = "https://tiktok.com/";
-        document.getElementById('tt-lily').href = "https://tiktok.com/";
-
-        // ==========================================
-
         window.addEventListener('load', function() {
-            // 最初は誰も選択せずアニメーションのみ
+            // 初期動作
         });
 
         function openTab(tabName, elem) {
@@ -466,7 +506,7 @@
             elem.classList.add('active-tab');
 
             if(tabName === 'sns') switchSns('sns-home');
-            if(tabName === 'members') closeBio(); // ぴょこぴょこリセット
+            if(tabName === 'members') closeBio();
 
             if(window.innerWidth <= 768 && document.readyState === 'complete') {
                 const offset = display.getBoundingClientRect().top + window.pageYOffset - 20;
@@ -493,6 +533,7 @@
             });
             elem.classList.remove('dimmed');
             elem.classList.add('active');
+            
             document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show'));
             const bio = document.getElementById('bio-' + name);
             if(bio) bio.classList.add('show');
@@ -505,6 +546,18 @@
                 c.classList.add('idle');
             });
             document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show'));
+        }
+
+        // --- 全身鑑賞モード制御 ---
+        function openFullView(imgSrc) {
+            const modal = document.getElementById('full-view-modal');
+            const img = document.getElementById('full-view-img');
+            img.src = imgSrc;
+            modal.classList.add('active');
+        }
+
+        function closeFullView() {
+            document.getElementById('full-view-modal').classList.remove('active');
         }
     </script>
 </body>
