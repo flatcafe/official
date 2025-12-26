@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -25,7 +26,6 @@
             font-family: 'Georgia', 'Yu Mincho', serif;
             color: var(--wood-dark);
             overflow-x: hidden;
-            /* 背景固定 */
             background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://www.transparenttextures.com/patterns/wood-pattern.png');
             background-attachment: fixed;
         }
@@ -82,7 +82,6 @@
             width: 160px; height: 140px; border: 3px solid transparent;
         }
 
-        /* アクティブ状態 */
         .menu-tab.active-tab {
             background-color: #fff; transform: translateY(4px);
             box-shadow: 0 2px 5px rgba(0,0,0,0.4), 0 0 10px var(--accent-gold);
@@ -123,12 +122,14 @@
             background-image: url('https://www.transparenttextures.com/patterns/cork-board.png');
             border-radius: 8px; border: 8px solid #5d4037;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6) inset;
-            padding: 20px; position: relative; min-height: 300px;
+            padding: 20px; position: relative; min-height: 400px; /* 高さを確保 */
+            overflow: hidden; /* はみ出し防止 */
         }
         
         .panel-header {
             text-align: center; margin-bottom: 20px; padding-bottom: 10px;
             border-bottom: 2px dashed rgba(93, 64, 55, 0.3);
+            position: relative; z-index: 10;
         }
         .panel-title-text {
             font-size: 1.4rem; color: #4a3b32; font-weight: bold;
@@ -166,7 +167,7 @@
         /* --- メンバーリスト (グリッド) --- */
         .member-list {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 15px;
+            gap: 20px 15px;
         }
         .mini-card {
             background: #fff; padding: 10px; border-radius: 4px;
@@ -182,14 +183,90 @@
             box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
         .mini-img {
-            width: 60px; height: 60px; border-radius: 50%; object-fit: cover;
-            border: 2px solid var(--accent-gold); margin-bottom: 5px; background: #eee;
+            width: 85px; height: 85px; border-radius: 50%; 
+            object-fit: cover; object-position: top center;
+            border: 3px solid var(--accent-gold); margin-bottom: 8px; background: #eee;
         }
-        .mini-name { font-weight: bold; font-size: 0.9rem; }
-        .mini-sub { font-size: 0.7rem; color: #666; }
+        .mini-name { font-weight: bold; font-size: 0.95rem; line-height: 1.2; }
+        .mini-sub { font-size: 0.75rem; color: #666; margin-top: 2px; }
+
+        /* =========================================
+           ▼▼▼ 新Membersステージ (立ち絵演出) ▼▼▼
+           ========================================= */
+        .members-stage {
+            display: flex; 
+            justify-content: space-around; /* 均等配置 */
+            align-items: flex-end;
+            height: 300px; /* 表示エリアの高さ */
+            position: relative;
+            margin-top: 20px;
+        }
+
+        .char-tachi {
+            position: relative;
+            width: 23%; /* 4人なので25%以下 */
+            height: 100%;
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            transform-origin: bottom center;
+            z-index: 5;
+            display: flex; justify-content: center; align-items: flex-end;
+        }
+
+        .char-tachi img {
+            max-width: 180%; /* 枠からはみ出して表示させる */
+            max-height: 95%; 
+            object-fit: contain;
+            object-position: bottom center;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
+            transition: all 0.5s;
+        }
+
+        /* 選択されていないキャラ（薄くなる） */
+        .char-tachi.dimmed {
+            opacity: 0.4;
+            transform: scale(0.9) translateY(10px);
+            filter: grayscale(0.5);
+            z-index: 1;
+        }
+
+        /* 選択されたキャラ（前に出る） */
+        .char-tachi.active {
+            opacity: 1;
+            transform: scale(1.15) translateY(0);
+            z-index: 10;
+        }
+        .char-tachi.active img {
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+        }
+
+        /* キャラクター説明プレート (初期非表示) */
+        .char-bio-box {
+            position: absolute;
+            bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px);
+            width: 90%;
+            background: rgba(255, 252, 240, 0.95);
+            border: 2px solid var(--wood-dark);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            text-align: center;
+            opacity: 0; pointer-events: none;
+            transition: all 0.4s ease;
+            z-index: 20;
+        }
+        .char-bio-box.show {
+            opacity: 1; pointer-events: auto;
+            transform: translateX(-50%) translateY(0);
+        }
+        .bio-name { font-size: 1.2rem; font-weight: bold; color: var(--pin-color); margin-bottom: 5px; font-family: 'Impact', sans-serif;}
+        .bio-text { font-size: 0.9rem; color: #444; line-height: 1.5; }
+        .bio-close { 
+            position: absolute; top: 5px; right: 10px; font-size: 1.2rem; cursor: pointer; color: #888;
+        }
 
         /* 戻る・閉じるボタン */
-        .panel-footer { margin-top: 20px; text-align: center; }
+        .panel-footer { margin-top: 20px; text-align: center; position: relative; z-index: 30;}
         .close-btn {
             display: inline-block; padding: 8px 30px; background: #8d6e63; color: #fff;
             border-radius: 20px; cursor: pointer; font-size: 0.9rem;
@@ -231,6 +308,11 @@
             .sns-label { font-size: 0.55rem; }
             
             .member-list { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .mini-img { width: 70px; height: 70px; }
+            
+            /* スマホでの立ち絵調整 */
+            .members-stage { height: 260px; }
+            .char-tachi img { max-width: 250%; } /* スマホだともっと大きくして重ねる */
         }
     </style>
 </head>
@@ -280,9 +362,9 @@
                             <a href="" target="_blank" class="sns-btn bg-yt" id="link-yt">
                                 <span class="sns-icon-char">▶</span><span class="sns-label">YouTube</span>
                             </a>
-                            <a href="" target="_blank" class="sns-btn bg-x" id="link-x">
+                            <div class="sns-btn bg-x" onclick="switchSns('sns-x')">
                                 <span class="sns-icon-char">𝕏</span><span class="sns-label">X</span>
-                            </a>
+                            </div>
                             <div class="sns-btn bg-twitch" onclick="switchSns('sns-twitch')">
                                 <span class="sns-icon-char">👾</span><span class="sns-label">Twitch</span>
                             </div>
@@ -292,60 +374,83 @@
                         </div>
                     </div>
 
+                    <div id="sns-x" class="sns-slide">
+                        <div onclick="switchSns('sns-home')" class="back-btn-internal">← Back</div>
+                        <div class="panel-header"><div class="panel-title-text" style="color:#333">X (Twitter)</div></div>
+                        <div class="member-list">
+                            <a href="" target="_blank" class="mini-card" id="x-official"><img src="flat-cafe-logo.png" class="mini-img" style="object-fit:contain"><span class="mini-name">Official</span></a>
+                            <a href="" target="_blank" class="mini-card" id="x-1"><img src="menu_youtube.png" class="mini-img"><span class="mini-name">Toruma</span></a>
+                            <a href="" target="_blank" class="mini-card" id="x-2"><img src="menu_twitter.png" class="mini-img"><span class="mini-name">Yuzucha</span></a>
+                            <a href="" target="_blank" class="mini-card" id="x-3"><img src="menu_member.png" class="mini-img"><span class="mini-name">Wakanagi</span></a>
+                            <a href="" target="_blank" class="mini-card" id="x-4"><img src="menu_gallery.png" class="mini-img"><span class="mini-name">Lily</span></a>
+                        </div>
+                    </div>
+
                     <div id="sns-twitch" class="sns-slide">
                         <div onclick="switchSns('sns-home')" class="back-btn-internal">← Back</div>
-                        <div class="panel-header">
-                            <div class="panel-title-text" style="color:#9146ff">Twitch Channels</div>
-                        </div>
+                        <div class="panel-header"><div class="panel-title-text" style="color:#9146ff">Twitch Channels</div></div>
                         <div class="member-list">
-                            <a href="" target="_blank" class="mini-card" id="tw-1">
-                                <img src="menu_youtube.png" class="mini-img"><span class="mini-name">Toruma</span>
-                            </a>
-                            <a href="" target="_blank" class="mini-card" id="tw-2">
-                                <img src="menu_twitter.png" class="mini-img"><span class="mini-name">Yuzucha</span>
-                            </a>
-                            <a href="" target="_blank" class="mini-card" id="tw-3">
-                                <img src="menu_member.png" class="mini-img"><span class="mini-name">Wakanagi</span>
-                            </a>
-                            <a href="" target="_blank" class="mini-card" id="tw-4">
-                                <img src="menu_gallery.png" class="mini-img"><span class="mini-name">Lily</span>
-                            </a>
+                            <a href="" target="_blank" class="mini-card" id="tw-1"><img src="menu_youtube.png" class="mini-img"><span class="mini-name">Toruma</span></a>
+                            <a href="" target="_blank" class="mini-card" id="tw-2"><img src="menu_twitter.png" class="mini-img"><span class="mini-name">Yuzucha</span></a>
+                            <a href="" target="_blank" class="mini-card" id="tw-3"><img src="menu_member.png" class="mini-img"><span class="mini-name">Wakanagi</span></a>
+                            <a href="" target="_blank" class="mini-card" id="tw-4"><img src="menu_gallery.png" class="mini-img"><span class="mini-name">Lily</span></a>
                         </div>
                     </div>
 
                     <div id="sns-tiktok" class="sns-slide">
                         <div onclick="switchSns('sns-home')" class="back-btn-internal">← Back</div>
-                        <div class="panel-header">
-                            <div class="panel-title-text" style="color:#333">TikTok Channels</div>
-                        </div>
+                        <div class="panel-header"><div class="panel-title-text" style="color:#333">TikTok Channels</div></div>
                         <div class="member-list">
-                            <a href="" target="_blank" class="mini-card" id="tt-official">
-                                <img src="flat-cafe-logo.png" class="mini-img" style="object-fit:contain"><span class="mini-name">Official</span>
-                            </a>
-                            <a href="" target="_blank" class="mini-card" id="tt-1">
-                                <img src="menu_youtube.png" class="mini-img"><span class="mini-name">Toruma</span>
-                            </a>
-                            <a href="" target="_blank" class="mini-card" id="tt-2">
-                                <img src="menu_twitter.png" class="mini-img"><span class="mini-name">Yuzucha</span>
-                            </a>
-                            <a href="" target="_blank" class="mini-card" id="tt-3">
-                                <img src="menu_member.png" class="mini-img"><span class="mini-name">Wakanagi</span>
-                            </a>
+                            <a href="" target="_blank" class="mini-card" id="tt-official"><img src="flat-cafe-logo.png" class="mini-img" style="object-fit:contain"><span class="mini-name">Official</span></a>
+                            <a href="" target="_blank" class="mini-card" id="tt-1"><img src="menu_youtube.png" class="mini-img"><span class="mini-name">Toruma</span></a>
+                            <a href="" target="_blank" class="mini-card" id="tt-2"><img src="menu_twitter.png" class="mini-img"><span class="mini-name">Yuzucha</span></a>
+                            <a href="" target="_blank" class="mini-card" id="tt-3"><img src="menu_member.png" class="mini-img"><span class="mini-name">Wakanagi</span></a>
+                            <a href="" target="_blank" class="mini-card" id="tt-4"><img src="menu_gallery.png" class="mini-img"><span class="mini-name">Lily</span></a>
                         </div>
                     </div>
-
                 </div>
 
                 <div id="view-members" class="section-view">
                     <div class="panel-header">
                         <div class="panel-title-text">Cafe Staff</div>
                     </div>
-                    <div class="member-list">
-                        <div class="mini-card"><img src="menu_youtube.png" class="mini-img"><span class="mini-name">Toruma</span><span class="mini-sub">Staff</span></div>
-                        <div class="mini-card"><img src="menu_twitter.png" class="mini-img"><span class="mini-name">Yuzucha</span><span class="mini-sub">Staff</span></div>
-                        <div class="mini-card"><img src="menu_member.png" class="mini-img"><span class="mini-name">Wakanagi</span><span class="mini-sub">Staff</span></div>
-                        <div class="mini-card"><img src="menu_gallery.png" class="mini-img"><span class="mini-name">Lily</span><span class="mini-sub">Staff</span></div>
+                    
+                    <div class="members-stage">
+                        <div class="char-tachi" onclick="selectMember('toruma', this)">
+                            <img src="top_toruma.png" alt="Toruma">
+                        </div>
+                        <div class="char-tachi" onclick="selectMember('yuzu', this)">
+                            <img src="top_yuzucha.png" alt="Yuzucha">
+                        </div>
+                        <div class="char-tachi" onclick="selectMember('wakanagi', this)">
+                            <img src="top_wakanagi.png" alt="Wakanagi">
+                        </div>
+                        <div class="char-tachi" onclick="selectMember('lily', this)">
+                            <img src="top_lily00.png" alt="Lily">
+                        </div>
                     </div>
+
+                    <div class="char-bio-box" id="bio-toruma">
+                        <div class="bio-close" onclick="closeBio()">×</div>
+                        <div class="bio-name">Toruma</div>
+                        <div class="bio-text">ふらっとcafeの店長。<br>ゲームとお酒が大好き。<br>今日もまったり配信中！</div>
+                    </div>
+                    <div class="char-bio-box" id="bio-yuzu">
+                        <div class="bio-close" onclick="closeBio()">×</div>
+                        <div class="bio-name">Yuzucha</div>
+                        <div class="bio-text">元気いっぱいの看板娘。<br>SNS担当で流行に敏感。<br>よくお菓子を食べている。</div>
+                    </div>
+                    <div class="char-bio-box" id="bio-wakanagi">
+                        <div class="bio-close" onclick="closeBio()">×</div>
+                        <div class="bio-name">Wakanagi</div>
+                        <div class="bio-text">クールに見えて意外と熱い。<br>メンバーのまとめ役。<br>深夜の作業が得意。</div>
+                    </div>
+                    <div class="char-bio-box" id="bio-lily">
+                        <div class="bio-close" onclick="closeBio()">×</div>
+                        <div class="bio-name">Lily</div>
+                        <div class="bio-text">癒し系のマイペース担当。<br>歌うことが好き。<br>美味しい紅茶を淹れてくれる。</div>
+                    </div>
+
                 </div>
 
                 <div id="view-gallery" class="section-view">
@@ -373,21 +478,27 @@
         //  ▼▼▼ URL設定エリア ▼▼▼
         // ==========================================
         
-        // Main SNS
         document.getElementById('link-yt').href = "https://www.youtube.com/@flatcafe-official";
-        document.getElementById('link-x').href = "https://twitter.com/";
 
-        // Twitch Members
+        // X (Twitter)
+        document.getElementById('x-official').href = "https://twitter.com/";
+        document.getElementById('x-1').href = "https://twitter.com/";
+        document.getElementById('x-2').href = "https://twitter.com/";
+        document.getElementById('x-3').href = "https://twitter.com/";
+        document.getElementById('x-4').href = "https://twitter.com/";
+
+        // Twitch
         document.getElementById('tw-1').href = "https://twitch.tv/";
         document.getElementById('tw-2').href = "https://twitch.tv/";
         document.getElementById('tw-3').href = "https://twitch.tv/";
         document.getElementById('tw-4').href = "https://twitch.tv/";
 
-        // TikTok Members
+        // TikTok
         document.getElementById('tt-official').href = "https://tiktok.com/";
         document.getElementById('tt-1').href = "https://tiktok.com/";
         document.getElementById('tt-2').href = "https://tiktok.com/";
         document.getElementById('tt-3').href = "https://tiktok.com/";
+        document.getElementById('tt-4').href = "https://tiktok.com/";
 
         // ==========================================
 
@@ -402,27 +513,57 @@
             document.querySelectorAll('.menu-tab').forEach(el => el.classList.remove('active-tab'));
             elem.classList.add('active-tab');
 
-            // SNSタブを開いた時は必ずホーム画面に戻す
             if(tabName === 'sns') switchSns('sns-home');
+            
+            // Membersタブを開いた時は、キャラの選択状態をリセット
+            if(tabName === 'members') closeBio();
 
-            // スマホならスクロール
             if(window.innerWidth <= 768) {
                 const offset = display.getBoundingClientRect().top + window.pageYOffset - 20;
                 window.scrollTo({top: offset, behavior: 'smooth'});
             }
         }
 
-        // 閉じる
         function closeContent() {
             document.getElementById('content-display').classList.remove('active');
             document.querySelectorAll('.menu-tab').forEach(el => el.classList.remove('active-tab'));
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        // SNS内部の画面切り替え
+        // SNS画面切り替え
         function switchSns(slideId) {
             document.querySelectorAll('.sns-slide').forEach(el => el.classList.remove('active'));
             document.getElementById(slideId).classList.add('active');
+        }
+
+        // --- Members 立ち絵選択システム ---
+        function selectMember(name, elem) {
+            // 全員の active を外し、dimmed をつける
+            document.querySelectorAll('.char-tachi').forEach(c => {
+                c.classList.remove('active');
+                c.classList.add('dimmed');
+            });
+
+            // クリックしたキャラだけ active にする (dimmed削除)
+            elem.classList.remove('dimmed');
+            elem.classList.add('active');
+
+            // 全ての説明文を隠す
+            document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show'));
+
+            // 該当する説明文を表示
+            const bio = document.getElementById('bio-' + name);
+            if(bio) bio.classList.add('show');
+        }
+
+        function closeBio() {
+            // 全員リセット（通常状態に戻す）
+            document.querySelectorAll('.char-tachi').forEach(c => {
+                c.classList.remove('active');
+                c.classList.remove('dimmed');
+            });
+            // 説明文を隠す
+            document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show'));
         }
     </script>
 </body>
