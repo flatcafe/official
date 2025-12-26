@@ -116,10 +116,14 @@
             content:''; position: absolute; width: 100%; height: 100%;
             top: 0; left: 0; opacity: 0.5; z-index: 0;
         }
+        /* トルマ(YouTube) */
         .card-yt .char-area::before { background: radial-gradient(circle at 50% 120%, #ffcdd2, transparent 70%); }
-        .card-tw .char-area::before { background: radial-gradient(circle at 50% 120%, #bbdefb, transparent 70%); }
-        .card-mem .char-area::before { background: radial-gradient(circle at 50% 120%, #fff9c4, transparent 70%); }
-        .card-gal .char-area::before { background: radial-gradient(circle at 50% 120%, #b2dfdb, transparent 70%); }
+        /* ゆずちゃん(Twitter) -> 黄色系 */
+        .card-tw .char-area::before { background: radial-gradient(circle at 50% 120%, #fff9c4, transparent 70%); }
+        /* ワカナギ(Members) -> 緑系 */
+        .card-mem .char-area::before { background: radial-gradient(circle at 50% 120%, #b2dfdb, transparent 70%); }
+        /* Lily(Gallery) -> 青系 */
+        .card-gal .char-area::before { background: radial-gradient(circle at 50% 120%, #bbdefb, transparent 70%); }
 
         /* キャラクター画像 */
         .char-img {
@@ -128,11 +132,27 @@
             position: relative; z-index: 10;
             transition: transform 0.5s ease; transform-origin: top center;
         }
-        /* 個別画像調整 */
-        .card-tw .char-img { transform: scale(1.2); } .card-tw:hover .char-img { transform: scale(1.3); }
-        .card-mem .char-img { transform: scale(1.25); } .card-mem:hover .char-img { transform: scale(1.35); }
-        .card-yt .char-img { transform: scale(1.05) translateY(-15px); } .card-yt:hover .char-img { transform: scale(1.15) translateY(-15px); }
-        .card-gal .char-img { transform: scale(0.98); } .card-gal:hover .char-img { transform: scale(1.08); }
+        
+        /* ▼▼▼ 個別画像調整 (キャラ変更に合わせてCSS移動) ▼▼▼ */
+
+        /* 1. トルマ (YouTube): 1.05倍, 上-15px */
+        .card-yt .char-img { transform: scale(1.05) translateY(-15px); }
+        .card-yt:hover .char-img { transform: scale(1.15) translateY(-15px); }
+
+        /* 2. ゆずちゃん (Twitter): 1.25倍 */
+        .card-tw .char-img { transform: scale(1.25); } 
+        .card-tw:hover .char-img { transform: scale(1.35); }
+
+        /* 3. ワカナギ (Members): 0.98倍 */
+        .card-mem .char-img { transform: scale(0.98); } 
+        .card-mem:hover .char-img { transform: scale(1.08); }
+
+        /* 4. Lily (Gallery): 1.2倍 */
+        .card-gal .char-img { transform: scale(1.2); } 
+        .card-gal:hover .char-img { transform: scale(1.3); }
+
+        /* ▲▲▲ 調整ここまで ▲▲▲ */
+
 
         /* 情報エリア */
         .info-area {
@@ -156,7 +176,7 @@
         @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 
         /* =========================================
-           ▼▼▼ 4. 多機能モーダル (アイコン選択式) ▼▼▼
+           4. 多機能モーダル (アイコン選択式)
            ========================================= */
         #video-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -181,7 +201,6 @@
         }
         #video-modal.active .modal-content { transform: scale(1) rotateX(0deg); }
 
-        /* 四隅のピン */
         .modal-content::before, .modal-content::after {
             content: ''; position: absolute; width: 20px; height: 20px;
             background: radial-gradient(circle at 30% 30%, #ff6b6b, var(--pin-color));
@@ -198,31 +217,26 @@
             transform: rotate(-1deg); box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        /* --- アイコングリッド (App Icon風) --- */
+        /* アイコングリッド */
         .icon-grid {
             display: flex; justify-content: center; gap: 20px;
             margin-bottom: 20px; flex-wrap: wrap;
         }
-
         .platform-icon {
             width: 100px; height: 100px;
-            border-radius: 20px; /* アプリアイコン風の角丸 */
+            border-radius: 20px;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             text-decoration: none; color: white;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            transition: transform 0.2s; position: relative;
-            cursor: pointer;
+            transition: transform 0.2s; position: relative; cursor: pointer;
         }
         .platform-icon:hover { transform: scale(1.1); box-shadow: 0 8px 20px rgba(0,0,0,0.4); z-index: 10; }
-        
-        /* アイコン上のピン */
         .platform-icon::after {
             content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
             width: 14px; height: 14px; border-radius: 50%;
             background: radial-gradient(circle at 30% 30%, #ef9a9a, var(--pin-color));
             box-shadow: 1px 2px 4px rgba(0,0,0,0.4);
         }
-
         .icon-symbol { font-size: 2.5rem; margin-bottom: 5px; line-height: 1; }
         .icon-label { font-size: 0.8rem; font-weight: bold; }
 
@@ -230,21 +244,18 @@
         .bg-twitch { background: linear-gradient(135deg, #9146ff, #6441a5); }
         .bg-tiktok { background: linear-gradient(135deg, #000000, #333333); }
 
-        /* --- 戻るボタン --- */
         .btn-back {
             background: #8d6e63; color: #fffbe0; border: none;
             text-align: center; padding: 10px 30px; width: auto; display: inline-block;
             margin-top: 20px; border-radius: 30px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3), inset 0 2px 2px rgba(255,255,255,0.2);
-            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3), inset 0 2px 2px rgba(255,255,255,0.2); cursor: pointer;
         }
 
-        /* --- チェキ風グリッド --- */
+        /* チェキ風グリッド */
         .sub-grid {
             display: grid; grid-template-columns: repeat(2, 1fr);
             gap: 20px; margin-bottom: 25px; padding: 10px;
         }
-
         .mini-card {
             background: #fff; padding: 10px 10px 25px 10px;
             text-decoration: none; color: #333;
@@ -261,19 +272,13 @@
             background: radial-gradient(circle at 30% 30%, #ef9a9a, var(--pin-color));
             box-shadow: 1px 2px 4px rgba(0,0,0,0.4); z-index: 5;
         }
-
-        /* ▼▼▼ 修正点: チェキ内の画像位置調整 ▼▼▼ */
         .mini-icon {
             width: 90%; aspect-ratio: 1 / 1;
-            /* 下半身問題を解決: 上揃えにする */
-            object-fit: cover; 
-            object-position: top center; 
-            
+            object-fit: cover; object-position: top center; 
             background: #eee; border: 1px solid #ccc;
             margin-bottom: 10px; filter: sepia(0.2);
         }
-        .official .mini-icon { object-fit: contain; padding: 5px; } /* 公式ロゴは全体表示 */
-
+        .official .mini-icon { object-fit: contain; padding: 5px; }
         .mini-name { font-family: 'Bradley Hand', cursive; font-weight: bold; font-size: 1.1rem; color: #444; }
 
         @keyframes mini-deal {
@@ -374,12 +379,10 @@
                         <span class="icon-symbol">▶</span>
                         <span class="icon-label">YouTube</span>
                     </a>
-                    
                     <div class="platform-icon bg-twitch" onclick="switchView('view-twitch')">
                         <span class="icon-symbol">👾</span>
                         <span class="icon-label">Twitch</span>
                     </div>
-                    
                     <div class="platform-icon bg-tiktok" onclick="switchView('view-tiktok')">
                         <span class="icon-symbol">🎵</span>
                         <span class="icon-label">TikTok</span>
@@ -398,15 +401,15 @@
                     </a>
                     <a href="" target="_blank" class="mini-card" id="twitch-mem2" style="--mini-rot:1.5deg; animation-delay:0.2s">
                         <img src="menu_twitter.png" class="mini-icon">
-                        <span class="mini-name">Lily</span>
+                        <span class="mini-name">Yuzucha</span>
                     </a>
                     <a href="" target="_blank" class="mini-card" id="twitch-mem3" style="--mini-rot:-1deg; animation-delay:0.3s">
                         <img src="menu_member.png" class="mini-icon">
-                        <span class="mini-name">Yuzucha</span>
+                        <span class="mini-name">Wakanagi</span>
                     </a>
                     <a href="" target="_blank" class="mini-card" id="twitch-mem4" style="--mini-rot:2deg; animation-delay:0.4s">
                         <img src="menu_gallery.png" class="mini-icon">
-                        <span class="mini-name">Wakanagi</span>
+                        <span class="mini-name">Lily</span>
                     </a>
                 </div>
                 <div class="btn-back" onclick="switchView('view-main')">Back</div>
@@ -425,11 +428,15 @@
                     </a>
                     <a href="" target="_blank" class="mini-card" id="tiktok-mem2" style="--mini-rot:1.5deg; animation-delay:0.3s">
                         <img src="menu_twitter.png" class="mini-icon">
-                        <span class="mini-name">Lily</span>
+                        <span class="mini-name">Yuzucha</span>
                     </a>
                     <a href="" target="_blank" class="mini-card" id="tiktok-mem3" style="--mini-rot:-1deg; animation-delay:0.4s">
                         <img src="menu_member.png" class="mini-icon">
-                        <span class="mini-name">Yuzucha</span>
+                        <span class="mini-name">Wakanagi</span>
+                    </a>
+                    <a href="" target="_blank" class="mini-card" id="tiktok-mem4" style="--mini-rot:2deg; animation-delay:0.5s">
+                        <img src="menu_gallery.png" class="mini-icon">
+                        <span class="mini-name">Lily</span>
                     </a>
                 </div>
                 <div class="btn-back" onclick="switchView('view-main')">Back</div>
@@ -454,16 +461,17 @@
         document.getElementById('link-gallery').href = "#";
 
         /* --- TwitchのメンバーURL --- */
-        document.getElementById('twitch-mem1').href = "https://twitch.tv/";
-        document.getElementById('twitch-mem2').href = "https://twitch.tv/";
-        document.getElementById('twitch-mem3').href = "https://twitch.tv/";
-        document.getElementById('twitch-mem4').href = "https://twitch.tv/";
+        document.getElementById('twitch-mem1').href = "https://twitch.tv/"; // Toruma
+        document.getElementById('twitch-mem2').href = "https://twitch.tv/"; // Yuzucha
+        document.getElementById('twitch-mem3').href = "https://twitch.tv/"; // Wakanagi
+        document.getElementById('twitch-mem4').href = "https://twitch.tv/"; // Lily
 
         /* --- TikTokのURL --- */
-        document.getElementById('tiktok-official').href = "https://tiktok.com/";
-        document.getElementById('tiktok-mem1').href = "https://tiktok.com/";
-        document.getElementById('tiktok-mem2').href = "https://tiktok.com/";
-        document.getElementById('tiktok-mem3').href = "https://tiktok.com/";
+        document.getElementById('tiktok-official').href = "https://tiktok.com/"; // Official
+        document.getElementById('tiktok-mem1').href = "https://tiktok.com/"; // Toruma
+        document.getElementById('tiktok-mem2').href = "https://tiktok.com/"; // Yuzucha
+        document.getElementById('tiktok-mem3').href = "https://tiktok.com/"; // Wakanagi
+        document.getElementById('tiktok-mem4').href = "https://tiktok.com/"; // Lily
 
         // ==========================================
         //  ▲▲▲ 設定ここまで ▲▲▲
