@@ -11,6 +11,7 @@
            ========================================= */
         :root {
             --paper-bg: #fdfbf7;
+            --card-bg: #fffcf5;
             --wood-dark: #4a3b32;
             --accent-gold: #ffd54f;
             --pin-color: #e53935; 
@@ -91,25 +92,11 @@
 
         .accordion-content { grid-column: 1 / -1; background: rgba(255,255,255,0.7); border-radius: 8px; padding: 15px; display: none; border: 2px dashed #d7ccc8; margin-top: -5px; margin-bottom: 10px; }
         .accordion-content.show { display: block; animation: fade-in 0.3s; }
-        
-        /* ★UPDATE: Mini Member Icons (顔を写すための調整) ★ */
         .mini-member-list { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
         .mini-card { width: 80px; text-align: center; text-decoration: none; color: #333; transition: transform 0.2s; }
         .mini-card:hover { transform: scale(1.1); }
-        /* 画像トリミング用の枠 */
-        .mini-img-box {
-            width: 60px; height: 60px; border-radius: 50%; border: 2px solid #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2); background: #eee;
-            overflow: hidden; position: relative; margin: 0 auto; /* 中央揃え */
-        }
-        /* 画像本体（拡大して位置調整） */
-        .mini-img-box img {
-            width: 200%; /* 2倍ズーム */
-            height: auto;
-            position: absolute;
-            top: 0; /* 上揃え */
-            left: 50%; transform: translateX(-50%); /* 左右中央 */
-        }
+        .mini-img-box { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); background: #eee; overflow: hidden; position: relative; margin: 0 auto; }
+        .mini-img-box img { width: 200%; height: auto; position: absolute; top: 0; left: 50%; transform: translateX(-50%); }
         .mini-card span { display: block; font-size: 0.8rem; margin-top: 3px; font-weight: bold; }
 
         /* Member Stage & Profile */
@@ -119,13 +106,19 @@
         .char-tachi { position: relative; width: 23%; height: 100%; cursor: pointer; transform-origin: bottom center; z-index: 5; display: flex; justify-content: center; align-items: flex-end; transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); }
         .char-tachi img { object-fit: contain; object-position: bottom center; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3)); transition: all 0.5s; max-width: 100%; max-height: 100%; }
         
-        /* ★UPDATE: 立ち絵サイズ調整 (若凪・柚茶を少し小さく) ★ */
-        #tachi-yuzu img, #tachi-wakanagi img { max-width: 250%; max-height: 80%; } /* PC: 少し縮小 */
+        /* 立ち絵サイズ調整 (若凪・柚茶) */
+        #tachi-yuzu img, #tachi-wakanagi img { max-width: 250%; max-height: 80%; } 
         
         .char-tachi.idle { animation: pyoko 2s infinite ease-in-out; }
         #tachi-toruma.idle { animation-delay: 0s; } #tachi-yuzu.idle { animation-delay: 0.5s; } #tachi-wakanagi.idle { animation-delay: 0.2s; } #tachi-lily.idle { animation-delay: 0.7s; }
         .char-tachi.dimmed { opacity: 0.5; transform: scale(0.9) translateY(10px); filter: blur(3px) grayscale(0.5) brightness(0.8); z-index: 1; }
+        
+        /* 通常のActive */
         .char-tachi.active { opacity: 1; transform: scale(1.2) translateY(20px); z-index: 100; animation: none; }
+        
+        /* ★UPDATE: 若凪・柚茶 Active時の位置調整（上へ移動） */
+        #tachi-yuzu.active, #tachi-wakanagi.active { transform: scale(1.2) translateY(-50px); }
+
         .char-tachi.active img { filter: drop-shadow(0 15px 30px rgba(0,0,0,0.7)); }
         @keyframes pyoko { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 
@@ -194,8 +187,8 @@
             .menu-tab { width: 32%; height: 90px; padding: 5px; }
             .tab-title { font-size: 0.8rem; } .tab-desc { font-size: 0.55rem; }
             .members-stage { height: 260px; }
-            /* ★UPDATE: スマホでの立ち絵サイズ調整 ★ */
-            #tachi-yuzu img, #tachi-wakanagi img { max-width: 280%; max-height: 75%; } /* スマホ: 少し縮小 */
+            /* スマホ: 立ち絵サイズ調整 */
+            #tachi-yuzu img, #tachi-wakanagi img { max-width: 280%; max-height: 75%; } 
             #tachi-toruma img { max-width: 200%; }
             #tachi-lily img { max-width: 170%; }
             .polaroid { width: 45%; max-width: 160px; }
