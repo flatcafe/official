@@ -130,29 +130,43 @@
         .bio-close { position: absolute; top: 5px; right: 10px; font-size: 1.5rem; cursor: pointer; color: #888; }
 
         /* ----------------------------------------------------
-           ★ UPDATE: Curtain Animation for Full View ★
+           ★ UPDATE: Curtain Animation with Mogo Mogo ★
            ---------------------------------------------------- */
         #full-view-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: all 0.3s; overflow: hidden; }
         #full-view-modal.active { opacity: 1; visibility: visible; }
         #full-view-img { max-width: 95%; max-height: 80vh; object-fit: contain; filter: drop-shadow(0 0 20px rgba(255,255,255,0.2)); transition: transform 0.3s; z-index: 1000; }
         
-        /* The Curtains */
+        /* カーテン定義 */
         .curtain-left, .curtain-right {
             position: absolute; top: 0; width: 51%; height: 100%;
             background: #b71c1c; /* Deep Red */
-            /* Add curtain texture */
             background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,0,0,0.1) 40px, rgba(0,0,0,0.1) 80px);
             box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
             transition: transform 0.5s ease-in-out;
-            z-index: 5000; /* Above image */
-            pointer-events: none;
+            z-index: 5000; pointer-events: none;
         }
         .curtain-left { left: 0; transform: translateX(-100%); border-right: 5px solid rgba(0,0,0,0.2); }
         .curtain-right { right: 0; transform: translateX(100%); border-left: 5px solid rgba(0,0,0,0.2); }
 
-        /* When Changing: Close Curtains */
+        /* 閉じるアニメーション */
         #full-view-modal.changing .curtain-left { transform: translateX(0); }
         #full-view-modal.changing .curtain-right { transform: translateX(0); }
+
+        /* もごもご（揺れる）アニメーション */
+        @keyframes rumble {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+        /* クラスが付いている間、親要素が揺れるのではなく、カーテン自体を揺らすのは難しいので
+           画像やカーテン全体を少し揺らす */
+        #full-view-modal.shaking .curtain-left, 
+        #full-view-modal.shaking .curtain-right {
+            /* 閉じた状態(translateX(0)) を基準に揺らす */
+            animation: rumble 0.3s infinite;
+        }
 
         .full-view-ctrl { margin-top: 15px; display: flex; gap: 20px; z-index: 10000; }
         .switch-btn { padding: 10px 20px; background: rgba(255,255,255,0.2); color: #fff; border: 1px solid #fff; border-radius: 30px; cursor: pointer; transition: background 0.3s; display: flex; align-items: center; gap: 8px;}
@@ -502,6 +516,7 @@
             
             // カーテンを開いた状態で開始
             modal.classList.remove('changing');
+            modal.classList.remove('shaking');
             modal.classList.add('active');
         }
 
@@ -510,23 +525,31 @@
             const img = document.getElementById('full-view-img');
             const btn = document.querySelector('.switch-btn');
             
-            // 1. カーテンを閉じる
+            // 1. Close Curtain
             modal.classList.add('changing');
 
-            // 2. 閉まった後に画像切り替え (CSS遷移時間 0.5s に合わせる)
+            // 2. Wait 600ms, then Shake & Swap
             setTimeout(() => {
+                modal.classList.add('shaking'); // Start wiggle
+                btn.textContent = "お着替え中...";
+
+                // Swap Logic
                 if(isHalloweenMode) { 
                     img.src = currentNormalImg; 
-                    btn.textContent = "🎃 衣装チェンジ"; 
                     isHalloweenMode = false; 
                 } else { 
                     img.src = currentHalloweenImg; 
-                    btn.textContent = "👕 通常衣装"; 
                     isHalloweenMode = true; 
                 }
                 
-                // 3. カーテンを開ける
-                modal.classList.remove('changing');
+                // 3. Wait another 1500ms (Loading Time), then Open
+                setTimeout(() => {
+                    modal.classList.remove('shaking');
+                    modal.classList.remove('changing');
+                    // Reset Button Text
+                    btn.textContent = isHalloweenMode ? "👕 通常衣装" : "🎃 衣装チェンジ";
+                }, 1500);
+
             }, 600);
         }
         function closeFullView() { document.getElementById('full-view-modal').classList.remove('active'); }
