@@ -105,19 +105,15 @@
         .char-tachi { position: relative; width: 23%; height: 100%; cursor: pointer; transform-origin: bottom center; z-index: 5; display: flex; justify-content: center; align-items: flex-end; transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); }
         .char-tachi img { object-fit: contain; object-position: bottom center; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3)); transition: all 0.5s; max-width: 100%; max-height: 100%; }
         
-        /* 立ち絵サイズ調整 (若凪・柚茶) */
+        /* 立ち絵サイズ調整 */
         #tachi-yuzu img, #tachi-wakanagi img { max-width: 250%; max-height: 80%; } 
         
         .char-tachi.idle { animation: pyoko 2s infinite ease-in-out; }
         #tachi-toruma.idle { animation-delay: 0s; } #tachi-yuzu.idle { animation-delay: 0.5s; } #tachi-wakanagi.idle { animation-delay: 0.2s; } #tachi-lily.idle { animation-delay: 0.7s; }
         .char-tachi.dimmed { opacity: 0.5; transform: scale(0.9) translateY(10px); filter: blur(3px) grayscale(0.5) brightness(0.8); z-index: 1; }
-        
-        /* 通常のActive */
         .char-tachi.active { opacity: 1; transform: scale(1.2) translateY(20px); z-index: 100; animation: none; }
-        
         /* 若凪・柚茶 Active時の位置調整（上へ移動） */
         #tachi-yuzu.active, #tachi-wakanagi.active { transform: scale(1.2) translateY(-50px); }
-
         .char-tachi.active img { filter: drop-shadow(0 15px 30px rgba(0,0,0,0.7)); }
         @keyframes pyoko { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 
@@ -133,15 +129,35 @@
         .bio-btn:active { transform: translateY(2px); box-shadow: none; }
         .bio-close { position: absolute; top: 5px; right: 10px; font-size: 1.5rem; cursor: pointer; color: #888; }
 
-        /* Full View with Switch */
-        #full-view-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: all 0.3s; }
+        /* ----------------------------------------------------
+           ★ UPDATE: Curtain Animation for Full View ★
+           ---------------------------------------------------- */
+        #full-view-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: all 0.3s; overflow: hidden; }
         #full-view-modal.active { opacity: 1; visibility: visible; }
-        #full-view-img { max-width: 95%; max-height: 80vh; object-fit: contain; filter: drop-shadow(0 0 20px rgba(255,255,255,0.2)); transform: scale(0.9); transition: transform 0.3s; }
-        #full-view-modal.active #full-view-img { transform: scale(1); }
+        #full-view-img { max-width: 95%; max-height: 80vh; object-fit: contain; filter: drop-shadow(0 0 20px rgba(255,255,255,0.2)); transition: transform 0.3s; z-index: 1000; }
+        
+        /* The Curtains */
+        .curtain-left, .curtain-right {
+            position: absolute; top: 0; width: 51%; height: 100%;
+            background: #b71c1c; /* Deep Red */
+            /* Add curtain texture */
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,0,0,0.1) 40px, rgba(0,0,0,0.1) 80px);
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+            transition: transform 0.5s ease-in-out;
+            z-index: 5000; /* Above image */
+            pointer-events: none;
+        }
+        .curtain-left { left: 0; transform: translateX(-100%); border-right: 5px solid rgba(0,0,0,0.2); }
+        .curtain-right { right: 0; transform: translateX(100%); border-left: 5px solid rgba(0,0,0,0.2); }
+
+        /* When Changing: Close Curtains */
+        #full-view-modal.changing .curtain-left { transform: translateX(0); }
+        #full-view-modal.changing .curtain-right { transform: translateX(0); }
+
         .full-view-ctrl { margin-top: 15px; display: flex; gap: 20px; z-index: 10000; }
         .switch-btn { padding: 10px 20px; background: rgba(255,255,255,0.2); color: #fff; border: 1px solid #fff; border-radius: 30px; cursor: pointer; transition: background 0.3s; display: flex; align-items: center; gap: 8px;}
         .switch-btn:hover { background: rgba(255,255,255,0.4); }
-        .full-view-close { position: absolute; top: 20px; right: 20px; color: #fff; font-size: 2.5rem; opacity: 0.7; cursor: pointer; }
+        .full-view-close { position: absolute; top: 20px; right: 20px; color: #fff; font-size: 2.5rem; opacity: 0.7; cursor: pointer; z-index: 10000; }
 
         /* Gallery */
         .gallery-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; padding: 20px; }
@@ -397,6 +413,9 @@
     </div>
 
     <div id="full-view-modal">
+        <div class="curtain-left"></div>
+        <div class="curtain-right"></div>
+        
         <div class="full-view-close" onclick="closeFullView()">×</div>
         <img id="full-view-img" src="" alt="Full View">
         <div class="full-view-ctrl">
@@ -477,19 +496,38 @@
             const modal = document.getElementById('full-view-modal');
             const img = document.getElementById('full-view-img');
             const switchBtn = document.querySelector('.switch-btn');
+            
             img.src = currentNormalImg;
             if(!halloweenImg) switchBtn.style.display = 'none'; else switchBtn.style.display = 'flex';
+            
+            // カーテンを開いた状態で開始
+            modal.classList.remove('changing');
             modal.classList.add('active');
         }
+
         function switchOutfit() {
+            const modal = document.getElementById('full-view-modal');
             const img = document.getElementById('full-view-img');
             const btn = document.querySelector('.switch-btn');
-            img.style.opacity = 0;
+            
+            // 1. カーテンを閉じる
+            modal.classList.add('changing');
+
+            // 2. 閉まった後に画像切り替え (CSS遷移時間 0.5s に合わせる)
             setTimeout(() => {
-                if(isHalloweenMode) { img.src = currentNormalImg; btn.textContent = "🎃 衣装チェンジ"; isHalloweenMode = false; }
-                else { img.src = currentHalloweenImg; btn.textContent = "👕 通常衣装"; isHalloweenMode = true; }
-                img.style.opacity = 1;
-            }, 300);
+                if(isHalloweenMode) { 
+                    img.src = currentNormalImg; 
+                    btn.textContent = "🎃 衣装チェンジ"; 
+                    isHalloweenMode = false; 
+                } else { 
+                    img.src = currentHalloweenImg; 
+                    btn.textContent = "👕 通常衣装"; 
+                    isHalloweenMode = true; 
+                }
+                
+                // 3. カーテンを開ける
+                modal.classList.remove('changing');
+            }, 600);
         }
         function closeFullView() { document.getElementById('full-view-modal').classList.remove('active'); }
 
