@@ -130,7 +130,7 @@
         .bio-close { position: absolute; top: 5px; right: 10px; font-size: 1.5rem; cursor: pointer; color: #888; }
 
         /* ----------------------------------------------------
-           ★ UPDATE: Curtain Animation with "Wave" & "Open" ★
+           ★ UPDATE: Curtain Animation (Wave & Open) ★
            ---------------------------------------------------- */
         #full-view-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: all 0.3s; overflow: hidden; }
         #full-view-modal.active { opacity: 1; visibility: visible; }
@@ -143,30 +143,31 @@
             background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,0,0,0.1) 40px, rgba(0,0,0,0.1) 80px);
             box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
             /* 開閉のアニメーション設定 */
-            transition: transform 0.5s ease-in-out;
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1); /* バサッと開く感 */
             z-index: 5000; pointer-events: none;
-            transform-origin: top center; /* 揺れの支点 */
+            transform-origin: top center; 
         }
         .curtain-left { left: 0; transform: translateX(-100%); border-right: 5px solid rgba(0,0,0,0.2); }
         .curtain-right { right: 0; transform: translateX(100%); border-left: 5px solid rgba(0,0,0,0.2); }
 
-        /* 閉じる状態（changingクラスが付いている時） */
+        /* 閉じる状態 */
         #full-view-modal.changing .curtain-left { transform: translateX(0); }
         #full-view-modal.changing .curtain-right { transform: translateX(0); }
 
-        /* ★UPDATE: もごもご（波打つ）アニメーション ★ */
-        @keyframes curtain-wave-left {
-            0%, 100% { transform: translateX(0) rotateZ(0deg); }
-            50% { transform: translateX(0) rotateZ(1.5deg) skewX(1deg); }
+        /* ★ もごもご（波打つ）アニメーション (揺れ幅を大きく) ★ */
+        @keyframes curtain-wave {
+            0% { transform: translateX(0) scaleX(1); }
+            25% { transform: translateX(0) scaleX(1.05); } /* 少し膨らむ */
+            50% { transform: translateX(0) scaleX(0.98); } /* 少し凹む */
+            75% { transform: translateX(0) scaleX(1.02); }
+            100% { transform: translateX(0) scaleX(1); }
         }
-        @keyframes curtain-wave-right {
-            0%, 100% { transform: translateX(0) rotateZ(0deg); }
-            50% { transform: translateX(0) rotateZ(-1.5deg) skewX(-1deg); }
-        }
-
+        
         /* shakingクラスが付いている間、波打たせる */
-        #full-view-modal.shaking .curtain-left { animation: curtain-wave-left 1s ease-in-out infinite; }
-        #full-view-modal.shaking .curtain-right { animation: curtain-wave-right 1s ease-in-out infinite; }
+        #full-view-modal.shaking .curtain-left,
+        #full-view-modal.shaking .curtain-right { 
+            animation: curtain-wave 0.5s ease-in-out infinite; 
+        }
 
         .full-view-ctrl { margin-top: 15px; display: flex; gap: 20px; z-index: 10000; }
         .switch-btn { padding: 10px 20px; background: rgba(255,255,255,0.2); color: #fff; border: 1px solid #fff; border-radius: 30px; cursor: pointer; transition: background 0.3s; display: flex; align-items: center; gap: 8px;}
@@ -525,15 +526,15 @@
             const img = document.getElementById('full-view-img');
             const btn = document.querySelector('.switch-btn');
             
-            // 1. Close Curtain
+            // 1. カーテンを閉じる
             modal.classList.add('changing');
 
-            // 2. Wait 600ms, then Wave & Swap
+            // 2. 閉まりきった後 (0.5秒後) -> もごもご開始 (Shake)
             setTimeout(() => {
-                modal.classList.add('shaking'); // Start wave
-                btn.textContent = "お着替え中...";
+                modal.classList.add('shaking'); 
+                btn.textContent = "お着替え中..."; // Text change
 
-                // Swap Logic
+                // 画像の切り替え (Swap)
                 if(isHalloweenMode) { 
                     img.src = currentNormalImg; 
                     isHalloweenMode = false; 
@@ -542,15 +543,20 @@
                     isHalloweenMode = true; 
                 }
                 
-                // 3. Wait another 2000ms (Loading Time), then Open
+                // 3. もごもごタイム終了 (2秒後) -> カーテンを開く (Open)
                 setTimeout(() => {
-                    modal.classList.remove('shaking'); // Stop wave
-                    modal.classList.remove('changing'); // Open curtain
-                    // Reset Button Text
-                    btn.textContent = isHalloweenMode ? "👕 通常衣装" : "🎃 衣装チェンジ";
-                }, 2000); // 待ち時間を少し長めに設定
+                    modal.classList.remove('shaking'); // Stop shaking first
+                    
+                    // 少しだけ間を置いてから開く（確実に閉じた状態を経由させる）
+                    setTimeout(() => {
+                        modal.classList.remove('changing'); // Open curtain
+                        // Reset Button Text
+                        btn.textContent = isHalloweenMode ? "👕 通常衣装" : "🎃 衣装チェンジ";
+                    }, 100); 
 
-            }, 600);
+                }, 2000);
+
+            }, 500); // 閉じるアニメーションの時間に合わせる
         }
         function closeFullView() { document.getElementById('full-view-modal').classList.remove('active'); }
 
