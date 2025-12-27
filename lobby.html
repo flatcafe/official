@@ -15,7 +15,7 @@
             --accent-gold: #ffd54f;
             --pin-color: #e53935; 
             --cork-bg: #e6d6ac;
-            /* メンバーカラー定義 (更新済み) */
+            /* メンバーカラー定義 */
             --col-toruma: #ab47bc;   /* Purple (とるま) */
             --col-yuzu: #fbc02d;     /* Yellow/Gold (柚茶) */
             --col-wakanagi: #66bb6a; /* Green (若凪) */
@@ -91,10 +91,25 @@
 
         .accordion-content { grid-column: 1 / -1; background: rgba(255,255,255,0.7); border-radius: 8px; padding: 15px; display: none; border: 2px dashed #d7ccc8; margin-top: -5px; margin-bottom: 10px; }
         .accordion-content.show { display: block; animation: fade-in 0.3s; }
+        
+        /* ★UPDATE: Mini Member Icons (顔を写すための調整) ★ */
         .mini-member-list { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
         .mini-card { width: 80px; text-align: center; text-decoration: none; color: #333; transition: transform 0.2s; }
         .mini-card:hover { transform: scale(1.1); }
-        .mini-card img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); background: #eee; object-fit: cover;}
+        /* 画像トリミング用の枠 */
+        .mini-img-box {
+            width: 60px; height: 60px; border-radius: 50%; border: 2px solid #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); background: #eee;
+            overflow: hidden; position: relative; margin: 0 auto; /* 中央揃え */
+        }
+        /* 画像本体（拡大して位置調整） */
+        .mini-img-box img {
+            width: 200%; /* 2倍ズーム */
+            height: auto;
+            position: absolute;
+            top: 0; /* 上揃え */
+            left: 50%; transform: translateX(-50%); /* 左右中央 */
+        }
         .mini-card span { display: block; font-size: 0.8rem; margin-top: 3px; font-weight: bold; }
 
         /* Member Stage & Profile */
@@ -103,6 +118,10 @@
         .members-stage { display: flex; justify-content: space-around; align-items: flex-end; height: 320px; position: relative; margin-top: 10px; }
         .char-tachi { position: relative; width: 23%; height: 100%; cursor: pointer; transform-origin: bottom center; z-index: 5; display: flex; justify-content: center; align-items: flex-end; transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); }
         .char-tachi img { object-fit: contain; object-position: bottom center; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3)); transition: all 0.5s; max-width: 100%; max-height: 100%; }
+        
+        /* ★UPDATE: 立ち絵サイズ調整 (若凪・柚茶を少し小さく) ★ */
+        #tachi-yuzu img, #tachi-wakanagi img { max-width: 250%; max-height: 80%; } /* PC: 少し縮小 */
+        
         .char-tachi.idle { animation: pyoko 2s infinite ease-in-out; }
         #tachi-toruma.idle { animation-delay: 0s; } #tachi-yuzu.idle { animation-delay: 0.5s; } #tachi-wakanagi.idle { animation-delay: 0.2s; } #tachi-lily.idle { animation-delay: 0.7s; }
         .char-tachi.dimmed { opacity: 0.5; transform: scale(0.9) translateY(10px); filter: blur(3px) grayscale(0.5) brightness(0.8); z-index: 1; }
@@ -175,7 +194,8 @@
             .menu-tab { width: 32%; height: 90px; padding: 5px; }
             .tab-title { font-size: 0.8rem; } .tab-desc { font-size: 0.55rem; }
             .members-stage { height: 260px; }
-            #tachi-yuzu img, #tachi-wakanagi img { max-width: 320%; max-height: 80%; }
+            /* ★UPDATE: スマホでの立ち絵サイズ調整 ★ */
+            #tachi-yuzu img, #tachi-wakanagi img { max-width: 280%; max-height: 75%; } /* スマホ: 少し縮小 */
             #tachi-toruma img { max-width: 200%; }
             #tachi-lily img { max-width: 170%; }
             .polaroid { width: 45%; max-width: 160px; }
@@ -230,10 +250,10 @@
                         </div>
                         <div id="acc-twitch" class="accordion-content">
                             <div class="mini-member-list">
-                                <a href="https://www.twitch.tv/tourma_flca" target="_blank" class="mini-card"><img src="menu_youtube.png"><span>とるま</span></a>
-                                <a href="https://www.twitch.tv/yuzucha08" target="_blank" class="mini-card"><img src="menu_twitter.png"><span>柚茶</span></a>
-                                <a href="https://www.twitch.tv/wakanagi" target="_blank" class="mini-card"><img src="menu_member.png"><span>若凪</span></a>
-                                <a href="https://www.twitch.tv/lily00_flca" target="_blank" class="mini-card"><img src="menu_gallery.png"><span>Lily00</span></a>
+                                <a href="https://www.twitch.tv/tourma_flca" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_youtube.png"></div><span>とるま</span></a>
+                                <a href="https://www.twitch.tv/yuzucha08" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_twitter.png"></div><span>柚茶</span></a>
+                                <a href="https://www.twitch.tv/wakanagi" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_member.png"></div><span>若凪</span></a>
+                                <a href="https://www.twitch.tv/lily00_flca" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_gallery.png"></div><span>Lily00</span></a>
                             </div>
                         </div>
 
@@ -244,11 +264,11 @@
                         </div>
                         <div id="acc-tiktok" class="accordion-content">
                             <div class="mini-member-list">
-                                <a href="https://tiktok.com/" target="_blank" class="mini-card"><img src="flat-cafe-logo.png"><span>Official</span></a>
-                                <a href="https://tiktok.com/" target="_blank" class="mini-card"><img src="menu_youtube.png"><span>とるま</span></a>
-                                <a href="https://tiktok.com/" target="_blank" class="mini-card"><img src="menu_twitter.png"><span>柚茶</span></a>
-                                <a href="https://tiktok.com/" target="_blank" class="mini-card"><img src="menu_member.png"><span>若凪</span></a>
-                                <a href="https://tiktok.com/" target="_blank" class="mini-card"><img src="menu_gallery.png"><span>Lily00</span></a>
+                                <a href="https://tiktok.com/" target="_blank" class="mini-card"><div class="mini-img-box"><img src="flat-cafe-logo.png"></div><span>Official</span></a>
+                                <a href="https://tiktok.com/" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_youtube.png"></div><span>とるま</span></a>
+                                <a href="https://tiktok.com/" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_twitter.png"></div><span>柚茶</span></a>
+                                <a href="https://tiktok.com/" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_member.png"></div><span>若凪</span></a>
+                                <a href="https://tiktok.com/" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_gallery.png"></div><span>Lily00</span></a>
                             </div>
                         </div>
 
@@ -259,11 +279,11 @@
                         </div>
                         <div id="acc-x" class="accordion-content">
                             <div class="mini-member-list">
-                                <a href="https://x.com/flca_official" target="_blank" class="mini-card"><img src="flat-cafe-logo.png"><span>Official</span></a>
-                                <a href="https://x.com/tourma_flca" target="_blank" class="mini-card"><img src="menu_youtube.png"><span>とるま</span></a>
-                                <a href="https://x.com/yuzucha_flca" target="_blank" class="mini-card"><img src="menu_twitter.png"><span>柚茶</span></a>
-                                <a href="https://x.com/wakanagi_flca" target="_blank" class="mini-card"><img src="menu_member.png"><span>若凪</span></a>
-                                <a href="https://x.com/Lily00_flca" target="_blank" class="mini-card"><img src="menu_gallery.png"><span>Lily00</span></a>
+                                <a href="https://x.com/flca_official" target="_blank" class="mini-card"><div class="mini-img-box"><img src="flat-cafe-logo.png"></div><span>Official</span></a>
+                                <a href="https://x.com/tourma_flca" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_youtube.png"></div><span>とるま</span></a>
+                                <a href="https://x.com/yuzucha_flca" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_twitter.png"></div><span>柚茶</span></a>
+                                <a href="https://x.com/wakanagi_flca" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_member.png"></div><span>若凪</span></a>
+                                <a href="https://x.com/Lily00_flca" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_gallery.png"></div><span>Lily00</span></a>
                             </div>
                         </div>
 
