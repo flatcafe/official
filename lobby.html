@@ -30,11 +30,11 @@
             font-family: 'Georgia', 'Yu Mincho', serif;
             color: var(--wood-dark); overflow-x: hidden;
             
-            /* --- 背景画像を naiso.png に変更 --- */
+            /* --- 背景指定 --- */
             background-image: url('naiso.png');
-            background-size: cover;          /* 画面全体を覆う */
-            background-position: center;     /* 中央揃え */
-            background-repeat: no-repeat;    /* 繰り返さない */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             background-attachment: fixed; 
             transition: background-color 1.5s ease;
         }
@@ -155,7 +155,7 @@
             padding-bottom: env(safe-area-inset-bottom); /* iOSホームバー対応 */
         }
         #full-view-modal.active { opacity: 1; visibility: visible; }
-        #full-view-img { max-width: 95%; max-height: 80vh; object-fit: contain; filter: drop-shadow(0 0 20px rgba(255,255,255,0.2)); transition: transform 0.3s; z-index: 1000; }
+        #full-view-img { max-width: 95%; max-height: 80vh; object-fit: contain; filter: drop-shadow(0 0 20px rgba(255,255,255,0.2)); transition: transform 0.3s; z-index: 1000; transform-origin: center bottom; }
         .curtain-left, .curtain-right { position: absolute; top: 0; width: 51%; height: 100%; background: #b71c1c; background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,0,0,0.1) 40px, rgba(0,0,0,0.1) 80px); box-shadow: inset 0 0 50px rgba(0,0,0,0.5); transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1); z-index: 5000; pointer-events: none; transform-origin: top center; }
         .curtain-left { left: 0; transform: translateX(-100%); border-right: 5px solid rgba(0,0,0,0.2); }
         .curtain-right { right: 0; transform: translateX(100%); border-left: 5px solid rgba(0,0,0,0.2); }
@@ -468,13 +468,26 @@
             document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show')); 
         }
 
+        // ====== 個別画像のスケール調整 ======
+        function updateImageScale(src) {
+            const img = document.getElementById('full-view-img');
+            // とるまのハロウィン画像のみ少し縮小（必要に応じて0.85の数値を調整してください）
+            if (src && src.includes('toruma_halloween')) {
+                img.style.transform = 'scale(0.85)';
+            } else {
+                img.style.transform = 'scale(1)';
+            }
+        }
+
         function openFullViewForMember(imgSrc, name) {
             currentMember = name; currentDefaultImg = imgSrc;
             const modal = document.getElementById('full-view-modal');
             const img = document.getElementById('full-view-img');
             const controls = document.getElementById('outfit-controls');
             
-            img.src = imgSrc; controls.style.display = 'flex';
+            img.src = imgSrc; 
+            updateImageScale(imgSrc); // 追加
+            controls.style.display = 'flex';
             
             const lib = outfitLibrary[name] || {};
             document.getElementById('btn-halloween').style.display = lib.halloween ? 'flex' : 'none';
@@ -489,7 +502,9 @@
             const img = document.getElementById('full-view-img');
             const controls = document.getElementById('outfit-controls');
             
-            img.src = imgSrc; controls.style.display = 'none';
+            img.src = imgSrc; 
+            updateImageScale(imgSrc); // 追加
+            controls.style.display = 'none';
             modal.classList.remove('changing', 'shaking'); modal.classList.add('active');
         }
 
@@ -506,7 +521,9 @@
 
             modal.classList.add('changing');
             setTimeout(() => {
-                modal.classList.add('shaking'); img.src = targetSrc;
+                modal.classList.add('shaking'); 
+                img.src = targetSrc;
+                updateImageScale(targetSrc); // 追加
                 setTimeout(() => {
                     modal.classList.remove('shaking');
                     setTimeout(() => { modal.classList.remove('changing'); }, 100);
