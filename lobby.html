@@ -30,11 +30,11 @@
             font-family: 'Georgia', 'Yu Mincho', serif;
             color: var(--wood-dark); overflow-x: hidden;
             
-            /* --- 背景画像を naiso.png に変更 --- */
+            /* --- 背景指定 --- */
             background-image: url('naiso.png');
-            background-size: cover;          /* 画面全体を覆う */
-            background-position: center;     /* 中央揃え */
-            background-repeat: no-repeat;    /* 繰り返さない */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             background-attachment: fixed; 
             transition: background-color 1.5s ease;
         }
@@ -52,10 +52,12 @@
         .container { max-width: 900px; margin: 0 auto; padding: 20px 15px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         header { text-align: center; margin-bottom: 20px; flex-shrink: 0; animation: fade-in 1s ease-out; position: relative; width: 100%; }
         .mini-logo { width: 120px; height: auto; margin-bottom: 10px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6)); }
-        .header-text { color: #fffbe0; letter-spacing: 0.2em; font-size: 1rem; text-shadow: 0 2px 4px rgba(0,0,0,0.8); border-top: 1px solid rgba(255,255,255,0.4); border-bottom: 1px solid rgba(255,255,255,0.4); padding: 3px 15px; display: inline-block; }
-        #greeting-msg { font-size: 0.8rem; color: #fffbe0; margin-top: 5px; opacity: 0.8; font-family: 'Yu Mincho', serif; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
-        .sound-switch { position: absolute; top: 0; right: 10px; width: 36px; height: 36px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; color: #fffbe0; font-size: 1.2rem; transition: all 0.3s; z-index: 50; }
-        .sound-switch.on { background: var(--accent-gold); color: var(--wood-dark); border-color: var(--wood-dark); box-shadow: 0 0 10px var(--accent-gold); }
+        
+        /* 視認性向上のためのすりガラス調プレート化 */
+        .header-text { color: var(--wood-dark); font-weight: bold; letter-spacing: 0.2em; font-size: 1rem; background: rgba(255,255,255,0.8); backdrop-filter: blur(4px); padding: 5px 20px; border-radius: 20px; display: inline-block; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        #greeting-msg { font-size: 0.85rem; color: var(--wood-dark); background: rgba(255,255,255,0.8); backdrop-filter: blur(4px); padding: 5px 15px; border-radius: 15px; margin-top: 8px; font-family: 'Yu Mincho', serif; display: inline-block; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .sound-switch { position: absolute; top: 0; right: 10px; width: 36px; height: 36px; background: rgba(255,255,255,0.8); backdrop-filter: blur(4px); border: none; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; color: var(--wood-dark); font-size: 1.2rem; transition: all 0.3s; z-index: 50; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .sound-switch.on { background: var(--accent-gold); color: var(--wood-dark); box-shadow: 0 0 10px var(--accent-gold); }
 
         /* =========================================
            3. メニューボタン (Tab)
@@ -93,7 +95,6 @@
         .menu-btn-icon { font-size: 2.5rem; margin-bottom: 8px; }
         .menu-btn-title { font-weight: bold; font-size: 1rem; line-height: 1.2; }
         .menu-btn-desc { font-size: 0.7rem; color: #777; margin-top: 3px; }
-        .badge { position: absolute; top: -5px; right: -5px; background: #e53935; color: #fff; font-size: 0.7rem; padding: 2px 6px; border-radius: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 
         .accordion-content { grid-column: 1 / -1; background: rgba(255,255,255,0.7); border-radius: 8px; padding: 15px; display: none; border: 2px dashed #d7ccc8; margin-top: -5px; margin-bottom: 10px; }
         .accordion-content.show { display: block; animation: fade-in 0.3s; }
@@ -111,14 +112,12 @@
         .char-tachi { position: relative; width: 23%; height: 100%; cursor: pointer; transform-origin: bottom center; z-index: 5; display: flex; justify-content: center; align-items: flex-end; transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); }
         .char-tachi img { object-fit: contain; object-position: bottom center; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3)); transition: all 0.5s; max-width: 100%; max-height: 100%; }
         
-        /* 立ち絵サイズ調整 */
         #tachi-yuzu img, #tachi-wakanagi img { max-width: 250%; max-height: 80%; } 
         
         .char-tachi.idle { animation: pyoko 2s infinite ease-in-out; }
         #tachi-toruma.idle { animation-delay: 0s; } #tachi-yuzu.idle { animation-delay: 0.5s; } #tachi-wakanagi.idle { animation-delay: 0.2s; } #tachi-lily.idle { animation-delay: 0.7s; }
         .char-tachi.dimmed { opacity: 0.5; transform: scale(0.9) translateY(10px); filter: blur(3px) grayscale(0.5) brightness(0.8); z-index: 1; }
         .char-tachi.active { opacity: 1; transform: scale(1.2) translateY(20px); z-index: 100; animation: none; }
-        /* 若凪・柚茶 Active時の位置調整（上へ移動） */
         #tachi-yuzu.active, #tachi-wakanagi.active { transform: scale(1.2) translateY(-50px); }
         .char-tachi.active img { filter: drop-shadow(0 15px 30px rgba(0,0,0,0.7)); }
         @keyframes pyoko { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
@@ -135,50 +134,6 @@
         .bio-btn:active { transform: translateY(2px); box-shadow: none; }
         .bio-close { position: absolute; top: 5px; right: 10px; font-size: 1.5rem; cursor: pointer; color: #888; }
 
-        /* ----------------------------------------------------
-           ★ Curtain Animation (Wave & Open) ★
-           ---------------------------------------------------- */
-        #full-view-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: all 0.3s; overflow: hidden; }
-        #full-view-modal.active { opacity: 1; visibility: visible; }
-        #full-view-img { max-width: 95%; max-height: 80vh; object-fit: contain; filter: drop-shadow(0 0 20px rgba(255,255,255,0.2)); transition: transform 0.3s; z-index: 1000; }
-        
-        /* カーテン定義 */
-        .curtain-left, .curtain-right {
-            position: absolute; top: 0; width: 51%; height: 100%;
-            background: #b71c1c; /* Deep Red */
-            background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,0,0,0.1) 40px, rgba(0,0,0,0.1) 80px);
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
-            /* 開閉のアニメーション設定 */
-            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-            z-index: 5000; pointer-events: none;
-            transform-origin: top center; 
-        }
-        .curtain-left { left: 0; transform: translateX(-100%); border-right: 5px solid rgba(0,0,0,0.2); }
-        .curtain-right { right: 0; transform: translateX(100%); border-left: 5px solid rgba(0,0,0,0.2); }
-
-        /* 閉じる状態 */
-        #full-view-modal.changing .curtain-left { transform: translateX(0); }
-        #full-view-modal.changing .curtain-right { transform: translateX(0); }
-
-        /* もごもご（波打つ）アニメーション */
-        @keyframes curtain-wave {
-            0% { transform: translateX(0) scaleX(1); }
-            25% { transform: translateX(0) scaleX(1.05); } 
-            50% { transform: translateX(0) scaleX(0.98); } 
-            75% { transform: translateX(0) scaleX(1.02); }
-            100% { transform: translateX(0) scaleX(1); }
-        }
-        
-        #full-view-modal.shaking .curtain-left,
-        #full-view-modal.shaking .curtain-right { 
-            animation: curtain-wave 0.5s ease-in-out infinite; 
-        }
-
-        .full-view-ctrl { margin-top: 15px; display: flex; gap: 20px; z-index: 10000; flex-wrap: wrap; justify-content: center; }
-        .switch-btn { padding: 10px 20px; background: rgba(255,255,255,0.2); color: #fff; border: 1px solid #fff; border-radius: 30px; cursor: pointer; transition: background 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; min-width: 140px;}
-        .switch-btn:hover { background: rgba(255,255,255,0.4); }
-        .full-view-close { position: absolute; top: 20px; right: 20px; color: #fff; font-size: 2.5rem; opacity: 0.7; cursor: pointer; z-index: 10000; }
-
         /* Gallery */
         .gallery-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; padding: 20px; }
         .polaroid { display: inline-block; vertical-align: top; background: #fff; padding: 10px 10px 35px 10px; box-shadow: 3px 3px 10px rgba(0,0,0,0.4); transform: rotate(-2deg); transition: transform 0.3s, z-index 0s; position: relative; cursor: pointer; text-decoration: none; color: #333; width: 140px; }
@@ -190,7 +145,31 @@
         .tape-corner { position: absolute; top: -10px; right: -5px; width: 40px; height: 15px; background: rgba(255,255,255,0.6); transform: rotate(45deg); box-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
         .stamp { position: absolute; bottom: 8px; right: 8px; border: 2px solid #1976d2; color: #1976d2; font-weight: bold; font-size: 0.7rem; padding: 1px 4px; transform: rotate(-15deg); opacity: 0.7; border-radius: 4px; }
 
-        .receipt-btn { margin-top: 30px; text-align: center; font-size: 0.8rem; text-decoration: underline; cursor: pointer; color: rgba(255,255,255,0.6); }
+        /* Curtain Animation */
+        #full-view-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: all 0.3s; overflow: hidden; }
+        #full-view-modal.active { opacity: 1; visibility: visible; }
+        #full-view-img { max-width: 95%; max-height: 80vh; object-fit: contain; filter: drop-shadow(0 0 20px rgba(255,255,255,0.2)); transition: transform 0.3s; z-index: 1000; }
+        .curtain-left, .curtain-right { position: absolute; top: 0; width: 51%; height: 100%; background: #b71c1c; background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,0,0,0.1) 40px, rgba(0,0,0,0.1) 80px); box-shadow: inset 0 0 50px rgba(0,0,0,0.5); transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1); z-index: 5000; pointer-events: none; transform-origin: top center; }
+        .curtain-left { left: 0; transform: translateX(-100%); border-right: 5px solid rgba(0,0,0,0.2); }
+        .curtain-right { right: 0; transform: translateX(100%); border-left: 5px solid rgba(0,0,0,0.2); }
+        #full-view-modal.changing .curtain-left { transform: translateX(0); }
+        #full-view-modal.changing .curtain-right { transform: translateX(0); }
+        @keyframes curtain-wave { 0% { transform: translateX(0) scaleX(1); } 25% { transform: translateX(0) scaleX(1.05); } 50% { transform: translateX(0) scaleX(0.98); } 75% { transform: translateX(0) scaleX(1.02); } 100% { transform: translateX(0) scaleX(1); } }
+        #full-view-modal.shaking .curtain-left, #full-view-modal.shaking .curtain-right { animation: curtain-wave 0.5s ease-in-out infinite; }
+        .full-view-ctrl { margin-top: 15px; display: flex; gap: 20px; z-index: 10000; flex-wrap: wrap; justify-content: center; }
+        .switch-btn { padding: 10px 20px; background: rgba(255,255,255,0.2); color: #fff; border: 1px solid #fff; border-radius: 30px; cursor: pointer; transition: background 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; min-width: 140px;}
+        .switch-btn:hover { background: rgba(255,255,255,0.4); }
+        .full-view-close { position: absolute; top: 20px; right: 20px; color: #fff; font-size: 2.5rem; opacity: 0.7; cursor: pointer; z-index: 10000; }
+
+        /* フッターリンク（視認性向上） */
+        .footer-links { display: flex; gap: 15px; margin-top: 20px; justify-content: center; z-index: 10; position: relative; }
+        .footer-btn { background: rgba(255,255,255,0.8); backdrop-filter: blur(4px); color: var(--wood-dark); padding: 8px 20px; border-radius: 20px; font-size: 0.85rem; text-decoration: none; cursor: pointer; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.1s; border: 1px solid rgba(255,255,255,0.5); }
+        .footer-btn:active { transform: translateY(2px); box-shadow: none; }
+        .panel-footer { margin-top: 20px; text-align: center; position: relative; z-index: 30;}
+        .close-btn { display: inline-block; padding: 8px 30px; background: #8d6e63; color: #fff; border-radius: 20px; cursor: pointer; font-size: 0.9rem; box-shadow: 0 3px 0 #5d4037; }
+        .close-btn:active { transform: translateY(3px); box-shadow: none; }
+
+        /* モーダル群 */
         #receipt-modal { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 5000; display: flex; justify-content: center; align-items: flex-end; transition: bottom 0.5s ease; }
         #receipt-modal.active { bottom: 0; }
         .receipt-paper { width: 300px; max-height: 80vh; background: #fff; padding: 20px; font-family: 'Courier New', monospace; font-size: 0.8rem; color: #333; position: relative; margin-bottom: 20px; box-shadow: 0 0 20px rgba(0,0,0,0.5); overflow-y: auto; transform: translateY(20px); }
@@ -210,9 +189,6 @@
         .note-btn { align-self: flex-end; margin-top: 10px; padding: 8px 30px; background: #5d4037; color: #fff; border-radius: 20px; cursor: pointer; font-family: sans-serif; font-size: 0.9rem; box-shadow: 0 3px 0 #3e2723; transition: all 0.1s; }
         .note-btn:active { transform: translateY(3px); box-shadow: none; }
 
-        .panel-footer { margin-top: 20px; text-align: center; position: relative; z-index: 30;}
-        .close-btn { display: inline-block; padding: 8px 30px; background: #8d6e63; color: #fff; border-radius: 20px; cursor: pointer; font-size: 0.9rem; box-shadow: 0 3px 0 #5d4037; }
-        .close-btn:active { transform: translateY(3px); box-shadow: none; }
         @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slide-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -222,7 +198,6 @@
             .menu-tab { width: 32%; height: 90px; padding: 5px; }
             .tab-title { font-size: 0.8rem; } .tab-desc { font-size: 0.55rem; }
             .members-stage { height: 260px; }
-            /* スマホ: 立ち絵サイズ調整 */
             #tachi-yuzu img, #tachi-wakanagi img { max-width: 280%; max-height: 75%; } 
             #tachi-toruma img { max-width: 200%; }
             #tachi-lily img { max-width: 170%; }
@@ -234,14 +209,13 @@
 </head>
 <body class="time-day">
     <div id="lighting-overlay"></div>
-    <div class="texture-overlay"></div>
 
     <div class="container">
         <header>
             <div class="sound-switch" onclick="toggleSound(this)" title="Doorbell ON/OFF">🔔</div>
             <img src="flat-cafe-logo.png" alt="Flat Cafe" class="mini-logo">
             <br>
-            <span class="header-text">Select Menu</span>
+            <span class="header-text">Select Menu</span><br>
             <div id="greeting-msg">いらっしゃいませ。</div>
         </header>
 
@@ -265,18 +239,12 @@
                 <!-- ====== CAFE MENU セクション ====== -->
                 <div id="view-menu" class="section-view">
                     <div class="panel-header"><div class="panel-title-text">Today's Menu</div></div>
-                    
                     <div class="menu-grid-layout">
                         <a href="https://www.youtube.com/@flatcafe_games/live" target="_blank" class="menu-btn">
-                            <div class="menu-btn-icon" style="color:#ff0000">📺</div>
-                            <div class="menu-btn-title">YouTube</div>
-                            <div class="menu-btn-desc">Official Live</div>
+                            <div class="menu-btn-icon" style="color:#ff0000">📺</div><div class="menu-btn-title">YouTube</div><div class="menu-btn-desc">Official Live</div>
                         </a>
-                        
                         <div class="menu-btn js-accordion" onclick="toggleAccordion('acc-twitch', this)">
-                            <div class="menu-btn-icon" style="color:#9146ff">👾</div>
-                            <div class="menu-btn-title">Twitch</div>
-                            <div class="menu-btn-desc">Member's</div>
+                            <div class="menu-btn-icon" style="color:#9146ff">👾</div><div class="menu-btn-title">Twitch</div><div class="menu-btn-desc">Member's</div>
                         </div>
                         <div id="acc-twitch" class="accordion-content">
                             <div class="mini-member-list">
@@ -288,9 +256,7 @@
                         </div>
 
                         <div class="menu-btn js-accordion" onclick="toggleAccordion('acc-tiktok', this)">
-                            <div class="menu-btn-icon" style="color:#333">🎵</div>
-                            <div class="menu-btn-title">TikTok</div>
-                            <div class="menu-btn-desc">Shorts</div>
+                            <div class="menu-btn-icon" style="color:#333">🎵</div><div class="menu-btn-title">TikTok</div><div class="menu-btn-desc">Shorts</div>
                         </div>
                         <div id="acc-tiktok" class="accordion-content">
                             <div class="mini-member-list">
@@ -303,9 +269,7 @@
                         </div>
 
                         <div class="menu-btn js-accordion" onclick="toggleAccordion('acc-x', this)">
-                            <div class="menu-btn-icon" style="color:#000">𝕏</div>
-                            <div class="menu-btn-title">X (Twitter)</div>
-                            <div class="menu-btn-desc">Info & Daily</div>
+                            <div class="menu-btn-icon" style="color:#000">𝕏</div><div class="menu-btn-title">X (Twitter)</div><div class="menu-btn-desc">Info & Daily</div>
                         </div>
                         <div id="acc-x" class="accordion-content">
                             <div class="mini-member-list">
@@ -318,9 +282,7 @@
                         </div>
 
                         <div class="menu-btn" onclick="openGuestNote()">
-                            <div class="menu-btn-icon">✎</div>
-                            <div class="menu-btn-title">Guest Note</div>
-                            <div class="menu-btn-desc">Message</div>
+                            <div class="menu-btn-icon">✎</div><div class="menu-btn-title">Guest Note</div><div class="menu-btn-desc">Message</div>
                         </div>
                     </div>
                 </div>
@@ -331,70 +293,35 @@
                     <div class="guide-text">Please Tap Member! 👇</div>
                     
                     <div class="members-stage">
-                        <div class="char-tachi idle" id="tachi-toruma" onclick="selectMember('toruma', this, 'menu_youtube.png')">
-                            <img src="menu_youtube.png" alt="Toruma">
-                        </div>
-                        <div class="char-tachi tachi-sit idle" id="tachi-yuzu" onclick="selectMember('yuzu', this, 'menu_twitter.png')">
-                            <img src="menu_twitter.png" alt="Yuzucha">
-                        </div>
-                        <div class="char-tachi tachi-sit idle" id="tachi-wakanagi" onclick="selectMember('wakanagi', this, 'menu_member.png')">
-                            <img src="menu_member.png" alt="Wakanagi">
-                        </div>
-                        <div class="char-tachi idle" id="tachi-lily" onclick="selectMember('lily', this, 'menu_gallery.png')">
-                            <img src="menu_gallery.png" alt="Lily">
-                        </div>
+                        <div class="char-tachi idle" id="tachi-toruma" onclick="selectMember('toruma', this, 'menu_youtube.png')"><img src="menu_youtube.png" alt="Toruma"></div>
+                        <div class="char-tachi tachi-sit idle" id="tachi-yuzu" onclick="selectMember('yuzu', this, 'menu_twitter.png')"><img src="menu_twitter.png" alt="Yuzucha"></div>
+                        <div class="char-tachi tachi-sit idle" id="tachi-wakanagi" onclick="selectMember('wakanagi', this, 'menu_member.png')"><img src="menu_member.png" alt="Wakanagi"></div>
+                        <div class="char-tachi idle" id="tachi-lily" onclick="selectMember('lily', this, 'menu_gallery.png')"><img src="menu_gallery.png" alt="Lily"></div>
                     </div>
 
                     <div class="char-bio-box" id="bio-toruma">
                         <div class="bio-close" onclick="closeBio()">×</div>
-                        <div class="bio-header">
-                            <div class="bio-name" style="color:var(--col-toruma)">とるま</div>
-                            <div class="bio-tags"><span class="tag">BD: 10/13</span><span class="tag" style="background:var(--col-toruma); color:#fff;">Purple</span></div>
-                        </div>
+                        <div class="bio-header"><div class="bio-name" style="color:var(--col-toruma)">とるま</div><div class="bio-tags"><span class="tag">BD: 10/13</span><span class="tag" style="background:var(--col-toruma); color:#fff;">Purple</span></div></div>
                         <div class="bio-text">最年少のイラスト担当。<br>すぐ眠くなっちゃうけど、<br>描く時は本気出すから見ててね。</div>
-                        <div class="bio-links">
-                            <div class="bio-btn">🔍 衣装を見る</div>
-                            <a href="https://www.youtube.com/shorts/_6wZeptatbc" target="_blank" class="bio-btn">▶ Shorts</a>
-                        </div>
+                        <div class="bio-links"><div class="bio-btn">🔍 衣装を見る</div><a href="https://www.youtube.com/shorts/_6wZeptatbc" target="_blank" class="bio-btn">▶ Shorts</a></div>
                     </div>
-
                     <div class="char-bio-box" id="bio-yuzu">
                         <div class="bio-close" onclick="closeBio()">×</div>
-                        <div class="bio-header">
-                            <div class="bio-name" style="color:var(--col-yuzu)">柚茶</div>
-                            <div class="bio-tags"><span class="tag">BD: 8/22</span><span class="tag" style="background:var(--col-yuzu); color:#fff;">Yellow</span></div>
-                        </div>
+                        <div class="bio-header"><div class="bio-name" style="color:var(--col-yuzu)">柚茶</div><div class="bio-tags"><span class="tag">BD: 8/22</span><span class="tag" style="background:var(--col-yuzu); color:#fff;">Yellow</span></div></div>
                         <div class="bio-text">元気いっぱいの看板娘。<br>広報にデザインになんでもできる！<br>よくお菓子を食べている。</div>
-                        <div class="bio-links">
-                            <div class="bio-btn">🔍 衣装を見る</div>
-                            <a href="https://www.youtube.com/shorts/kCya5I7d-b8" target="_blank" class="bio-btn">▶ Shorts</a>
-                        </div>
+                        <div class="bio-links"><div class="bio-btn">🔍 衣装を見る</div><a href="https://www.youtube.com/shorts/kCya5I7d-b8" target="_blank" class="bio-btn">▶ Shorts</a></div>
                     </div>
-
                     <div class="char-bio-box" id="bio-wakanagi">
                         <div class="bio-close" onclick="closeBio()">×</div>
-                        <div class="bio-header">
-                            <div class="bio-name" style="color:var(--col-wakanagi)">若凪</div>
-                            <div class="bio-tags"><span class="tag">BD: 8/3</span><span class="tag" style="background:var(--col-wakanagi); color:#fff;">Green</span></div>
-                        </div>
+                        <div class="bio-header"><div class="bio-name" style="color:var(--col-wakanagi)">若凪</div><div class="bio-tags"><span class="tag">BD: 8/3</span><span class="tag" style="background:var(--col-wakanagi); color:#fff;">Green</span></div></div>
                         <div class="bio-text">ダメダメでも熱いリーダー。<br>MIXや動画編集が得意な<br>頼れる（？）存在。</div>
-                        <div class="bio-links">
-                            <div class="bio-btn">🔍 衣装を見る</div>
-                            <a href="https://www.youtube.com/shorts/UD6plT5ab3Q" target="_blank" class="bio-btn">▶ Shorts</a>
-                        </div>
+                        <div class="bio-links"><div class="bio-btn">🔍 衣装を見る</div><a href="https://www.youtube.com/shorts/UD6plT5ab3Q" target="_blank" class="bio-btn">▶ Shorts</a></div>
                     </div>
-
                     <div class="char-bio-box" id="bio-lily">
                         <div class="bio-close" onclick="closeBio()">×</div>
-                        <div class="bio-header">
-                            <div class="bio-name" style="color:var(--col-lily)">Lily00</div>
-                            <div class="bio-tags"><span class="tag">BD: 4/18</span><span class="tag" style="background:var(--col-lily); color:#fff;">Red</span></div>
-                        </div>
+                        <div class="bio-header"><div class="bio-name" style="color:var(--col-lily)">Lily00</div><div class="bio-tags"><span class="tag">BD: 4/18</span><span class="tag" style="background:var(--col-lily); color:#fff;">Red</span></div></div>
                         <div class="bio-text">ゲームの腕前は神レベル。<br>冷静沈着な参謀役。<br>美味しいコーヒーを淹れてくれる。</div>
-                        <div class="bio-links">
-                            <div class="bio-btn">🔍 衣装を見る</div>
-                            <a href="https://www.youtube.com/shorts/Qs9mFiE0Ni4" target="_blank" class="bio-btn">▶ Shorts</a>
-                        </div>
+                        <div class="bio-links"><div class="bio-btn">🔍 衣装を見る</div><a href="https://www.youtube.com/shorts/Qs9mFiE0Ni4" target="_blank" class="bio-btn">▶ Shorts</a></div>
                     </div>
                 </div>
 
@@ -402,30 +329,17 @@
                 <div id="view-gallery" class="section-view">
                     <div class="panel-header"><div class="panel-title-text">Photo Gallery</div></div>
                     <div class="gallery-grid">
-                        
-                        <!-- 1周年記念イラスト追加 -->
                         <div class="polaroid" onclick="openFullViewForGallery('anniversary1st.png')">
-                            <div class="pin"></div>
-                            <img src="anniversary1st.png" alt="1st Anniversary">
-                            <div class="caption">1st Anniv. <span style="color:#ffd54f;">★</span></div>
-                            <div class="stamp" style="border-color:#e53935; color:#e53935;">NEW!</div>
+                            <div class="pin"></div><img src="anniversary1st.png" alt="1st Anniversary"><div class="caption">1st Anniv. <span style="color:#ffd54f;">★</span></div><div class="stamp" style="border-color:#e53935; color:#e53935;">NEW!</div>
                         </div>
-                        
                         <div class="polaroid" onclick="openFullViewForGallery('halloween2025.png')">
-                            <div class="pin"></div>
-                            <img src="halloween2025.png" alt="Halloween 2025">
-                            <div class="caption">Halloween 2025</div>
+                            <div class="pin"></div><img src="halloween2025.png" alt="Halloween 2025"><div class="caption">Halloween 2025</div>
                         </div>
                         <a href="https://flatcafe.github.io/flatcafe-live/merry.html" target="_blank" class="polaroid">
-                            <div class="tape-corner"></div>
-                            <img src="toruma_Xmas2025.png" alt="Xmas Site">
-                            <div class="caption">Xmas Site 2025 <span style="color:#e53935;">♥</span></div>
-                            <div class="stamp">WEB</div>
+                            <div class="tape-corner"></div><img src="toruma_Xmas2025.png" alt="Xmas Site"><div class="caption">Xmas Site 2025 <span style="color:#e53935;">♥</span></div><div class="stamp">WEB</div>
                         </a>
                         <div class="polaroid" onclick="openFullViewForGallery('flat-cafe-logo.png')">
-                            <div class="pin"></div>
-                            <img src="flat-cafe-logo.png" alt="Logo">
-                            <div class="caption">My Logo</div>
+                            <div class="pin"></div><img src="flat-cafe-logo.png" alt="Logo"><div class="caption">My Logo</div>
                         </div>
                     </div>
                 </div>
@@ -434,22 +348,18 @@
             </div>
         </div>
 
-        <div style="margin-top:20px;">
-            <a href="index.html" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:0.8rem;">← Entrance</a>
+        <div class="footer-links">
+            <a href="index.html" class="footer-btn">← Entrance</a>
+            <div class="footer-btn" onclick="openReceipt()">View History</div>
         </div>
-        
-        <div class="receipt-btn" onclick="openReceipt()">View History</div>
     </div>
 
     <!-- お着替え＆ギャラリー用 モーダル -->
     <div id="full-view-modal">
-        <div class="curtain-left"></div>
-        <div class="curtain-right"></div>
-        
+        <div class="curtain-left"></div><div class="curtain-right"></div>
         <div class="full-view-close" onclick="closeFullView()">×</div>
         <img id="full-view-img" src="" alt="Full View">
         <div class="full-view-ctrl" id="outfit-controls">
-            <!-- ボタンはJSで動的に表示 -->
             <div class="switch-btn" id="btn-halloween" onclick="switchSpecificOutfit('halloween')">🎃 ハロウィン</div>
             <div class="switch-btn" id="btn-cafe" onclick="switchSpecificOutfit('cafe')">☕ カフェスタイル</div>
             <div class="switch-btn" id="btn-default" onclick="switchSpecificOutfit('default')">👕 通常衣装</div>
@@ -459,8 +369,7 @@
     <div id="receipt-modal">
         <div class="receipt-paper">
             <div style="text-align:center; margin-bottom:10px;">*** FLAT CAFE LOG ***</div>
-            <div class="receipt-line"><span>2025-12-24</span><span>Open</span></div>
-            <div class="receipt-total">Total: 1 Updates</div>
+            <div class="receipt-total">Total: 0 Updates</div>
             <div class="receipt-close" onclick="closeReceipt()">Close Receipt</div>
         </div>
     </div>
@@ -484,7 +393,6 @@
         let currentMember = "";
         let currentDefaultImg = "";
 
-        // 衣装ライブラリ（ファイル名をここに設定）
         const outfitLibrary = {
             'toruma': { halloween: 'toruma_halloween.png', cafe: 'toruma_cafe.png' },
             'yuzu': { halloween: 'yuzu_halloween.png', cafe: 'yuzu_cafe.png' },
@@ -533,60 +441,48 @@
             btn.classList.toggle('active'); content.classList.toggle('show');
         }
 
-        // ====== メンバープロフィールの制御 ======
         function selectMember(name, elem, imgSrc) { 
-            document.querySelectorAll('.char-tachi').forEach(c => { c.classList.remove('idle'); c.classList.remove('active'); c.classList.add('dimmed'); }); 
+            document.querySelectorAll('.char-tachi').forEach(c => { c.classList.remove('idle', 'active'); c.classList.add('dimmed'); }); 
             elem.classList.remove('dimmed'); elem.classList.add('active'); 
             document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show')); 
             const bio = document.getElementById('bio-' + name); 
             if(bio) {
                 bio.classList.add('show');
-                // 動的に衣装ボタンのイベントをバインド
                 const outfitBtn = bio.querySelector('.bio-btn');
                 if(outfitBtn) outfitBtn.onclick = () => openFullViewForMember(imgSrc, name);
             }
         }
         
         function closeBio() { 
-            document.querySelectorAll('.char-tachi').forEach(c => { c.classList.remove('active'); c.classList.remove('dimmed'); c.classList.add('idle'); }); 
+            document.querySelectorAll('.char-tachi').forEach(c => { c.classList.remove('active', 'dimmed'); c.classList.add('idle'); }); 
             document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show')); 
         }
 
-        // ====== モーダル制御（メンバーお着替え用） ======
         function openFullViewForMember(imgSrc, name) {
-            currentMember = name;
-            currentDefaultImg = imgSrc;
+            currentMember = name; currentDefaultImg = imgSrc;
             const modal = document.getElementById('full-view-modal');
             const img = document.getElementById('full-view-img');
             const controls = document.getElementById('outfit-controls');
             
-            img.src = imgSrc;
-            controls.style.display = 'flex'; // お着替えボタンを表示
+            img.src = imgSrc; controls.style.display = 'flex';
             
-            // 衣装の有無に応じてボタンを出し分け
             const lib = outfitLibrary[name] || {};
             document.getElementById('btn-halloween').style.display = lib.halloween ? 'flex' : 'none';
             document.getElementById('btn-cafe').style.display = lib.cafe ? 'flex' : 'none';
-            document.getElementById('btn-default').style.display = 'flex'; // 通常は常に表示
+            document.getElementById('btn-default').style.display = 'flex';
 
-            modal.classList.remove('changing', 'shaking');
-            modal.classList.add('active');
+            modal.classList.remove('changing', 'shaking'); modal.classList.add('active');
         }
 
-        // ====== モーダル制御（ギャラリー用） ======
         function openFullViewForGallery(imgSrc) {
             const modal = document.getElementById('full-view-modal');
             const img = document.getElementById('full-view-img');
             const controls = document.getElementById('outfit-controls');
             
-            img.src = imgSrc;
-            controls.style.display = 'none'; // ギャラリーではボタンを隠す
-
-            modal.classList.remove('changing', 'shaking');
-            modal.classList.add('active');
+            img.src = imgSrc; controls.style.display = 'none';
+            modal.classList.remove('changing', 'shaking'); modal.classList.add('active');
         }
 
-        // ====== お着替えアニメーション ======
         function switchSpecificOutfit(type) {
             const modal = document.getElementById('full-view-modal');
             const img = document.getElementById('full-view-img');
@@ -596,27 +492,20 @@
             if(type === 'halloween' && lib.halloween) targetSrc = lib.halloween;
             if(type === 'cafe' && lib.cafe) targetSrc = lib.cafe;
 
-            // すでにその衣装なら何もしない
             if(img.src.includes(targetSrc)) return;
 
-            modal.classList.add('changing'); // カーテン閉まる
-
+            modal.classList.add('changing');
             setTimeout(() => {
-                modal.classList.add('shaking'); // もごもご開始
-                img.src = targetSrc; // 画像チェンジ
-
+                modal.classList.add('shaking'); img.src = targetSrc;
                 setTimeout(() => {
-                    modal.classList.remove('shaking'); // もごもご終了
-                    setTimeout(() => {
-                        modal.classList.remove('changing'); // カーテン開く
-                    }, 100);
-                }, 1500); // お着替え時間
-            }, 600); // カーテンが閉まりきるまでの時間
+                    modal.classList.remove('shaking');
+                    setTimeout(() => { modal.classList.remove('changing'); }, 100);
+                }, 1500);
+            }, 600);
         }
 
         function closeFullView() { document.getElementById('full-view-modal').classList.remove('active'); }
 
-        // ====== その他の機能（レシート、ノート） ======
         async function openReceipt() { 
             const modal = document.getElementById('receipt-modal'); modal.classList.add('active'); 
             const paper = document.querySelector('.receipt-paper');
@@ -646,7 +535,7 @@
                 const row = document.createElement('div'); row.className = 'receipt-line';
                 row.innerHTML = `<span>2025-12-24</span><span>Open</span>`;
                 paper.insertBefore(row, total); row.classList.add('receipt-element-show');
-                total.classList.add('receipt-element-show'); closeBtn.classList.add('receipt-element-show');
+                total.textContent = "Total: 1 Updates"; total.classList.add('receipt-element-show'); closeBtn.classList.add('receipt-element-show');
             }
         }
         function closeReceipt() { document.getElementById('receipt-modal').classList.remove('active'); }
