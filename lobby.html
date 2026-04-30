@@ -44,32 +44,42 @@
         .header-text { color: #fffbe0; letter-spacing: 0.2em; font-size: 1rem; text-shadow: 0 2px 4px rgba(0,0,0,0.8); border-top: 1px solid rgba(255,255,255,0.4); border-bottom: 1px solid rgba(255,255,255,0.4); padding: 3px 15px; display: inline-block; }
         #greeting-msg { font-size: 0.8rem; color: #fffbe0; margin-top: 5px; opacity: 0.8; }
 
-        .card-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; width: 100%; margin-bottom: 20px; }
-        .menu-tab { position: relative; background-color: #fffcf5; border-radius: 8px; color: var(--wood-dark); box-shadow: 0 4px 10px rgba(0,0,0,0.4); transition: all 0.2s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 160px; height: 140px; cursor: pointer; }
-        .menu-tab.active-tab { transform: translateY(4px); box-shadow: 0 2px 5px rgba(0,0,0,0.4), 0 0 10px var(--accent-gold); border: 3px solid var(--accent-gold); }
-        .tab-icon { font-size: 3rem; margin-bottom: 5px; }
+        /* タブメニュー */
+        .card-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; margin-bottom: 20px; }
+        .menu-tab { position: relative; background-color: #fffcf5; border-radius: 8px; color: var(--wood-dark); box-shadow: 0 4px 10px rgba(0,0,0,0.4); transition: all 0.2s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 30%; max-width: 160px; height: 120px; cursor: pointer; border: 3px solid transparent; }
+        .menu-tab.active-tab { transform: translateY(4px); box-shadow: 0 2px 5px rgba(0,0,0,0.4), 0 0 10px var(--accent-gold); border-color: var(--accent-gold); background-color: #fff; }
+        .tab-icon { font-size: 2.5rem; margin-bottom: 5px; }
+        .tab-title { font-size: 0.9rem; font-weight: bold; }
 
-        #content-display { width: 100%; flex-grow: 1; display: none; }
+        /* コンテンツパネル */
+        #content-display { width: 100%; flex-grow: 1; display: none; animation: slide-up 0.4s ease-out; }
         #content-display.active { display: block; }
-        .content-panel { background-color: var(--cork-bg); background-image: url('https://www.transparenttextures.com/patterns/cork-board.png'); border-radius: 8px; border: 8px solid #5d4037; box-shadow: 0 10px 30px rgba(0,0,0,0.6) inset; padding: 20px; position: relative; min-height: 400px; padding-bottom: 60px; }
+        .content-panel { background-color: var(--cork-bg); background-image: url('https://www.transparenttextures.com/patterns/cork-board.png'); border-radius: 8px; border: 8px solid #5d4037; box-shadow: 0 10px 30px rgba(0,0,0,0.6) inset; padding: 20px; position: relative; min-height: 450px; padding-bottom: 60px; }
         .section-view { display: none; }
         .section-view.show { display: block; }
+
+        /* Cafe Menu デザイン */
+        .menu-grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
+        .menu-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fff; padding: 15px; border-radius: 12px; text-decoration: none; color: #333; box-shadow: 0 3px 0 #d7ccc8; transition: transform 0.1s; border: 1px solid #eee; }
+        .menu-btn:active { transform: translateY(3px); box-shadow: none; }
+        .menu-btn-icon { font-size: 2rem; margin-bottom: 5px; }
 
         /* Members Stage */
         .members-stage { display: flex; justify-content: space-around; align-items: flex-end; height: 320px; position: relative; }
         .char-tachi { position: relative; width: 23%; height: 100%; cursor: pointer; transform-origin: bottom center; display: flex; justify-content: center; align-items: flex-end; transition: all 0.5s; }
-        .char-tachi img { object-fit: contain; object-position: bottom center; max-width: 100%; max-height: 100%; }
+        .char-tachi img { object-fit: contain; object-position: bottom center; max-width: 100%; max-height: 100%; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3)); }
         .char-tachi.dimmed { opacity: 0.5; filter: blur(2px) grayscale(0.5); }
         .char-tachi.active { transform: scale(1.2) translateY(20px); z-index: 100; }
+        .char-tachi.active img { filter: drop-shadow(0 15px 30px rgba(0,0,0,0.7)); }
 
-        .char-bio-box { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 95%; max-width: 400px; background: rgba(255, 252, 240, 0.95); border: 2px solid var(--wood-dark); border-radius: 12px; padding: 15px; opacity: 0; pointer-events: none; transition: all 0.4s; z-index: 200; }
+        .char-bio-box { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 95%; max-width: 400px; background: rgba(255, 252, 240, 0.95); border: 2px solid var(--wood-dark); border-radius: 12px; padding: 15px; opacity: 0; pointer-events: none; transition: all 0.4s; z-index: 200; text-align: center; }
         .char-bio-box.show { opacity: 1; pointer-events: auto; }
-        .bio-btn { font-size: 0.8rem; padding: 4px 12px; background: #fff; border: 1px solid #ccc; border-radius: 15px; cursor: pointer; display: inline-block; }
+        .bio-btn { font-size: 0.8rem; padding: 6px 15px; background: #fff; border: 1px solid #ccc; border-radius: 20px; cursor: pointer; display: inline-block; margin-top: 10px; box-shadow: 0 2px 0 #ddd; }
 
         /* Curtain & Full View */
-        #full-view-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: all 0.3s; }
+        #full-view-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: all 0.3s; }
         #full-view-modal.active { opacity: 1; visibility: visible; }
-        #full-view-img { max-width: 90%; max-height: 70vh; object-fit: contain; z-index: 1000; }
+        #full-view-img { max-width: 90%; max-height: 65vh; object-fit: contain; z-index: 1000; }
         
         .curtain-left, .curtain-right {
             position: absolute; top: 0; width: 51%; height: 100%;
@@ -78,19 +88,27 @@
             transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
             z-index: 5000; pointer-events: none;
         }
-        .curtain-left { left: 0; transform: translateX(-100%); }
-        .curtain-right { right: 0; transform: translateX(100%); }
+        .curtain-left { left: 0; transform: translateX(-100%); border-right: 2px solid rgba(0,0,0,0.3); }
+        .curtain-right { right: 0; transform: translateX(100%); border-left: 2px solid rgba(0,0,0,0.3); }
         #full-view-modal.changing .curtain-left, #full-view-modal.changing .curtain-right { transform: translateX(0); }
         #full-view-modal.shaking .curtain-left, #full-view-modal.shaking .curtain-right { animation: curtain-wave 0.5s infinite; }
 
-        .full-view-ctrl { margin-top: 20px; display: flex; gap: 10px; z-index: 10000; flex-wrap: wrap; justify-content: center; }
-        .switch-btn { padding: 12px 20px; background: rgba(255,255,255,0.2); color: #fff; border: 1px solid #fff; border-radius: 30px; cursor: pointer; transition: 0.3s; min-width: 150px; text-align: center; }
-        .switch-btn:hover { background: rgba(255,255,255,0.4); }
-        .full-view-close { position: absolute; top: 20px; right: 20px; color: #fff; font-size: 2.5rem; cursor: pointer; z-index: 10000; }
+        .full-view-ctrl { margin-top: 25px; display: flex; gap: 12px; z-index: 10000; flex-wrap: wrap; justify-content: center; }
+        .switch-btn { padding: 12px 24px; background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.5); border-radius: 30px; cursor: pointer; transition: 0.3s; min-width: 140px; text-align: center; font-size: 0.9rem; }
+        .switch-btn:hover { background: rgba(255,255,255,0.3); border-color: #fff; }
+        .full-view-close { position: absolute; top: 20px; right: 20px; color: #fff; font-size: 2.5rem; cursor: pointer; z-index: 10000; opacity: 0.7; }
 
-        .close-btn { display: inline-block; padding: 8px 30px; background: #8d6e63; color: #fff; border-radius: 20px; cursor: pointer; }
+        .panel-footer { text-align: center; margin-top: 20px; }
+        .close-btn { display: inline-block; padding: 8px 30px; background: #8d6e63; color: #fff; border-radius: 20px; cursor: pointer; font-size: 0.9rem; box-shadow: 0 3px 0 #5d4037; }
 
-        @keyframes curtain-wave { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(1.03); } }
+        @keyframes curtain-wave { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(1.02); } }
+        @keyframes slide-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 768px) {
+            .menu-tab { height: 100px; }
+            .members-stage { height: 260px; }
+            .switch-btn { padding: 10px 15px; font-size: 0.8rem; min-width: 120px; }
+        }
     </style>
 </head>
 <body class="time-day">
@@ -103,7 +121,11 @@
             <div id="greeting-msg">いらっしゃいませ。</div>
         </header>
 
+        <!-- 3つのタブが揃ったメニュー -->
         <div class="card-grid">
+            <div class="menu-tab" onclick="openTab('menu', this)">
+                <div class="tab-icon">📖</div><div class="tab-title">Cafe Menu</div>
+            </div>
             <div class="menu-tab" onclick="openTab('members', this)">
                 <div class="tab-icon">☕</div><div class="tab-title">Members</div>
             </div>
@@ -114,6 +136,24 @@
 
         <div id="content-display">
             <div class="content-panel">
+                
+                <!-- リンク集セクション -->
+                <div id="view-menu" class="section-view">
+                    <div style="text-align:center; margin-bottom:20px; font-weight:bold; color:#5d4037;">Official Links</div>
+                    <div class="menu-grid-layout">
+                        <a href="https://www.youtube.com/@flatcafe_games/live" target="_blank" class="menu-btn">
+                            <div class="menu-btn-icon" style="color:#ff0000">📺</div><div style="font-weight:bold;">YouTube</div>
+                        </a>
+                        <a href="https://x.com/flca_official" target="_blank" class="menu-btn">
+                            <div class="menu-btn-icon" style="color:#000">𝕏</div><div style="font-weight:bold;">Twitter</div>
+                        </a>
+                        <div class="menu-btn" style="cursor:default; opacity:0.6;">
+                            <div class="menu-btn-icon">🏠</div><div style="font-weight:bold;">Coming Soon</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- メンバー紹介セクション -->
                 <div id="view-members" class="section-view">
                     <div class="members-stage">
                         <div class="char-tachi" id="tachi-toruma" onclick="selectMember('toruma', this, 'menu_youtube.png')"><img src="menu_youtube.png"></div>
@@ -123,30 +163,36 @@
                     </div>
 
                     <div class="char-bio-box" id="bio-toruma">
-                        <div class="bio-header"><div class="bio-name">とるま</div></div>
+                        <div style="font-weight:bold; color:var(--col-toruma); font-size:1.2rem;">とるま</div>
                         <div class="bio-links"><div class="bio-btn">🔍 衣装を見る</div></div>
                     </div>
                     <div class="char-bio-box" id="bio-yuzu">
-                        <div class="bio-header"><div class="bio-name">柚茶</div></div>
+                        <div style="font-weight:bold; color:var(--col-yuzu); font-size:1.2rem;">柚茶</div>
                         <div class="bio-links"><div class="bio-btn">🔍 衣装を見る</div></div>
                     </div>
                     <div class="char-bio-box" id="bio-wakanagi">
-                        <div class="bio-header"><div class="bio-name">若凪</div></div>
+                        <div style="font-weight:bold; color:var(--col-wakanagi); font-size:1.2rem;">若凪</div>
                         <div class="bio-links"><div class="bio-btn">🔍 衣装を見る</div></div>
                     </div>
                     <div class="char-bio-box" id="bio-lily">
-                        <div class="bio-header"><div class="bio-name">Lily00</div></div>
+                        <div style="font-weight:bold; color:var(--col-lily); font-size:1.2rem;">Lily00</div>
                         <div class="bio-links"><div class="bio-btn">🔍 衣装を見る</div></div>
                     </div>
                 </div>
 
-                <div class="panel-footer" style="text-align:center; margin-top:20px;">
+                <!-- ギャラリーセクション -->
+                <div id="view-gallery" class="section-view">
+                    <div style="text-align:center; color:#5d4037; font-weight:bold;">Coming Soon...</div>
+                </div>
+
+                <div class="panel-footer">
                     <div class="close-btn" onclick="closeContent()">Close ×</div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- お着替えモーダル -->
     <div id="full-view-modal">
         <div class="curtain-left"></div><div class="curtain-right"></div>
         <div class="full-view-close" onclick="closeFullView()">×</div>
@@ -162,7 +208,7 @@
         let currentMember = "";
         let currentDefaultImg = "";
 
-        // 衣装の定義（画像がない場合はボタンが出ません）
+        // 衣装ライブラリ
         const outfitLibrary = {
             'toruma': { halloween: 'toruma_halloween.png', cafe: 'toruma_cafe.png' },
             'yuzu': { halloween: 'yuzu_halloween.png', cafe: 'yuzu_cafe.png' },
@@ -173,8 +219,8 @@
         function updateTimeOfDay() {
             const hr = new Date().getHours();
             const msg = document.getElementById('greeting-msg');
-            if(hr >= 5 && hr < 11) msg.textContent = "おはよう。";
-            else if(hr >= 11 && hr < 17) msg.textContent = "こんにちは。";
+            if(hr >= 5 && hr < 11) msg.textContent = "おはようございます。";
+            else if(hr >= 11 && hr < 17) msg.textContent = "こんにちは！";
             else msg.textContent = "こんばんは。";
         }
         window.onload = updateTimeOfDay;
@@ -183,9 +229,14 @@
             document.getElementById('content-display').classList.add('active');
             document.querySelectorAll('.section-view').forEach(v => v.classList.remove('show'));
             document.getElementById('view-' + name).classList.add('show');
+            document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active-tab'));
+            elem.classList.add('active-tab');
         }
 
-        function closeContent() { document.getElementById('content-display').classList.remove('active'); }
+        function closeContent() { 
+            document.getElementById('content-display').classList.remove('active'); 
+            document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active-tab'));
+        }
 
         function selectMember(name, elem, imgSrc) {
             document.querySelectorAll('.char-tachi').forEach(c => { c.classList.remove('active'); c.classList.add('dimmed'); });
@@ -205,7 +256,6 @@
             const img = document.getElementById('full-view-img');
             img.src = imgSrc;
             
-            // ボタンの表示制御
             const lib = outfitLibrary[name] || {};
             document.getElementById('btn-halloween').style.display = lib.halloween ? 'block' : 'none';
             document.getElementById('btn-cafe').style.display = lib.cafe ? 'block' : 'none';
@@ -223,7 +273,7 @@
             if(type === 'halloween' && lib.halloween) targetSrc = lib.halloween;
             if(type === 'cafe' && lib.cafe) targetSrc = lib.cafe;
 
-            if(img.src.includes(targetSrc)) return; // 同じ衣装なら何もしない
+            if(img.src.includes(targetSrc)) return;
 
             modal.classList.add('changing');
 
@@ -236,7 +286,7 @@
                     setTimeout(() => {
                         modal.classList.remove('changing');
                     }, 100);
-                }, 1500); // お着替え時間
+                }, 1500);
             }, 600);
         }
 
