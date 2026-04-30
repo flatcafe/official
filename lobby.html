@@ -101,8 +101,11 @@
         .mini-member-list { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
         .mini-card { width: 80px; text-align: center; text-decoration: none; color: #333; transition: transform 0.2s; }
         .mini-card:hover { transform: scale(1.1); }
-        .mini-img-box { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); background: #eee; overflow: hidden; position: relative; margin: 0 auto; }
-        .mini-img-box img { width: 200%; height: auto; position: absolute; top: 0; left: 50%; transform: translateX(-50%); }
+        
+        /* ★アイコンのCSSを最適化★ */
+        .mini-img-box { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); background: #eee; overflow: hidden; margin: 0 auto; display: flex; justify-content: center; align-items: center; }
+        .mini-img-box img { width: 100%; height: 100%; object-fit: cover; }
+        
         .mini-card span { display: block; font-size: 0.8rem; margin-top: 3px; font-weight: bold; }
 
         /* Member Stage & Profile */
@@ -258,10 +261,10 @@
                         </div>
                         <div id="acc-twitch" class="accordion-content">
                             <div class="mini-member-list">
-                                <a href="https://www.twitch.tv/tourma_flca" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_youtube.png"></div><span>とるま</span></a>
-                                <a href="https://www.twitch.tv/yuzucha08" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_twitter.png"></div><span>柚茶</span></a>
-                                <a href="https://www.twitch.tv/wakanagi" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_member.png"></div><span>若凪</span></a>
-                                <a href="https://www.twitch.tv/lily00_flca" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_gallery.png"></div><span>Lily00</span></a>
+                                <a href="https://www.twitch.tv/tourma_flca" target="_blank" class="mini-card"><div class="mini-img-box"><img src="icon_toruma.png"></div><span>とるま</span></a>
+                                <a href="https://www.twitch.tv/yuzucha08" target="_blank" class="mini-card"><div class="mini-img-box"><img src="icon_yuzu.png"></div><span>柚茶</span></a>
+                                <a href="https://www.twitch.tv/wakanagi" target="_blank" class="mini-card"><div class="mini-img-box"><img src="icon_wakanagi.png"></div><span>若凪</span></a>
+                                <a href="https://www.twitch.tv/lily00_flca" target="_blank" class="mini-card"><div class="mini-img-box"><img src="icon_lily.png"></div><span>Lily00</span></a>
                             </div>
                         </div>
 
@@ -270,11 +273,11 @@
                         </div>
                         <div id="acc-tiktok" class="accordion-content">
                             <div class="mini-member-list">
-                                <a href="https://tiktok.com/" target="_blank" class="mini-card"><div class="mini-img-box"><img src="flat-cafe-logo.png"></div><span>Official</span></a>
-                                <a href="https://tiktok.com/" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_youtube.png"></div><span>とるま</span></a>
-                                <a href="https://tiktok.com/" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_twitter.png"></div><span>柚茶</span></a>
-                                <a href="https://tiktok.com/" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_member.png"></div><span>若凪</span></a>
-                                <a href="https://tiktok.com/" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_gallery.png"></div><span>Lily00</span></a>
+                                <a href="https://tiktok.com/" target="_blank" class="mini-card"><div class="mini-img-box"><img src="icon_official.png"></div><span>Official</span></a>
+                                <a href="https://tiktok.com/" target="_blank" class="mini-card"><div class="mini-img-box"><img src="icon_toruma.png"></div><span>とるま</span></a>
+                                <a href="https://tiktok.com/" target="_blank" class="mini-card"><div class="mini-img-box"><img src="icon_yuzu.png"></div><span>柚茶</span></a>
+                                <a href="https://tiktok.com/" target="_blank" class="mini-card"><div class="mini-img-box"><img src="icon_wakanagi.png"></div><span>若凪</span></a>
+                                <a href="https://tiktok.com/" target="_blank" class="mini-card"><div class="mini-img-box"><img src="icon_lily.png"></div><span>Lily00</span></a>
                             </div>
                         </div>
 
@@ -283,11 +286,11 @@
                         </div>
                         <div id="acc-x" class="accordion-content">
                             <div class="mini-member-list">
-                                <a href="https://x.com/flca_official" target="_blank" class="mini-card"><div class="mini-img-box"><img src="flat-cafe-logo.png"></div><span>Official</span></a>
-                                <a href="https://x.com/tourma_flca" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_youtube.png"></div><span>とるま</span></a>
-                                <a href="https://x.com/yuzucha_flca" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_twitter.png"></div><span>柚茶</span></a>
-                                <a href="https://x.com/wakanagi_flca" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_member.png"></div><span>若凪</span></a>
-                                <a href="https://x.com/Lily00_flca" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_gallery.png"></div><span>Lily00</span></a>
+                                <a href="https://x.com/flca_official" target="_blank" class="mini-card"><div class="mini-img-box"><img src="icon_official.png"></div><span>Official</span></a>
+                                <a href="https://x.com/tourma_flca" target="_blank" class="mini-card"><div class="mini-img-box"><img src="icon_toruma.png"></div><span>とるま</span></a>
+                                <a href="https://x.com/yuzucha_flca" target="_blank" class="mini-card"><div class="mini-img-box"><img src="icon_yuzu.png"></div><span>柚茶</span></a>
+                                <a href="https://x.com/wakanagi_flca" target="_blank" class="mini-card"><div class="mini-img-box"><img src="icon_wakanagi.png"></div><span>若凪</span></a>
+                                <a href="https://x.com/Lily00_flca" target="_blank" class="mini-card"><div class="mini-img-box"><img src="icon_lily.png"></div><span>Lily00</span></a>
                             </div>
                         </div>
 
@@ -468,10 +471,8 @@
             document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show')); 
         }
 
-        // ====== 個別画像のスケール調整 ======
         function updateImageScale(src) {
             const img = document.getElementById('full-view-img');
-            // とるまのハロウィン画像のみ少し縮小（必要に応じて0.85の数値を調整してください）
             if (src && src.includes('toruma_halloween')) {
                 img.style.transform = 'scale(0.85)';
             } else {
@@ -486,7 +487,7 @@
             const controls = document.getElementById('outfit-controls');
             
             img.src = imgSrc; 
-            updateImageScale(imgSrc); // 追加
+            updateImageScale(imgSrc); 
             controls.style.display = 'flex';
             
             const lib = outfitLibrary[name] || {};
@@ -503,7 +504,7 @@
             const controls = document.getElementById('outfit-controls');
             
             img.src = imgSrc; 
-            updateImageScale(imgSrc); // 追加
+            updateImageScale(imgSrc); 
             controls.style.display = 'none';
             modal.classList.remove('changing', 'shaking'); modal.classList.add('active');
         }
@@ -523,7 +524,7 @@
             setTimeout(() => {
                 modal.classList.add('shaking'); 
                 img.src = targetSrc;
-                updateImageScale(targetSrc); // 追加
+                updateImageScale(targetSrc); 
                 setTimeout(() => {
                     modal.classList.remove('shaking');
                     setTimeout(() => { modal.classList.remove('changing'); }, 100);
