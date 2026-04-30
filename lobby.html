@@ -15,11 +15,10 @@
             --accent-gold: #ffd54f;
             --pin-color: #e53935; 
             --cork-bg: #e6d6ac;
-            /* メンバーカラー定義 */
-            --col-toruma: #ab47bc;   /* Purple (とるま) */
-            --col-yuzu: #fbc02d;     /* Yellow/Gold (柚茶) */
-            --col-wakanagi: #66bb6a; /* Green (若凪) */
-            --col-lily: #ef5350;     /* Red (Lily00) */
+            --col-toruma: #ab47bc;
+            --col-yuzu: #fbc02d;
+            --col-wakanagi: #66bb6a;
+            --col-lily: #ef5350;
         }
 
         * { -webkit-tap-highlight-color: transparent; outline: none; box-sizing: border-box; }
@@ -33,165 +32,65 @@
             background-attachment: fixed; transition: background-color 1.5s ease;
         }
 
-        /* 時間帯フィルター */
         #lighting-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; transition: background 2s ease; mix-blend-mode: overlay; }
         body.time-morning #lighting-overlay { background: linear-gradient(135deg, rgba(255, 255, 240, 0.3), rgba(200, 230, 255, 0.2)); }
         body.time-day #lighting-overlay { background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.15), transparent 70%); }
         body.time-sunset #lighting-overlay { background: linear-gradient(to bottom right, rgba(255, 160, 0, 0.3), rgba(100, 50, 0, 0.4)); mix-blend-mode: soft-light; }
         body.time-night #lighting-overlay { background: radial-gradient(circle at 50% 50%, rgba(40, 50, 80, 0.2) 20%, rgba(0, 0, 10, 0.8) 100%); }
 
-        /* =========================================
-           2. レイアウト & ヘッダー
-           ========================================= */
         .container { max-width: 900px; margin: 0 auto; padding: 20px 15px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        header { text-align: center; margin-bottom: 20px; flex-shrink: 0; animation: fade-in 1s ease-out; position: relative; width: 100%; }
+        header { text-align: center; margin-bottom: 20px; flex-shrink: 0; position: relative; width: 100%; }
         .mini-logo { width: 120px; height: auto; margin-bottom: 10px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6)); }
         .header-text { color: #fffbe0; letter-spacing: 0.2em; font-size: 1rem; text-shadow: 0 2px 4px rgba(0,0,0,0.8); border-top: 1px solid rgba(255,255,255,0.4); border-bottom: 1px solid rgba(255,255,255,0.4); padding: 3px 15px; display: inline-block; }
-        #greeting-msg { font-size: 0.8rem; color: #fffbe0; margin-top: 5px; opacity: 0.8; font-family: 'Yu Mincho', serif; }
-        .sound-switch { position: absolute; top: 0; right: 10px; width: 36px; height: 36px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; color: #fffbe0; font-size: 1.2rem; transition: all 0.3s; z-index: 50; }
-        .sound-switch.on { background: var(--accent-gold); color: var(--wood-dark); border-color: var(--wood-dark); box-shadow: 0 0 10px var(--accent-gold); }
+        #greeting-msg { font-size: 0.8rem; color: #fffbe0; margin-top: 5px; opacity: 0.8; }
 
-        /* =========================================
-           3. メニューボタン (Tab)
-           ========================================= */
-        .card-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; width: 100%; margin-bottom: 20px; flex-shrink: 0; }
-        .menu-tab { position: relative; background-color: #fffcf5; border-radius: 8px; color: var(--wood-dark); box-shadow: 0 4px 10px rgba(0,0,0,0.4); transition: all 0.2s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 160px; height: 140px; border: 3px solid transparent; cursor: pointer; }
-        .menu-tab.active-tab { background-color: #fff; transform: translateY(4px); box-shadow: 0 2px 5px rgba(0,0,0,0.4), 0 0 10px var(--accent-gold); border-color: var(--accent-gold); }
-        .tab-icon { font-size: 3rem; margin-bottom: 5px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2)); transition: transform 0.2s; position: relative; }
-        .menu-tab:hover .tab-icon { transform: scale(1.1); }
-        .tab-title { font-size: 1rem; font-weight: bold; font-family: 'Impact', sans-serif; letter-spacing: 0.05em; color: #5d4037; }
-        .tab-desc { font-size: 0.7rem; color: #888; margin-top: 3px; }
-        .tape { position: absolute; top: -8px; left: 50%; transform: translateX(-50%) rotate(-2deg); width: 60px; height: 20px; background: rgba(255,255,255,0.4); backdrop-filter: blur(2px); box-shadow: 0 1px 2px rgba(0,0,0,0.2); pointer-events: none; }
-        .steam-container { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 40px; height: 40px; pointer-events: none; z-index: 5; }
-        .steam { position: absolute; bottom: 0; left: 50%; width: 8px; height: 20px; background: rgba(255,255,255,0.6); border-radius: 10px; filter: blur(4px); opacity: 0; animation: rise 2.5s infinite ease-out; }
-        .steam:nth-child(1) { animation-delay: 0s; left: 30%; height: 15px; }
-        .steam:nth-child(2) { animation-delay: 1.2s; left: 70%; height: 25px; }
-        .steam:nth-child(3) { animation-delay: 0.6s; left: 50%; height: 20px; }
-        @keyframes rise { 0% { opacity: 0; transform: translateY(0) scale(0.5); } 30% { opacity: 0.7; } 100% { opacity: 0; transform: translateY(-30px) scale(1.5); } }
+        .card-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; width: 100%; margin-bottom: 20px; }
+        .menu-tab { position: relative; background-color: #fffcf5; border-radius: 8px; color: var(--wood-dark); box-shadow: 0 4px 10px rgba(0,0,0,0.4); transition: all 0.2s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 160px; height: 140px; cursor: pointer; }
+        .menu-tab.active-tab { transform: translateY(4px); box-shadow: 0 2px 5px rgba(0,0,0,0.4), 0 0 10px var(--accent-gold); border: 3px solid var(--accent-gold); }
+        .tab-icon { font-size: 3rem; margin-bottom: 5px; }
 
-        /* =========================================
-           4. コンテンツ表示エリア
-           ========================================= */
-        #content-display { width: 100%; flex-grow: 1; display: none; animation: slide-up 0.4s ease-out; }
+        #content-display { width: 100%; flex-grow: 1; display: none; }
         #content-display.active { display: block; }
-        .content-panel { background-color: var(--cork-bg); background-image: url('https://www.transparenttextures.com/patterns/cork-board.png'); border-radius: 8px; border: 8px solid #5d4037; box-shadow: 0 10px 30px rgba(0,0,0,0.6) inset; padding: 20px; position: relative; min-height: 400px; overflow: hidden; padding-bottom: 60px; }
-        .panel-header { text-align: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px dashed rgba(93, 64, 55, 0.3); position: relative; z-index: 10; }
-        .panel-title-text { font-size: 1.4rem; color: #4a3b32; font-weight: bold; text-shadow: 0 1px 0 rgba(255,255,255,0.4); }
+        .content-panel { background-color: var(--cork-bg); background-image: url('https://www.transparenttextures.com/patterns/cork-board.png'); border-radius: 8px; border: 8px solid #5d4037; box-shadow: 0 10px 30px rgba(0,0,0,0.6) inset; padding: 20px; position: relative; min-height: 400px; padding-bottom: 60px; }
         .section-view { display: none; }
-        .section-view.show { display: block; animation: fade-in 0.3s; }
+        .section-view.show { display: block; }
 
-        /* Cafe Menu (Icon Grid) */
-        .menu-grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
-        .menu-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fff; padding: 15px; border-radius: 12px; text-decoration: none; color: #333; box-shadow: 0 3px 0 #d7ccc8; transition: transform 0.1s, box-shadow 0.1s; border: 1px solid #eee; cursor: pointer; position: relative; }
-        .menu-btn:active, .menu-btn.active { transform: translateY(3px); box-shadow: none; background: #fffde7; }
-        .menu-btn-icon { font-size: 2.5rem; margin-bottom: 8px; }
-        .menu-btn-title { font-weight: bold; font-size: 1rem; line-height: 1.2; }
-        .menu-btn-desc { font-size: 0.7rem; color: #777; margin-top: 3px; }
+        /* Members Stage */
+        .members-stage { display: flex; justify-content: space-around; align-items: flex-end; height: 320px; position: relative; }
+        .char-tachi { position: relative; width: 23%; height: 100%; cursor: pointer; transform-origin: bottom center; display: flex; justify-content: center; align-items: flex-end; transition: all 0.5s; }
+        .char-tachi img { object-fit: contain; object-position: bottom center; max-width: 100%; max-height: 100%; }
+        .char-tachi.dimmed { opacity: 0.5; filter: blur(2px) grayscale(0.5); }
+        .char-tachi.active { transform: scale(1.2) translateY(20px); z-index: 100; }
 
-        .accordion-content { grid-column: 1 / -1; background: rgba(255,255,255,0.7); border-radius: 8px; padding: 15px; display: none; border: 2px dashed #d7ccc8; margin-top: -5px; margin-bottom: 10px; }
-        .accordion-content.show { display: block; animation: fade-in 0.3s; }
-        .mini-member-list { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
-        .mini-card { width: 80px; text-align: center; text-decoration: none; color: #333; transition: transform 0.2s; }
-        .mini-card:hover { transform: scale(1.1); }
-        .mini-img-box { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); background: #eee; overflow: hidden; position: relative; margin: 0 auto; }
-        .mini-img-box img { width: 200%; height: auto; position: absolute; top: 0; left: 50%; transform: translateX(-50%); }
-        .mini-card span { display: block; font-size: 0.8rem; margin-top: 3px; font-weight: bold; }
+        .char-bio-box { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 95%; max-width: 400px; background: rgba(255, 252, 240, 0.95); border: 2px solid var(--wood-dark); border-radius: 12px; padding: 15px; opacity: 0; pointer-events: none; transition: all 0.4s; z-index: 200; }
+        .char-bio-box.show { opacity: 1; pointer-events: auto; }
+        .bio-btn { font-size: 0.8rem; padding: 4px 12px; background: #fff; border: 1px solid #ccc; border-radius: 15px; cursor: pointer; display: inline-block; }
 
-        /* Member Stage & Profile */
-        .guide-text { text-align: center; color: #8d6e63; font-size: 0.85rem; margin-bottom: 10px; animation: flash 3s infinite; }
-        @keyframes flash { 0%,100% { opacity: 0.7; } 50% { opacity: 1; } }
-        .members-stage { display: flex; justify-content: space-around; align-items: flex-end; height: 320px; position: relative; margin-top: 10px; }
-        .char-tachi { position: relative; width: 23%; height: 100%; cursor: pointer; transform-origin: bottom center; z-index: 5; display: flex; justify-content: center; align-items: flex-end; transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); }
-        .char-tachi img { object-fit: contain; object-position: bottom center; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3)); transition: all 0.5s; max-width: 100%; max-height: 100%; }
-        
-        #tachi-yuzu img, #tachi-wakanagi img { max-width: 250%; max-height: 80%; } 
-        
-        .char-tachi.idle { animation: pyoko 2s infinite ease-in-out; }
-        #tachi-toruma.idle { animation-delay: 0s; } #tachi-yuzu.idle { animation-delay: 0.5s; } #tachi-wakanagi.idle { animation-delay: 0.2s; } #tachi-lily.idle { animation-delay: 0.7s; }
-        .char-tachi.dimmed { opacity: 0.5; transform: scale(0.9) translateY(10px); filter: blur(3px) grayscale(0.5) brightness(0.8); z-index: 1; }
-        .char-tachi.active { opacity: 1; transform: scale(1.2) translateY(20px); z-index: 100; animation: none; }
-        #tachi-yuzu.active, #tachi-wakanagi.active { transform: scale(1.2) translateY(-50px); }
-        .char-tachi.active img { filter: drop-shadow(0 15px 30px rgba(0,0,0,0.7)); }
-        @keyframes pyoko { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-
-        .char-bio-box { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px); width: 95%; max-width: 400px; background: rgba(255, 252, 240, 0.95); backdrop-filter: blur(5px); border: 2px solid var(--wood-dark); border-radius: 12px; padding: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); text-align: center; opacity: 0; pointer-events: none; transition: all 0.4s ease; z-index: 200; }
-        .char-bio-box.show { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
-        .bio-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 8px; border-bottom: 1px dashed #ccc; padding-bottom: 5px; }
-        .bio-name { font-size: 1.4rem; font-weight: bold; font-family: 'Yu Mincho', serif; }
-        .bio-tags { font-size: 0.75rem; color: #666; display: flex; gap: 8px; }
-        .tag { background: #eee; padding: 2px 6px; border-radius: 4px; }
-        .bio-text { font-size: 0.9rem; color: #444; line-height: 1.5; margin-bottom: 10px; }
-        .bio-links { display: flex; justify-content: center; gap: 10px; margin-top: 10px; }
-        .bio-btn { font-size: 0.8rem; padding: 4px 10px; background: #fff; border: 1px solid #ccc; border-radius: 15px; text-decoration: none; color: #333; box-shadow: 0 2px 0 #ddd; cursor: pointer; display: flex; align-items: center; gap: 5px;}
-        .bio-btn:active { transform: translateY(2px); box-shadow: none; }
-        .bio-close { position: absolute; top: 5px; right: 10px; font-size: 1.5rem; cursor: pointer; color: #888; }
-
-        /* Curtain Animation */
-        #full-view-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: all 0.3s; overflow: hidden; }
+        /* Curtain & Full View */
+        #full-view-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: all 0.3s; }
         #full-view-modal.active { opacity: 1; visibility: visible; }
-        #full-view-img { max-width: 95%; max-height: 80vh; object-fit: contain; filter: drop-shadow(0 0 20px rgba(255,255,255,0.2)); transition: transform 0.3s; z-index: 1000; }
+        #full-view-img { max-width: 90%; max-height: 70vh; object-fit: contain; z-index: 1000; }
         
         .curtain-left, .curtain-right {
             position: absolute; top: 0; width: 51%; height: 100%;
-            background: #b71c1c;
-            background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,0,0,0.1) 40px, rgba(0,0,0,0.1) 80px);
+            background: #b71c1c; background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,0,0,0.1) 40px, rgba(0,0,0,0.1) 80px);
             box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
             transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
             z-index: 5000; pointer-events: none;
-            transform-origin: top center; 
         }
-        .curtain-left { left: 0; transform: translateX(-100%); border-right: 5px solid rgba(0,0,0,0.2); }
-        .curtain-right { right: 0; transform: translateX(100%); border-left: 5px solid rgba(0,0,0,0.2); }
+        .curtain-left { left: 0; transform: translateX(-100%); }
+        .curtain-right { right: 0; transform: translateX(100%); }
+        #full-view-modal.changing .curtain-left, #full-view-modal.changing .curtain-right { transform: translateX(0); }
+        #full-view-modal.shaking .curtain-left, #full-view-modal.shaking .curtain-right { animation: curtain-wave 0.5s infinite; }
 
-        #full-view-modal.changing .curtain-left { transform: translateX(0); }
-        #full-view-modal.changing .curtain-right { transform: translateX(0); }
+        .full-view-ctrl { margin-top: 20px; display: flex; gap: 10px; z-index: 10000; flex-wrap: wrap; justify-content: center; }
+        .switch-btn { padding: 12px 20px; background: rgba(255,255,255,0.2); color: #fff; border: 1px solid #fff; border-radius: 30px; cursor: pointer; transition: 0.3s; min-width: 150px; text-align: center; }
+        .switch-btn:hover { background: rgba(255,255,255,0.4); }
+        .full-view-close { position: absolute; top: 20px; right: 20px; color: #fff; font-size: 2.5rem; cursor: pointer; z-index: 10000; }
 
-        @keyframes curtain-wave {
-            0% { transform: translateX(0) scaleX(1); }
-            25% { transform: translateX(0) scaleX(1.05); } 
-            50% { transform: translateX(0) scaleX(0.98); } 
-            75% { transform: translateX(0) scaleX(1.02); }
-            100% { transform: translateX(0) scaleX(1); }
-        }
-        #full-view-modal.shaking .curtain-left,
-        #full-view-modal.shaking .curtain-right { animation: curtain-wave 0.5s ease-in-out infinite; }
+        .close-btn { display: inline-block; padding: 8px 30px; background: #8d6e63; color: #fff; border-radius: 20px; cursor: pointer; }
 
-        .full-view-ctrl { margin-top: 15px; display: flex; gap: 20px; z-index: 10000; }
-        .switch-btn { padding: 10px 20px; background: rgba(255,255,255,0.2); color: #fff; border: 1px solid #fff; border-radius: 30px; cursor: pointer; transition: background 0.3s; display: flex; align-items: center; gap: 8px;}
-        .full-view-close { position: absolute; top: 20px; right: 20px; color: #fff; font-size: 2.5rem; opacity: 0.7; cursor: pointer; z-index: 10000; }
-
-        /* Gallery */
-        .gallery-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; padding: 20px; }
-        .polaroid { display: inline-block; vertical-align: top; background: #fff; padding: 10px 10px 35px 10px; box-shadow: 3px 3px 10px rgba(0,0,0,0.4); transform: rotate(-2deg); transition: transform 0.3s; position: relative; cursor: pointer; text-decoration: none; color: #333; width: 140px; }
-        .polaroid img { width: 100%; height: 120px; object-fit: cover; background: #eee; border: 1px solid #ccc; }
-        .caption { font-family: 'Bradley Hand', cursive; font-weight: bold; text-align: center; margin-top: 10px; font-size: 0.9rem; }
-        .pin { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 12px; height: 12px; border-radius: 50%; background: var(--pin-color); }
-
-        #receipt-modal { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 5000; display: flex; justify-content: center; align-items: flex-end; transition: bottom 0.5s ease; }
-        #receipt-modal.active { bottom: 0; }
-        .receipt-paper { width: 300px; max-height: 80vh; background: #fff; padding: 20px; font-family: 'Courier New', monospace; font-size: 0.8rem; color: #333; position: relative; margin-bottom: 20px; box-shadow: 0 0 20px rgba(0,0,0,0.5); overflow-y: auto; }
-        .receipt-line, .receipt-total, .receipt-close { opacity: 0; transform: translateY(-5px); transition: all 0.2s; display: flex; justify-content: space-between; margin-bottom: 5px; border-bottom: 1px dashed #eee; }
-        .receipt-total { border-top: 2px solid #333; margin-top: 10px; padding-top: 5px; font-weight: bold; text-align: right; display: block; }
-        .receipt-close { text-align: center; margin-top: 15px; cursor: pointer; color: #888; border: 1px solid #ccc; padding: 5px; display: block; }
-        .receipt-element-show { opacity: 1 !important; transform: translateY(0) !important; }
-
-        #note-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 6000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-        #note-modal.active { opacity: 1; pointer-events: auto; }
-        .note-paper { width: 90%; max-width: 500px; height: 70vh; background: #fff; border-radius: 5px; padding: 40px 20px 20px 20px; position: relative; display: flex; flex-direction: column; }
-        .note-content { flex-grow: 1; width: 100%; border: none; background: transparent; font-family: 'Yu Mincho', serif; font-size: 1rem; line-height: 32px; outline: none; resize: none; }
-
-        .panel-footer { margin-top: 20px; text-align: center; position: relative; z-index: 30;}
-        .close-btn { display: inline-block; padding: 8px 30px; background: #8d6e63; color: #fff; border-radius: 20px; cursor: pointer; font-size: 0.9rem; }
-        @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slide-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        @media (max-width: 768px) {
-            .container { padding: 10px; }
-            .menu-tab { width: 32%; height: 90px; }
-            .members-stage { height: 260px; }
-            #tachi-yuzu img, #tachi-wakanagi img { max-width: 280%; max-height: 75%; } 
-            .polaroid { width: 45%; }
-        }
+        @keyframes curtain-wave { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(1.03); } }
     </style>
 </head>
 <body class="time-day">
@@ -199,113 +98,53 @@
 
     <div class="container">
         <header>
-            <div class="sound-switch" onclick="toggleSound(this)">🔔</div>
             <img src="flat-cafe-logo.png" alt="Flat Cafe" class="mini-logo">
-            <br>
-            <span class="header-text">Select Menu</span>
+            <br><span class="header-text">Select Menu</span>
             <div id="greeting-msg">いらっしゃいませ。</div>
         </header>
 
         <div class="card-grid">
-            <div class="menu-tab" onclick="openTab('menu', this)">
-                <div class="tape"></div><div class="tab-icon">📖</div><div class="tab-title">Cafe Menu</div><div class="tab-desc">Content & Links</div>
-            </div>
-            <div class="menu-tab" id="tab-members" onclick="openTab('members', this)">
-                <div class="tape"></div>
-                <div class="tab-icon">☕<div class="steam-container"><div class="steam"></div><div class="steam"></div><div class="steam"></div></div></div>
-                <div class="tab-title">Members</div><div class="tab-desc">Staff Profile</div>
+            <div class="menu-tab" onclick="openTab('members', this)">
+                <div class="tab-icon">☕</div><div class="tab-title">Members</div>
             </div>
             <div class="menu-tab" onclick="openTab('gallery', this)">
-                <div class="tape"></div><div class="tab-icon">📷</div><div class="tab-title">Gallery</div><div class="tab-desc">Photo Album</div>
+                <div class="tab-icon">📷</div><div class="tab-title">Gallery</div>
             </div>
         </div>
 
         <div id="content-display">
             <div class="content-panel">
-                <div id="view-menu" class="section-view">
-                    <div class="panel-header"><div class="panel-title-text">Today's Menu</div></div>
-                    <div class="menu-grid-layout">
-                        <a href="https://www.youtube.com/@flatcafe_games/live" target="_blank" class="menu-btn">
-                            <div class="menu-btn-icon" style="color:#ff0000">📺</div>
-                            <div class="menu-btn-title">YouTube</div>
-                        </a>
-                        <div class="menu-btn" onclick="toggleAccordion('acc-twitch', this)">
-                            <div class="menu-btn-icon" style="color:#9146ff">👾</div>
-                            <div class="menu-btn-title">Twitch</div>
-                        </div>
-                        <div id="acc-twitch" class="accordion-content">
-                            <div class="mini-member-list">
-                                <a href="https://www.twitch.tv/tourma_flca" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_youtube.png"></div><span>とるま</span></a>
-                                <a href="https://www.twitch.tv/yuzucha08" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_twitter.png"></div><span>柚茶</span></a>
-                                <a href="https://www.twitch.tv/wakanagi" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_member.png"></div><span>若凪</span></a>
-                                <a href="https://www.twitch.tv/lily00_flca" target="_blank" class="mini-card"><div class="mini-img-box"><img src="menu_gallery.png"></div><span>Lily00</span></a>
-                            </div>
-                        </div>
-                        <div class="menu-btn" onclick="openGuestNote()">
-                            <div class="menu-btn-icon">✎</div>
-                            <div class="menu-btn-title">Guest Note</div>
-                        </div>
-                    </div>
-                </div>
-
                 <div id="view-members" class="section-view">
-                    <div class="panel-header"><div class="panel-title-text">Cafe Staff</div></div>
-                    <div class="guide-text">Please Tap Member! 👇</div>
                     <div class="members-stage">
-                        <div class="char-tachi idle" id="tachi-toruma" onclick="selectMember('toruma', this, 'menu_youtube.png')">
-                            <img src="menu_youtube.png" alt="Toruma">
-                        </div>
-                        <div class="char-tachi idle" id="tachi-yuzu" onclick="selectMember('yuzu', this, 'menu_twitter.png')">
-                            <img src="menu_twitter.png" alt="Yuzucha">
-                        </div>
-                        <div class="char-tachi idle" id="tachi-wakanagi" onclick="selectMember('wakanagi', this, 'menu_member.png')">
-                            <img src="menu_member.png" alt="Wakanagi">
-                        </div>
-                        <div class="char-tachi idle" id="tachi-lily" onclick="selectMember('lily', this, 'menu_gallery.png')">
-                            <img src="menu_gallery.png" alt="Lily">
-                        </div>
+                        <div class="char-tachi" id="tachi-toruma" onclick="selectMember('toruma', this, 'menu_youtube.png')"><img src="menu_youtube.png"></div>
+                        <div class="char-tachi" id="tachi-yuzu" onclick="selectMember('yuzu', this, 'menu_twitter.png')"><img src="menu_twitter.png"></div>
+                        <div class="char-tachi" id="tachi-wakanagi" onclick="selectMember('wakanagi', this, 'menu_member.png')"><img src="menu_member.png"></div>
+                        <div class="char-tachi" id="tachi-lily" onclick="selectMember('lily', this, 'menu_gallery.png')"><img src="menu_gallery.png"></div>
                     </div>
 
-                    <!-- Profiles (Buttons will be updated dynamically by JS) -->
                     <div class="char-bio-box" id="bio-toruma">
-                        <div class="bio-close" onclick="closeBio()">×</div>
-                        <div class="bio-header"><div class="bio-name" style="color:var(--col-toruma)">とるま</div></div>
-                        <div class="bio-text">最年少のイラスト担当。</div>
-                        <div class="bio-links"><div class="bio-btn">🔍 全身</div></div>
+                        <div class="bio-header"><div class="bio-name">とるま</div></div>
+                        <div class="bio-links"><div class="bio-btn">🔍 衣装を見る</div></div>
                     </div>
                     <div class="char-bio-box" id="bio-yuzu">
-                        <div class="bio-close" onclick="closeBio()">×</div>
-                        <div class="bio-header"><div class="bio-name" style="color:var(--col-yuzu)">柚茶</div></div>
-                        <div class="bio-text">元気いっぱいの看板娘。</div>
-                        <div class="bio-links"><div class="bio-btn">🔍 全身</div></div>
+                        <div class="bio-header"><div class="bio-name">柚茶</div></div>
+                        <div class="bio-links"><div class="bio-btn">🔍 衣装を見る</div></div>
                     </div>
                     <div class="char-bio-box" id="bio-wakanagi">
-                        <div class="bio-close" onclick="closeBio()">×</div>
-                        <div class="bio-header"><div class="bio-name" style="color:var(--col-wakanagi)">若凪</div></div>
-                        <div class="bio-text">ダメダメでも熱いリーダー。</div>
-                        <div class="bio-links"><div class="bio-btn">🔍 全身</div></div>
+                        <div class="bio-header"><div class="bio-name">若凪</div></div>
+                        <div class="bio-links"><div class="bio-btn">🔍 衣装を見る</div></div>
                     </div>
                     <div class="char-bio-box" id="bio-lily">
-                        <div class="bio-close" onclick="closeBio()">×</div>
-                        <div class="bio-header"><div class="bio-name" style="color:var(--col-lily)">Lily00</div></div>
-                        <div class="bio-text">ゲームの腕前は神レベル。</div>
-                        <div class="bio-links"><div class="bio-btn">🔍 全身</div></div>
+                        <div class="bio-header"><div class="bio-name">Lily00</div></div>
+                        <div class="bio-links"><div class="bio-btn">🔍 衣装を見る</div></div>
                     </div>
                 </div>
 
-                <div id="view-gallery" class="section-view">
-                    <div class="panel-header"><div class="panel-title-text">Photo Gallery</div></div>
-                    <div class="gallery-grid">
-                        <div class="polaroid" onclick="openFullView('halloween2025.png')">
-                            <img src="halloween2025.png"><div class="caption">Halloween 2025</div>
-                        </div>
-                    </div>
+                <div class="panel-footer" style="text-align:center; margin-top:20px;">
+                    <div class="close-btn" onclick="closeContent()">Close ×</div>
                 </div>
-
-                <div class="panel-footer"><div class="close-btn" onclick="closeContent()">Close ×</div></div>
             </div>
         </div>
-        <div class="receipt-btn" onclick="openReceipt()">View History</div>
     </div>
 
     <div id="full-view-modal">
@@ -313,153 +152,95 @@
         <div class="full-view-close" onclick="closeFullView()">×</div>
         <img id="full-view-img" src="">
         <div class="full-view-ctrl">
-            <div class="switch-btn" onclick="switchOutfit()">👗 衣装チェンジ</div>
+            <div class="switch-btn" id="btn-halloween" onclick="switchSpecificOutfit('halloween')">🎃 ハロウィン</div>
+            <div class="switch-btn" id="btn-cafe" onclick="switchSpecificOutfit('cafe')">☕ カフェスタイル</div>
+            <div class="switch-btn" id="btn-default" onclick="switchSpecificOutfit('default')">👕 通常衣装へ</div>
         </div>
     </div>
-
-    <div id="receipt-modal">
-        <div class="receipt-paper">
-            <div style="text-align:center;">*** FLAT CAFE LOG ***</div>
-            <div class="receipt-total"></div>
-            <div class="receipt-close" onclick="closeReceipt()">Close</div>
-        </div>
-    </div>
-
-    <div id="note-modal">
-        <div class="note-paper">
-            <div onclick="closeGuestNote()" style="cursor:pointer;text-align:right;">×</div>
-            <textarea class="note-content" placeholder="メッセージをどうぞ..."></textarea>
-            <button onclick="closeGuestNote()">送信</button>
-        </div>
-    </div>
-    
-    <audio id="audio-se"></audio>
 
     <script>
-        const GITHUB_USER = 'flatcafe';
-        const GITHUB_REPO = 'flatcafe-live';
-        const LOG_FOLDER  = 'logs';
+        let currentMember = "";
+        let currentDefaultImg = "";
 
-        // --- 衣装管理ロジック ---
-        let currentBaseImg = "";     // 通常衣装
-        let currentExtraImgs = [];   // 追加衣装リスト
-        let currentOutfitIndex = 0;  // 0:通常, 1~:追加
-
-        // 新衣装を追加する場合はここを編集
+        // 衣装の定義（画像がない場合はボタンが出ません）
         const outfitLibrary = {
-            'toruma': ['toruma_new.png'],
-            'yuzu': ['yuzu_new.png'],
-            'wakanagi': ['wakanagi_new.png'],
-            'lily': ['lily_new.png']
+            'toruma': { halloween: 'toruma_halloween.png', cafe: 'toruma_cafe.png' },
+            'yuzu': { halloween: 'yuzu_halloween.png', cafe: 'yuzu_cafe.png' },
+            'wakanagi': { halloween: 'wakanagi_halloween.png', cafe: 'wakanagi_cafe.png' },
+            'lily': { halloween: 'lily_halloween.png', cafe: 'lily_cafe.png' }
         };
 
-        window.addEventListener('load', () => updateTimeOfDay());
-
         function updateTimeOfDay() {
-            const hour = new Date().getHours();
-            const greeting = document.getElementById('greeting-msg');
-            document.body.classList.remove('time-morning', 'time-day', 'time-sunset', 'time-night');
-            if (hour >= 5 && hour < 11) { document.body.classList.add('time-morning'); greeting.textContent = "おはよう。"; }
-            else if (hour >= 11 && hour < 16) { document.body.classList.add('time-day'); greeting.textContent = "こんにちは。"; }
-            else if (hour >= 16 && hour < 19) { document.body.classList.add('time-sunset'); greeting.textContent = "こんばんは。"; }
-            else { document.body.classList.add('time-night'); greeting.textContent = "夜更かしだね。"; }
+            const hr = new Date().getHours();
+            const msg = document.getElementById('greeting-msg');
+            if(hr >= 5 && hr < 11) msg.textContent = "おはよう。";
+            else if(hr >= 11 && hr < 17) msg.textContent = "こんにちは。";
+            else msg.textContent = "こんばんは。";
         }
+        window.onload = updateTimeOfDay;
 
-        let isSoundOn = false;
-        function toggleSound(btn) { isSoundOn = !isSoundOn; btn.classList.toggle('on', isSoundOn); }
-
-        function openTab(tabName, elem) {
+        function openTab(name, elem) {
             document.getElementById('content-display').classList.add('active');
-            document.querySelectorAll('.section-view').forEach(el => el.classList.remove('show'));
-            document.getElementById('view-' + tabName).classList.add('show');
-            document.querySelectorAll('.menu-tab').forEach(el => el.classList.remove('active-tab'));
-            elem.classList.add('active-tab');
+            document.querySelectorAll('.section-view').forEach(v => v.classList.remove('show'));
+            document.getElementById('view-' + name).classList.add('show');
         }
 
-        function closeContent() {
-            document.getElementById('content-display').classList.remove('active');
-            document.querySelectorAll('.menu-tab').forEach(el => el.classList.remove('active-tab'));
-        }
+        function closeContent() { document.getElementById('content-display').classList.remove('active'); }
 
-        function toggleAccordion(id, btn) {
-            const content = document.getElementById(id);
-            content.classList.toggle('show');
-            btn.classList.toggle('active');
-        }
-
-        // --- メンバー選択と衣装連携 ---
-        function selectMember(name, elem, imgSrc) { 
-            document.querySelectorAll('.char-tachi').forEach(c => c.classList.remove('idle', 'active', 'dimmed'));
-            document.querySelectorAll('.char-tachi').forEach(c => { if(c !== elem) c.classList.add('dimmed'); });
-            elem.classList.add('active'); 
-            document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show')); 
-            const bio = document.getElementById('bio-' + name); 
+        function selectMember(name, elem, imgSrc) {
+            document.querySelectorAll('.char-tachi').forEach(c => { c.classList.remove('active'); c.classList.add('dimmed'); });
+            elem.classList.remove('dimmed'); elem.classList.add('active');
+            document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show'));
+            const bio = document.getElementById('bio-' + name);
             if(bio) {
-                bio.classList.add('show'); 
-                // 全身ボタンのリンクを動的に生成
-                const btn = bio.querySelector('.bio-btn');
-                btn.onclick = () => openFullView(imgSrc, name);
+                bio.classList.add('show');
+                bio.querySelector('.bio-btn').onclick = () => openFullView(imgSrc, name);
             }
         }
 
-        function closeBio() { 
-            document.querySelectorAll('.char-tachi').forEach(c => { c.classList.remove('active', 'dimmed'); c.classList.add('idle'); }); 
-            document.querySelectorAll('.char-bio-box').forEach(b => b.classList.remove('show')); 
-        }
-
-        function openFullView(normalImg, memberKey = null) {
-            currentBaseImg = normalImg;
-            currentExtraImgs = (memberKey && outfitLibrary[memberKey]) ? outfitLibrary[memberKey] : [];
-            currentOutfitIndex = 0;
-            
+        function openFullView(imgSrc, name) {
+            currentMember = name;
+            currentDefaultImg = imgSrc;
             const modal = document.getElementById('full-view-modal');
             const img = document.getElementById('full-view-img');
-            const btn = document.querySelector('.switch-btn');
+            img.src = imgSrc;
             
-            img.src = currentBaseImg;
-            btn.style.display = (currentExtraImgs.length > 0) ? 'flex' : 'none';
-            btn.textContent = "👗 衣装チェンジ";
-            
+            // ボタンの表示制御
+            const lib = outfitLibrary[name] || {};
+            document.getElementById('btn-halloween').style.display = lib.halloween ? 'block' : 'none';
+            document.getElementById('btn-cafe').style.display = lib.cafe ? 'block' : 'none';
+
             modal.classList.remove('changing', 'shaking');
             modal.classList.add('active');
         }
 
-        function switchOutfit() {
+        function switchSpecificOutfit(type) {
             const modal = document.getElementById('full-view-modal');
             const img = document.getElementById('full-view-img');
-            const btn = document.querySelector('.switch-btn');
+            const lib = outfitLibrary[currentMember] || {};
             
+            let targetSrc = currentDefaultImg;
+            if(type === 'halloween' && lib.halloween) targetSrc = lib.halloween;
+            if(type === 'cafe' && lib.cafe) targetSrc = lib.cafe;
+
+            if(img.src.includes(targetSrc)) return; // 同じ衣装なら何もしない
+
             modal.classList.add('changing');
 
             setTimeout(() => {
                 modal.classList.add('shaking');
-                btn.textContent = "お着替え中...";
+                img.src = targetSrc;
 
-                currentOutfitIndex++;
-                if (currentOutfitIndex > currentExtraImgs.length) currentOutfitIndex = 0;
-
-                img.src = (currentOutfitIndex === 0) ? currentBaseImg : currentExtraImgs[currentOutfitIndex - 1];
-                
                 setTimeout(() => {
                     modal.classList.remove('shaking');
                     setTimeout(() => {
                         modal.classList.remove('changing');
-                        btn.textContent = (currentOutfitIndex === 0) ? "👗 衣装チェンジ" : "👕 通常衣装へ";
                     }, 100);
-                }, 2000);
+                }, 1500); // お着替え時間
             }, 600);
         }
 
         function closeFullView() { document.getElementById('full-view-modal').classList.remove('active'); }
-
-        async function openReceipt() {
-            const modal = document.getElementById('receipt-modal');
-            modal.classList.add('active');
-            // GitHub APIの処理（略）
-        }
-        function closeReceipt() { document.getElementById('receipt-modal').classList.remove('active'); }
-        function openGuestNote() { document.getElementById('note-modal').classList.add('active'); }
-        function closeGuestNote() { document.getElementById('note-modal').classList.remove('active'); }
     </script>
 </body>
 </html>
